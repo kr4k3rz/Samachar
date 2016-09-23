@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Breaking News">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pushNotification"
+            android:summary="gets news alerts,breaking news"
+            android:title="Breaking news Notification" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Image Loading">
+        <CheckBoxPreference
+            android:key="disableImage"
+            android:summary="image will not be loaded"
+            android:title="Disable Image Loading" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Categories">
+        <Preference
+            android:enabled="true"
+            android:key="editCategories"
+            android:summary="select the newspaper want to load and read "
+            android:title="Edit Categories" />
+        <EditTextPreference
+            android:inputType="numberSigned"
+            android:key="feedsToStore"
+            android:summary="Feeds to Store"
+            android:title="Number of Feeds to keep storing" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

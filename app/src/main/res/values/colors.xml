@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#FF4081</color>
+    <!-- Red -->
+    <color name="red_900">#B71C1C</color>
+    <!-- Red -->
+
+    <!-- Pink -->
+    <!-- Pink -->
+
+    <!-- Purple -->
+    <!-- Purple -->
+
+    <!-- Deep Purple -->
+    <!-- Deep Purple -->
+
+    <!-- Indigo -->
+    <!-- Indigo -->
+
+    <!-- Blue -->
+    <color name="blue_50">#E3F2FD</color>
+    <!-- Blue -->
+
+    <!-- Light Blue -->
+    <!-- Light Blue -->
+
+    <!-- Cyan -->
+    <!-- Cyan -->
+
+    <!-- Teal -->
+    <!-- Teal -->
+
+    <!-- Green -->
+    <!-- Green -->
+
+    <!-- Light Green -->
+    <!-- Light Green -->
+
+    <!-- Lime -->
+    <!-- Lime -->
+
+    <!-- Yellow -->
+    <!-- Yellow -->
+
+    <!-- Amber -->
+    <!-- Amber -->
+
+    <!-- Orange -->
+    <!-- Orange -->
+
+    <!-- Deep Orange -->
+    <!-- Deep Orange -->
+
+    <!-- Brown -->
+    <!-- Brown -->
+
+    <!-- Grey -->
+    <!-- Grey -->
+
+    <!-- Blue Grey -->
+    <!-- Blue Grey -->
+
+    <!-- Black -->
+    <!-- Black -->
+
+    <!-- White -->
+    <color name="white">#FFFFFF</color>
+    <!-- White -->
+
+
+</resources>

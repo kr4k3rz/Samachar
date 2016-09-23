@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardElevation="0dp"
+    app:layout_scrollFlags="scroll">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardviewImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image_picture"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_newspaper" />
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/cardviewImage"
+            android:layout_toStartOf="@+id/cardviewImage"
+            android:text="Title"
+            android:textStyle="bold"
+            android:typeface="normal"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/content_snippet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/cardviewImage"
+            android:layout_toStartOf="@+id/cardviewImage"
+            android:text="code snippet"
+            android:typeface="normal"
+            tools:ignore="HardcodedText" />
+
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/date"
+            android:textColor="@color/colorAccent"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+
+
+        <TextView
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_toEndOf="@+id/date"
+            android:layout_toRightOf="@+id/date"
+            android:text="source"
+            android:textColor="@color/colorAccent"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,MissingPrefix,SmallSp" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+

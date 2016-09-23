@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">समाचार</string>
+    <string name="title">समाचार</string>
+    <string name="open">Open Drawer</string>
+    <string name="close">Close Drawer</string>
+    <string name="menu_world">विश्व</string>
+    <string name="menu_business">अर्थ</string>
+    <string name="menu_technology">प्रविधि</string>
+    <string name="menu_entertainment">कला</string>
+    <string name="menu_health">स्वास्थ्य</string>
+    <string name="menu_setting">सेट्टिङ्स</string>
+    <string name="menu_headline">मुख्य समाचार </string>
+    <string name="image_picture">Image picture</string>
+    <string name="date">Date</string>
+    <string name="title_activity_detail_feed">DetailFeed</string>
+
+</resources>
