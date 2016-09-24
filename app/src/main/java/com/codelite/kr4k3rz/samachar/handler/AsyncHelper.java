@@ -28,7 +28,6 @@ import java.util.List;
 
 public class AsyncHelper extends AsyncTask<String, Void, List<Entry>> {
 
-    private static final String TAG = "AsyncHelper";
     private final SwipeRefreshLayout refreshLayout;
     private final String cacheName;
     private final Context context;
@@ -56,7 +55,7 @@ public class AsyncHelper extends AsyncTask<String, Void, List<Entry>> {
             for (String rs : rss) {
                 if (!rs.equalsIgnoreCase("")) {
                     String jsonStr = new PullData().run(rs);    //loads JSON String feeds by Okhttp
-                    Log.i(TAG, ":>  " + jsonStr);
+                    Log.i("TAG", " : " + jsonStr);
                     JSONObject mainNode = new JSONObject(jsonStr);
                     JSONObject responseData = mainNode.getJSONObject("responseData");
                     JSONObject feeds = responseData.getJSONObject("feed");
@@ -67,13 +66,14 @@ public class AsyncHelper extends AsyncTask<String, Void, List<Entry>> {
                     }.getType();
                     List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
                     list.addAll(posts);
-                    list = Parse.deleteEnglishFeeds(list);  //delete english feeds
                 }
 
             }
+
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            Log.i(TAG, "Internet not working or failed to download / 200 error");
+            Log.i("TAG", "Internet not working or failed to download / 200 error");
         }
         return list;
 
@@ -82,27 +82,40 @@ public class AsyncHelper extends AsyncTask<String, Void, List<Entry>> {
     @Override
     protected void onPostExecute(List<Entry> entries) {
         super.onPostExecute(entries);
-        int num1, num2;
+        int oldFeedsSize, newFeedsSize;
 
         List<Entry> oldFeeds = Hawk.get(cacheName);
         if (oldFeeds != null) {
-            num1 = oldFeeds.size();
+            //have old feeds
+            oldFeedsSize = oldFeeds.size(); //number of old feeds
+            Log.i("TAG", "old feeds  size:" + oldFeedsSize);
             entries.addAll(oldFeeds);
-        } else num1 = 0;
+        } else oldFeedsSize = 0;
         List<Entry> newFeeds;
-        newFeeds = Parse.deleteDuplicate(entries); //delete duplicate
-        Parse.sortByTime(newFeeds).size();  //sort by time feeds feeds
-        num2 = newFeeds.size();
+        newFeeds = entries;
+        newFeeds = Parse.deleteDuplicate(newFeeds); //delete duplicate feeds
+        newFeeds = Parse.deleteEnglishFeeds(newFeeds);  //delete english feeds
+        newFeeds = Parse.sortByTime(newFeeds);  //sort by time feeds feeds
+
+        newFeedsSize = newFeeds.size();
+        Log.i("TAG", "new feeds size : " + newFeedsSize);
+
         recyclerView.setAdapter(new RvAdapter(context, newFeeds));
-        int numStore = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(150)));
-        if (newFeeds.size() > numStore) {
-            newFeeds.subList(numStore, newFeeds.size()).clear();
+
+
+        int numStore = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(300)));
+        Log.i("TAG", "Pref Value : " + numStore);
+
+        if (newFeedsSize > numStore) {
+            entries.subList(numStore, newFeedsSize).clear();
         }
+
+
         Hawk.put(cacheName, newFeeds);
-        if (num2 - num1 == 0)
+        if (newFeedsSize - oldFeedsSize == 0)
             SnackMsg.showMsgShort(rootView, "zero feeds");
         else
-            SnackMsg.showMsgShort(rootView, num2 - num1 + " feeds loaded ");
+            SnackMsg.showMsgShort(rootView, newFeedsSize - oldFeedsSize + " feeds loaded ");
         refreshLayout.setRefreshing(false);
     }
 

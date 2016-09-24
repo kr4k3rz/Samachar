@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class BusinessFrag extends Fragment {
 
-    private static final String TAG = "Business Fragment";
+    private static final String TAG = "TAG";
     private static final String CACHE_NAME = "Business";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

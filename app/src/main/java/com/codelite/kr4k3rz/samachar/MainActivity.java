@@ -93,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.health_frag:
                 fragment = HealthFrag.class.newInstance();
                 break;
-            case R.id.setting:
+            case R.id.settings:
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         drawerLayout.closeDrawer(GravityCompat.START);
-                        Intent i = new Intent(MainActivity.this, SettingActivity.class);
+                        Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(i);
 
                     }

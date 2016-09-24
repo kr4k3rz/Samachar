@@ -3,10 +3,8 @@ package com.codelite.kr4k3rz.samachar;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +32,6 @@ public class DetailFeed extends AppCompatActivity {
     private SeekBar seekBar;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +54,15 @@ public class DetailFeed extends AppCompatActivity {
         content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
         title.setText(getIntent().getExtras().getString("title"));
 
-        date.setText(" "+DateUtils.getRelativeTimeSpanString(Date.parse(getIntent().getExtras().getString("date")),
+        date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(getIntent().getExtras().getString("date")),
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));
 
 
         content.setText(Html.fromHtml(getIntent().getExtras().getString("content"), Parse.EMPTY_IMAGE_GETTER, null));
         author.setText(getIntent().getExtras().getString("author"));
-        Boolean disableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("disableImage", false);
-        if (!disableImage) {
+        boolean enableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("enableImage", true);
+     //   Log.i("TAG", "enableImage: " + enableImage);
+        if (enableImage) {
             cardView.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
                     .load(Parse.parseImg(getIntent()

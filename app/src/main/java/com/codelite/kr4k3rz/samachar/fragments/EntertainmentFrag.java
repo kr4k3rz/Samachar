@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class EntertainmentFrag extends Fragment {
 
-    private static final String TAG = "Entertainment Fragment";
+    private static final String TAG = "TAG";
     private static final String CACHE_NAME = "Entertainment";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

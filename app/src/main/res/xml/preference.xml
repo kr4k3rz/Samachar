@@ -9,24 +9,33 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Image Loading">
-        <CheckBoxPreference
-            android:key="disableImage"
-            android:summary="image will not be loaded"
-            android:title="Disable Image Loading" />
+    <PreferenceCategory android:title="Image">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="enableImage"
+            android:summary="thumbnail image to be loaded"
+            android:title="Image Loading" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Categories">
         <Preference
             android:enabled="true"
             android:key="editCategories"
-            android:summary="select the newspaper want to load and read "
+            android:summary="select the newspapers want to load and read "
             android:title="Edit Categories" />
-        <EditTextPreference
-            android:inputType="numberSigned"
+        <ListPreference
+            android:entries="@array/listDisplayWord"
+            android:entryValues="@array/listReturnValue"
             android:key="feedsToStore"
-            android:summary="Feeds to Store"
-            android:title="Number of Feeds to keep storing" />
+            android:summary="select the numbers of feeds to keep store"
+            android:title="Numbers of Feeds to Store" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+
+        <Preference
+            android:key="aboutPref"
+            android:title="About the Samachar App" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.util.Log;
 
 public class MyAlarmReceiver extends BroadcastReceiver {
-    public static final int REQUEST_CODE = 12345;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i("TAG", "In Broadcast receiver");
         Intent intent1 = new Intent(context, MyIntentService.class);
         context.startService(intent1);
-        Log.i("MyAlarmReceiver", "Alarm in Broadcast fired");
 
     }
 }

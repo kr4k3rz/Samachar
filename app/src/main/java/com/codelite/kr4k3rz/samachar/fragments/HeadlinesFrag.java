@@ -23,7 +23,7 @@ import java.util.List;
 
 
 public class HeadlinesFrag extends Fragment {
-    private static final String TAG = "Headlines Fragment";
+    private static final String TAG = "TAG";
     private static final String CACHE_NAME = "Headlines";
     /*for loading at postRefresh at first lunch*/
     private View rootView;

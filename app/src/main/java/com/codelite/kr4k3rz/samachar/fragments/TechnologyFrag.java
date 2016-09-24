@@ -27,7 +27,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class TechnologyFrag extends Fragment {
-    private static final String TAG = "Technology Fragment";
+    private static final String TAG = "TAG";
     private static final String CACHE_NAME = "Technology";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

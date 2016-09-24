@@ -24,7 +24,7 @@ import java.util.List;
 
 public class WorldFrag extends Fragment {
     private static final String CACHE_NAME = "World";
-    private static final String TAG = "World Fragment";
+    private static final String TAG = "TAG";
     private View rootView;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

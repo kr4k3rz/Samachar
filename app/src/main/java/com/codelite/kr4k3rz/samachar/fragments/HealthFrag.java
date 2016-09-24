@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class HealthFrag extends Fragment {
 
-    private static final String TAG = "Health Fragment";
+    private static final String TAG = "TAG";
     private static final String CACHE_NAME = "Health";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;

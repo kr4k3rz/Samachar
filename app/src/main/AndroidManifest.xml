@@ -25,19 +25,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppThemeNoActionBar" />
         <activity
             android:name=".DetailFeed"
             android:label="@string/title_activity_detail_feed"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppThemeNoActionBar"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.codelite.kr4k3rz.samachar.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity"
             tools:ignore="UnusedAttribute">
             <meta-data
@@ -46,27 +48,29 @@
         </activity>
         <activity
             android:name=".EditCategory"
-            android:parentActivityName=".SettingActivity"
+            android:parentActivityName=".SettingsActivity"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codelite.kr4k3rz.samachar.SettingActivity" />
+                android:value="com.codelite.kr4k3rz.samachar.SettingsActivity" />
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".MyIntentService" />
+
+        <receiver android:name=".MyAlarmReceiver" />
 
 
-        <service
-            android:name=".MyIntentService"
-            android:exported="false" />
-
-        <receiver
-            android:name=".MyAlarmReceiver"
-            android:process=":remote" />
-        <receiver android:name="com.codelite.kr4k3rz.samachar.BootBroadcastReceiver">
+        <receiver android:name=".BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>

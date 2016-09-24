@@ -1,14 +1,13 @@
 package com.codelite.kr4k3rz.samachar;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.support.v7.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
 
@@ -33,7 +32,9 @@ import java.util.List;
 
 public class MyIntentService extends IntentService {
 
-
+    /*
+    * download all newsFeeds show only the Breaking news
+    * save the feeds into file show that later it used*/
     public MyIntentService() {
         super("MyIntentService");
     }
@@ -42,11 +43,10 @@ public class MyIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         WakefulBroadcastReceiver.completeWakefulIntent(intent);
-        if (CheckInternet.isNetworkAvailable(getApplicationContext())) {
-            Log.i("MyIntentService", "Intent Service fired");
-            if (CheckInternet.isNetworkAvailable(getApplicationContext()))
-                updateDataNotify();
-        }
+        Log.i("TAG", "IntentService fired");
+
+        if (CheckInternet.isNetworkAvailable(getApplicationContext()))
+            updateDataNotify();
 
     }
 
@@ -59,7 +59,6 @@ public class MyIntentService extends IntentService {
                 if (!rs.equalsIgnoreCase("")) {
                     String jsonStr = new PullData().run(rs);    //loads JSON String feeds by Okhttp
                     Log.i("TAG", ":>  " + jsonStr);
-                /*parsing the pulled JSON string into ArrayList<Entry> */
                     JSONObject mainNode = new JSONObject(jsonStr);
                     JSONObject responseData = mainNode.getJSONObject("responseData");
                     JSONObject feeds = responseData.getJSONObject("feed");
@@ -75,7 +74,6 @@ public class MyIntentService extends IntentService {
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            // checkError = true;
             Log.i("TAG", "Internet not working or failed to download / 200 error");
         }
 
@@ -92,26 +90,32 @@ public class MyIntentService extends IntentService {
             Hawk.put("Headlines", newFeeds);
             Entry entry;
             entry = newFeeds.get(0);
-            Intent intent4 = new Intent(getApplicationContext(), DetailFeed.class);
-            intent4.putExtra("title", entry.getTitle());
-            intent4.putExtra("date", entry.getDate());
-            intent4.putExtra("content", entry.getContent());
-            intent4.putExtra("author", entry.getAuthor());
-            intent4.putExtra("link", entry.getLink());
-            intent4.putStringArrayListExtra("categories", (ArrayList<String>) entry.getCategories());
-            PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent4,
+            Intent intent = new Intent(getApplicationContext(), DetailFeed.class);
+            intent.putExtra("title", entry.getTitle());
+            intent.putExtra("date", entry.getDate());
+            intent.putExtra("content", entry.getContent());
+            intent.putExtra("author", entry.getAuthor());
+            intent.putExtra("link", entry.getLink());
+            intent.putStringArrayListExtra("categories", (ArrayList<String>) entry.getCategories());
+            Log.i("TAG", " Title : " + entry.getTitle() + "\n Content : " + Html.fromHtml(entry.getContentSnippet().replace("...", "").replace("[…]", "")));
+
+
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
-            android.support.v4.app.NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(getApplicationContext())
+
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle(entry.getTitle())
+                            .setContentIntent(pIntent)
+                            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                             .setContentText(Html.fromHtml(entry.getContentSnippet().replace("...", "").replace("[…]", "")))
-                            .setContentIntent(pIntent);
-            Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            mBuilder.setSound(notificationSound);
-            Notification notify = mBuilder.build();
-            notify.flags = Notification.FLAG_AUTO_CANCEL;
-            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(0, notify);
+                            .setAutoCancel(true);
+            int NOTIFICATION_ID = 12345;
+            NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            nManager.notify(NOTIFICATION_ID, builder.build());
+/*TODO
+ * when notification is clicked make back button clicked on DetailFeeds to go in MainActivity loading all from start data */
 
         }
 
