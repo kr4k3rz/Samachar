@@ -52,6 +52,7 @@ public class HeadlinesFrag extends Fragment {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Hawk.contains(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
+
                                              new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView).execute(rss);
 
                                          } else {

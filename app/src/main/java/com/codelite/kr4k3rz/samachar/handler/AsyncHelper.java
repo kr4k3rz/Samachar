@@ -2,6 +2,7 @@ package com.codelite.kr4k3rz.samachar.handler;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     private final Context context;
     private final RecyclerView recyclerView;
     private final View rootView;
+    private int newsFeedsSize = 0;
 
     public AsyncHelper(View rootView, SwipeRefreshLayout refreshLayout, Context context, String cacheName, RecyclerView recyclerView) {
         this.refreshLayout = refreshLayout;
@@ -74,18 +76,24 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
             Log.i("TAG", "Internet not working or failed to download / 200 error");
         }
-        Parse.filterCategories(list);
+        newsFeedsSize = Parse.filterCategories(list).get(3);
         return null;
-
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         List<Entry> feeds = Hawk.get(cacheName);
-        refreshLayout.setRefreshing(false);
+        int limitSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(20)));
+        Log.i("TAG", "limitSize : " + limitSize);
+
+        if (feeds.size() > limitSize) {
+            feeds.subList(limitSize, feeds.size()).clear();
+        }
+
         recyclerView.setAdapter(new RvAdapter(context, feeds));
-        SnackMsg.showMsgShort(rootView, "feeds loaded");
+        refreshLayout.setRefreshing(false);
+        SnackMsg.showMsgShort(rootView, "feeds loaded " + newsFeedsSize);
 
     }
 }

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
-    private static final String POSTFIX_CACHED = "&num=-1&hl=np&scoring=h";
-    private static final String POSTFIX_LATEST = "&hl=np";
+    private static final String POSTFIX_CACHED = "&num=-1&scoring=h";  //cached and max feeds
+    private static final String POSTFIX_LATEST = "&num=-1";  //latest and max feeds
 
     /*&scoring=h*/
     public static ArrayList<Category> feedsListSetup() {
@@ -24,24 +24,21 @@ public class FeedLists {
         String[][] headlines_feed = new String[][]{
                 {"Online Khabar", "http://www.onlinekhabar.com/feed/"},
                 {"Online Patrika", "http://onlinepatrika.com/feed/"},
-                {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
+              //  {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
-                {"Tokyo Nepal", "http://tokyonepal.com/feed"},
-                {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
+               // {"Tokyo Nepal", "http://tokyonepal.com/feed"},
+               // {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
                 {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},
-                {"Nepall", "http://nepall.net/feed"},
-                {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
-                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"}
-              /*,
-                {"Bigul News", "http://bigulnews.com/feed"},
+               // {"Nepall", "http://nepall.net/feed"},
+               // {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
+              //  {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},
+               // {"Bigul News", "http://bigulnews.com/feed"},
                 {"Nepalgunj News", "http://nepalgunjnews.com/feed"},
-                {"BBC Nepali", "http://feeds.bbci.co.uk/nepali/rss.xml"},
-                {"Reporters Nepal", "http://reportersnepal.com/rss-feeds"},
-                {"Lokaantar", "http://lokaantar.com/feed"},
-                {"MediaNp", "http://medianp.com/feed"},
-                {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
-                {"Nepal Aaja", "http://nepalaaja.com/feed/"},
-                {"lahanonline", "http://lahanonline.com/feed/"}*/
+              //  {"Lokaantar", "http://lokaantar.com/feed"},
+                //{"MediaNp", "http://medianp.com/feed"},
+               // {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
+               // {"Nepal Aaja", "http://nepalaaja.com/feed/"},
+                {"lahanonline", "http://lahanonline.com/feed/"}
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();
@@ -213,8 +210,6 @@ public class FeedLists {
                     subCategory.setUpdated_sub_link_latest(PREFIX_AJAX + aTechnology_feed[1] + POSTFIX_LATEST);
                     subCategories_technology.add(subCategory);
                 }
-
-
             }
         }
         category_technology.setSub_category(subCategories_technology);
