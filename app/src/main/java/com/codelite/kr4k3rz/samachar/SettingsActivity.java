@@ -52,7 +52,8 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     getActivity().finish();
-                    Intent refresh = new Intent(getActivity(), MainActivity.class);
+                    Intent refresh = new Intent(getActivity(), SplashActivity.class);
+                    refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(refresh);
                     return true;
                 }
@@ -64,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     getActivity().finish();
                     Intent refresh = new Intent(getActivity(), SplashActivity.class);
+                    refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(refresh);
                     return true;
                 }

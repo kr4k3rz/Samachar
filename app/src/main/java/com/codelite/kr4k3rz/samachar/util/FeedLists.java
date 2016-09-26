@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
-    private static final String POSTFIX_CACHED = "&num=-1&hl=np";
+    private static final String POSTFIX_CACHED = "&num=-1&hl=np&scoring=h";
     private static final String POSTFIX_LATEST = "&hl=np";
 
-
+    /*&scoring=h*/
     public static ArrayList<Category> feedsListSetup() {
 
         ArrayList<Category> categories = new ArrayList<>();//<-- its collects all the Category
@@ -23,17 +23,25 @@ public class FeedLists {
         subCategories_headlines = new ArrayList<>();
         String[][] headlines_feed = new String[][]{
                 {"Online Khabar", "http://www.onlinekhabar.com/feed/"},
-                {"Online Patrika", "http://onlinepatrika.com/feed/"},              /*Just add your feed string here*/
-                {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},
+                {"Online Patrika", "http://onlinepatrika.com/feed/"},
+                {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
                 {"Tokyo Nepal", "http://tokyonepal.com/feed"},
                 {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
                 {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},
                 {"Nepall", "http://nepall.net/feed"},
                 {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
-                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},
+                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"}
+              /*,
                 {"Bigul News", "http://bigulnews.com/feed"},
-                {"Nepalgunj News", "http://nepalgunjnews.com/feed"}
+                {"Nepalgunj News", "http://nepalgunjnews.com/feed"},
+                {"BBC Nepali", "http://feeds.bbci.co.uk/nepali/rss.xml"},
+                {"Reporters Nepal", "http://reportersnepal.com/rss-feeds"},
+                {"Lokaantar", "http://lokaantar.com/feed"},
+                {"MediaNp", "http://medianp.com/feed"},
+                {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
+                {"Nepal Aaja", "http://nepalaaja.com/feed/"},
+                {"lahanonline", "http://lahanonline.com/feed/"}*/
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();
@@ -57,6 +65,7 @@ public class FeedLists {
 
 
         //<--World-->
+
         Category category_world = new Category();
         category_world.setName_category("विश्व");
         ArrayList<SubCategory> subCategories_world = new ArrayList<>();

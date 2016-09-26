@@ -61,7 +61,7 @@ public class DetailFeed extends AppCompatActivity {
         content.setText(Html.fromHtml(getIntent().getExtras().getString("content"), Parse.EMPTY_IMAGE_GETTER, null));
         author.setText(getIntent().getExtras().getString("author"));
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("enableImage", true);
-     //   Log.i("TAG", "enableImage: " + enableImage);
+        //   Log.i("TAG", "enableImage: " + enableImage);
         if (enableImage) {
             cardView.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
@@ -113,6 +113,10 @@ public class DetailFeed extends AppCompatActivity {
 
                 break;
             case R.id.action_textSize:
+                if (seekBar.getVisibility() == View.VISIBLE) {
+                    seekBar.setVisibility(View.GONE);
+                    break;
+                }
                 seekBar.setVisibility(View.VISIBLE);
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     float value;
@@ -141,5 +145,8 @@ public class DetailFeed extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+        /*seekbar issue TODO
+        * 1. size increase*/
+
     }
 }

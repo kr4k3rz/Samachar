@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.orhanobut.hawk.Hawk;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,14 +41,6 @@ public class Parse {
         return url;
     }
 
-    public static String parseStr(String str) {
-        String[] bits = str.split(" ");
-        Log.i("TIME", String.valueOf(bits.length));
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(bits[0]).append(bits[1].charAt(0));
-        return String.valueOf(stringBuilder);
-
-    }
 
     public static String getSource(String link) throws MalformedURLException {
         URL myUrl = new URL(link);
@@ -88,7 +81,8 @@ public class Parse {
     public static List<Entry> deleteDuplicate(List<Entry> entries) {
         ArrayList<Entry> newFeeds = new ArrayList<>();
         Set<Entry> hs = new HashSet<>();
-        hs.addAll(entries);
+        if (entries != null)
+            hs.addAll(entries);
         newFeeds.clear();
         newFeeds.addAll(hs);
         return newFeeds;
@@ -107,6 +101,274 @@ public class Parse {
         return entries1;
     }
 
+
+    public static void filterCategories(List<Entry> entries) {
+        ArrayList<String> categories = new ArrayList<>();
+        List<List<Entry>> main = new ArrayList<>();
+        int CATEGORY_NUMBER = 11;
+
+        categories.add("Breaking");
+        categories.add("Newspaper");
+        categories.add("Headlines");
+        categories.add("Local");
+        categories.add("Opinion");
+        categories.add("World");
+        categories.add("Business");
+        categories.add("Technology");
+        categories.add("Entertainment");
+        categories.add("Health");
+        categories.add("Sport");
+
+
+        List<Entry> breaking = new ArrayList<>();
+        if (Hawk.contains("Breaking")) {
+            List<Entry> entries1 = Hawk.get("Breaking");
+            breaking.addAll(entries1);
+        }
+
+        List<Entry> newspaper = new ArrayList<>();
+        if (Hawk.contains("Newspaper")) {
+            List<Entry> entries1 = Hawk.get("Newspaper");
+            newspaper.addAll(entries1);
+        }
+
+        List<Entry> national = new ArrayList<>();
+        if (Hawk.contains("Headlines")) {
+            List<Entry> entries1 = Hawk.get("Headlines");
+            national.addAll(entries1);
+        }
+        List<Entry> local = new ArrayList<>();
+        if (Hawk.contains("Local")) {
+            List<Entry> entries1 = Hawk.get("Local");
+            local.addAll(entries1);
+        }
+
+        List<Entry> opinion = new ArrayList<>();
+        if (Hawk.contains("Opinion")) {
+            List<Entry> entries1 = Hawk.get("Opinion");
+            opinion.addAll(entries1);
+        }
+
+        List<Entry> world = new ArrayList<>();
+        if (Hawk.contains("World")) {
+            List<Entry> entries1 = Hawk.get("World");
+            world.addAll(entries1);
+        }
+        List<Entry> business = new ArrayList<>();
+        if (Hawk.contains("Business")) {
+            List<Entry> entries1 = Hawk.get("Business");
+            business.addAll(entries1);
+        }
+        List<Entry> technology = new ArrayList<>();
+        if (Hawk.contains("Technology")) {
+            List<Entry> entries1 = Hawk.get("Technology");
+            technology.addAll(entries1);
+        }
+        List<Entry> entertain = new ArrayList<>();
+        if (Hawk.contains("Entertainment")) {
+            List<Entry> entries1 = Hawk.get("Entertainment");
+            entertain.addAll(entries1);
+        }
+        List<Entry> health = new ArrayList<>();
+        if (Hawk.contains("Health")) {
+            List<Entry> entries1 = Hawk.get("Health");
+            health.addAll(entries1);
+        }
+        List<Entry> sport = new ArrayList<>();
+        if (Hawk.contains("Sport")) {
+            List<Entry> entries1 = Hawk.get("Sport");
+            sport.addAll(entries1);
+        }
+
+        int total_feeds = 0;
+        int feeds_filtered = 0;
+        /*
+        TODO 1.all are not categorized check the percentage and make use of  unfiltered by showing
+        filtered by category*/
+        for (Entry entry : entries) {
+            for (String s : entry.getCategories()) {
+                //Breaking
+                total_feeds++;
+                if (s.equalsIgnoreCase("Breaking")
+                        || s.equalsIgnoreCase("Top News")
+                        || s.equalsIgnoreCase("BreakingNews")
+                        || s.equalsIgnoreCase("प्रमुख")
+                        || s.equalsIgnoreCase("HEADLINES")
+                        || s.equalsIgnoreCase("Feature")
+                        || s.equalsIgnoreCase("मेन स्टोरी")
+                        || s.equalsIgnoreCase("मुख्य समाचार")
+                        || s.equalsIgnoreCase("currentnews")
+                        || s.equalsIgnoreCase("highlight")
+                        || s.equalsIgnoreCase("आजको विशेष")
+                        || s.equalsIgnoreCase("बिशेष")
+                        || s.equalsIgnoreCase("प्रमुख समाचार")) {
+                    breaking.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//newspaper
+                if (s.equalsIgnoreCase("newspaper")
+                        || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
+                        || s.equalsIgnoreCase("पत्रपत्रिका")) {
+                    newspaper.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//national
+                if (s.equalsIgnoreCase("राष्ट्रिय समाचार")
+                        || s.equalsIgnoreCase("राष्ट्रिय")
+                        || s.equalsIgnoreCase("देश")
+                        || s.equalsIgnoreCase("समाज")
+                        || s.equalsIgnoreCase("देश")
+                        || s.equalsIgnoreCase("राजनीति")
+                        || s.equalsIgnoreCase("Nepal News")
+                        || s.equalsIgnoreCase("Community News")
+                        || s.equalsIgnoreCase("फिचर")
+                        || s.equalsIgnoreCase("मेन स्टोरी")
+                        || s.equalsIgnoreCase("Night only")) {
+                    national.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//local
+                if (s.equalsIgnoreCase("प्रबास/स्थानिय")
+                        || s.equalsIgnoreCase(" बैदेशिक रोजगार")
+                        || s.equalsIgnoreCase("प्रबास")
+                        || s.equalsIgnoreCase("प्रवास | बैदेशिक रोजगार")
+                        || s.equalsIgnoreCase("प्रवास")
+                        || s.equalsIgnoreCase("LOCAL")
+                        || s.equalsIgnoreCase("DIASPORA")
+                        || s.equalsIgnoreCase("DIASPORA/LOCAL")
+                        || s.equalsIgnoreCase("स्थानिय")) {
+                    local.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//opinion
+                if (s.equalsIgnoreCase("विचार")
+                        || s.equalsIgnoreCase("बिचार")
+                        || s.equalsIgnoreCase("अनुभूति")
+                        || s.equalsIgnoreCase("बिचार | ब्लग")
+                        || s.equalsIgnoreCase("ब्लग")
+                        || s.equalsIgnoreCase("OPINION")
+                        || s.equalsIgnoreCase("घुम्दा घुम्दै")
+                        || s.equalsIgnoreCase("Uncategorized")
+                        || s.equalsIgnoreCase("Odd World")
+                        || s.equalsIgnoreCase("विचार/अनुभूति")) {
+                    opinion.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//world
+                if (s.equalsIgnoreCase("अन्तराष्ट्रिय समाचार")
+                        || s.equalsIgnoreCase("अन्तराष्ट्रिय")
+                        || s.equalsIgnoreCase("अन्तराष्ट्रीय")
+                        || s.equalsIgnoreCase("बिश्व")
+                        || s.equalsIgnoreCase("रोचक")
+                        || s.equalsIgnoreCase("आश्चर्यजनक")
+                        || s.equalsIgnoreCase("बिचित्र संसार")
+                        || s.equalsIgnoreCase("रोचक संसार")
+                        || s.equalsIgnoreCase("रोचक | आश्चर्यजनक")
+                        || s.equalsIgnoreCase("अन्तर्राष्ट्रिय")
+                        || s.equalsIgnoreCase("अन्तर्राष्ट्रिय समाचार")
+                        || s.equalsIgnoreCase("विश्व")
+                        || s.equalsIgnoreCase("विचित्र संसार")) {
+                    world.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//Business
+                if (s.equalsIgnoreCase("अर्थनीति")
+                        || s.equalsIgnoreCase("कृषि")
+                        || s.equalsIgnoreCase("बातावरण-कृषि")
+                        || s.equalsIgnoreCase("अर्थ")
+                        || s.equalsIgnoreCase("बजार")
+                        || s.equalsIgnoreCase("बिजनेस")
+                        || s.equalsIgnoreCase("अर्थ वाणिज्य")
+                        || s.equalsIgnoreCase("वाणिज्य")
+                        || s.equalsIgnoreCase("अर्थतन्त्र")
+                        || s.equalsIgnoreCase("बिजनेस समाचार")
+                        || s.equalsIgnoreCase("बिजनेस प्रमुख होम")
+                        || s.equalsIgnoreCase("बिजनेस प्रमुख")) {
+                    business.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//Technology
+                if (s.equalsIgnoreCase("सूचना प्रविधि-प्रमुख")
+                        || s.equalsIgnoreCase("विज्ञान  प्रविधि")
+                        || s.equalsIgnoreCase("विज्ञान")
+                        || s.equalsIgnoreCase("विज्ञान तथा प्रविधी")
+                        || s.equalsIgnoreCase("प्रविधि")
+                        || s.equalsIgnoreCase("सूचना प्रविधि")) {
+                    technology.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//Entertain
+                if (s.equalsIgnoreCase("बलिउड/हलिउड")
+                        || s.equalsIgnoreCase("बलिउड")
+                        || s.equalsIgnoreCase("हलिउड")
+                        || s.equalsIgnoreCase("मनोरञ्जन")
+                        || s.equalsIgnoreCase("बलिवुड")
+                        || s.equalsIgnoreCase("आजको राशिफल")
+                        || s.equalsIgnoreCase("मनोरञ्जन एप")
+                        || s.equalsIgnoreCase("LITERATURE")
+                        || s.equalsIgnoreCase("मनोरन्जन प्रमुख होम")
+                        || s.equalsIgnoreCase("गशिप")
+                        || s.equalsIgnoreCase("मनोरञ्जन")
+                        || s.equalsIgnoreCase("साहित्य")
+                        || s.equalsIgnoreCase("ENT")
+                        || s.equalsIgnoreCase("Entertainment Main")
+                        || s.equalsIgnoreCase("नेपाली चलचित्र")
+                        || s.equalsIgnoreCase("कला")
+                        || s.equalsIgnoreCase("Bollywood")
+                        || s.equalsIgnoreCase("मनोरञ्जन प्रमुख")) {
+                    entertain.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//Health
+                if (s.equalsIgnoreCase("स्वास्थ्य")
+                        || s.equalsIgnoreCase("बातावरण")
+                        || s.equalsIgnoreCase("जीवनशैली")
+                        || s.equalsIgnoreCase("यौन")
+                        || s.equalsIgnoreCase("स्वास्थ्य/जीवनशैली")) {
+                    health.add(entry);
+                    feeds_filtered++;
+                    break;
+                }//sport
+                if (s.equalsIgnoreCase("खेलकुद समाचार")
+                        || s.equalsIgnoreCase("खेलकुद")
+                        || s.equalsIgnoreCase("खेलकुद प्रमुख")
+                        || s.equalsIgnoreCase("खेल")
+                        || s.equalsIgnoreCase("खेलकुद फिचर")
+                        || s.equalsIgnoreCase("SPORT")
+                        || s.equalsIgnoreCase("Sports")) {
+                    sport.add(entry);
+                    feeds_filtered++;
+                    break;
+                }
+
+            }
+        }
+
+        main.add(breaking);
+        main.add(newspaper);
+        main.add(national);
+        main.add(local);
+        main.add(opinion);
+        main.add(world);
+        main.add(business);
+        main.add(technology);
+        main.add(entertain);
+        main.add(health);
+        main.add(sport);
+        Log.i("TAG", "Total Feeds Size after categoriezed : " + feeds_filtered);
+        Log.i("TAG", "Total Feeds Size : " + total_feeds);
+
+        for (int i = 0; i < CATEGORY_NUMBER; i++) {
+            List<Entry> processedFeeds;
+            processedFeeds = main.get(i);
+            processedFeeds = deleteDuplicate(processedFeeds); //delete duplicate feeds
+            processedFeeds = deleteEnglishFeeds(processedFeeds);  //delete english feeds
+            processedFeeds = sortByTime(processedFeeds);  //sort by time feeds feeds*//*
+            Hawk.put(categories.get(i), processedFeeds);
+
+        }
+
+    }
 
 
 }

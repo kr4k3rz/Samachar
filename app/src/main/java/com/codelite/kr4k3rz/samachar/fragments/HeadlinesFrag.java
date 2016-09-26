@@ -53,10 +53,11 @@ public class HeadlinesFrag extends Fragment {
                                          if (!Hawk.contains(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
                                              new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView).execute(rss);
+
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Hawk.get(CACHE_NAME);
-                                             if ((list == null)) {
+                                             if (!Hawk.contains(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
                                                  recyclerView.setAdapter(new RvAdapter(getContext(), list));
@@ -73,7 +74,6 @@ public class HeadlinesFrag extends Fragment {
                 Log.d(TAG, "setOnRefreshListener()");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
                     String[] rss_new = FeedLists.getFeedListLatest(0);
-
                     new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView).execute(rss_new);
                 } else {
                     SnackMsg.showMsgShort(rootView, "couldn't connect to internet");

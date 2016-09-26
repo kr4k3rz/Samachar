@@ -56,9 +56,8 @@ public class WorldFrag extends Fragment {
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Hawk.get(CACHE_NAME);
-                                             if ((list == null)) {
+                                             if (!Hawk.contains(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
-
                                              } else
                                                  recyclerView.setAdapter(new RvAdapter(getContext(), list));
                                              mSwipeRefreshLayout.setRefreshing(false);
