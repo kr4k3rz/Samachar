@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:layout_scrollFlags="exitUntilCollapsed"
-    tools:context="com.codelite.kr4k3rz.samachar.DetailFeed">
+    tools:context="com.codelite.kr4k3rz.samachar.activity.DetailFeed">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -57,6 +57,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:text="Title"
+                    android:textColor="#3B494C"
                     android:textSize="20sp"
                     android:textStyle="bold|normal"
                     android:typeface="normal"
@@ -131,6 +132,7 @@
                     android:linksClickable="true"
                     android:scrollbars="vertical"
                     android:text="Content"
+                    android:textColor="#3B494C"
                     android:textSize="18sp"
                     android:typeface="sans"
                     tools:ignore="HardcodedText" />

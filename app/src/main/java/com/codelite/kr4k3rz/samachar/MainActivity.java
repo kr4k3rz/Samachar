@@ -1,132 +1,100 @@
 package com.codelite.kr4k3rz.samachar;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.NavigationView;
+import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
-import com.codelite.kr4k3rz.samachar.fragments.BusinessFrag;
-import com.codelite.kr4k3rz.samachar.fragments.EntertainmentFrag;
-import com.codelite.kr4k3rz.samachar.fragments.HeadlinesFrag;
-import com.codelite.kr4k3rz.samachar.fragments.HealthFrag;
-import com.codelite.kr4k3rz.samachar.fragments.TechnologyFrag;
-import com.codelite.kr4k3rz.samachar.fragments.WorldFrag;
-import com.google.firebase.crash.FirebaseCrash;
-
+import com.codelite.kr4k3rz.samachar.activity.EditCategory;
+import com.codelite.kr4k3rz.samachar.activity.SettingsActivity;
+import com.codelite.kr4k3rz.samachar.fragments.HomeMainFrag;
+import com.codelite.kr4k3rz.samachar.fragments.MyNewsMainFrag;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends AppCompatActivity {
-
-    private DrawerLayout drawerLayout;
-    private Fragment fragment = null;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private CoordinatorLayout coordinatorLayout;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        setupDrawerContent(navigationView);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        if (savedInstanceState == null) {
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.flContent, new HeadlinesFrag()).commit();
-        }
-
-        FirebaseCrash.log("Activity created");
-
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.three_buttons_activity);
+        setupBottomBar();
     }
 
 
-    private void setupDrawerContent(NavigationView navigationView) {
+    /*
+    * setup bottom bar
+    * */
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void setupBottomBar() {
+
+        final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        /*TODO add number feeds count updated when Broadcaster runs at background*/
+        //  final BottomBarTab nearby = bottomBar.getTabWithId(R.id.mynews_item);
+//        int newFeeds = Hawk.get("NewFeedsLoaded");
+        //      Log.i(MainActivity.class.getSimpleName(), "value : " + newFeeds);
+        //    nearby.setBadgeCount(newFeeds);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                try {
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.home_item:
+                        try {
+                            fragment = HomeMainFrag.class.newInstance();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case R.id.mynews_item:
+                        try {
+                            fragment = MyNewsMainFrag.class.newInstance();
+                            //   nearby.removeBadge();
 
-                    selectDrawerItem(menuItem);
-                } catch (IllegalAccessException | InstantiationException e) {
-                    e.printStackTrace();
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        //Snackbar.make(coordinatorLayout, "Favorite Item Selected", Snackbar.LENGTH_LONG).show();
+                        break;
+                    case R.id.edit_category:
+                        startActivity(new Intent(MainActivity.this, EditCategory.class));
+                        //Snackbar.make(coordnatorLayout, "Location Item Selected", Snackbar.LENGTH_LONG).show();
+                        break;
+                    case R.id.more_item:
+                        /*TODO make setting Fragment best memory optimized*/
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        break;
                 }
-                return true;
+
+                if (fragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, fragment).commit();
+                    fragment = null;
+                }
+
             }
         });
-    }
 
 
-    private void selectDrawerItem(final MenuItem menuItem) throws IllegalAccessException, InstantiationException {
-        switch (menuItem.getItemId()) {
-            case R.id.headlines_frag:
-                fragment = HeadlinesFrag.class.newInstance();
-                break;
-            case R.id.world_frag:
-                fragment = WorldFrag.class.newInstance();
-                break;
-            case R.id.business_frag:
-                fragment = BusinessFrag.class.newInstance();
-                break;
-            case R.id.technology_frag:
-                fragment = TechnologyFrag.class.newInstance();
-                break;
-            case R.id.entertainment_frag:
-                fragment = EntertainmentFrag.class.newInstance();
-                break;
-            case R.id.health_frag:
-                fragment = HealthFrag.class.newInstance();
-                break;
-            case R.id.settings:
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        Intent i = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivity(i);
-
-                    }
-                }, 200);
-                break;
-        }
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+// Remove the badge when you're done with it.
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
-            public void run() {
-                if (fragment != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
-                    fragment = null;
-                    menuItem.setChecked(true);
-                    setTitle(menuItem.getTitle());
-                }
+            public void onTabReSelected(@IdRes int tabId) {
+                if (tabId == R.id.more_item)
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
+                if (tabId == R.id.edit_category)
+                    startActivity(new Intent(MainActivity.this, EditCategory.class));
             }
-        }, 200);
-        drawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        actionBarDrawerToggle.syncState();
+        });
     }
 
 

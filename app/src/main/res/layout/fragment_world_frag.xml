@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeRefreshLayout"
+        android:id="@+id/swipeRefreshLayout_world"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

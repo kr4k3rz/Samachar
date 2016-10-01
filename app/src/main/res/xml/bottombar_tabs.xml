@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/icon_headlines"
+        id="@+id/home_item"
+        title="Breaking" />
+    <tab
+        icon="@drawable/icon_author"
+        id="@+id/mynews_item"
+        title="News" />
+    <tab
+        icon="@drawable/icon_entertainment"
+        id="@+id/edit_category"
+        title="Favourite" />
+    <tab
+        icon="@drawable/icon_setting"
+        id="@+id/more_item"
+        title="more" />
+</tabs>

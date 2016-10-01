@@ -15,8 +15,8 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.orhanobut.hawk.Hawk;
 
@@ -28,11 +28,15 @@ import java.util.List;
  */
 public class EntertainmentFrag extends Fragment {
 
-    private static final String TAG = "TAG";
-    private static final String CACHE_NAME = "Entertainment";
+    private static final String TAG = EntertainmentFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.ENTERTAINMENT.name();
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View rootView;
+    private String[] mSpecialFeed = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://screennepal.com/feed&num=-1"};
+
+    public EntertainmentFrag() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,21 +47,18 @@ public class EntertainmentFrag extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_entertainment);
         initSwipeRefresh();
         return rootView;
     }
 
     private void initSwipeRefresh() {
-        Log.i(TAG, "initSwipeRefresh()");
         mSwipeRefreshLayout.post(new Runnable() {
                                      @Override
                                      public void run() {
-                                         Log.i(TAG, "initSwipeRefresh post()");
+                                         Log.i(TAG, "SwipeRefresh post()");
                                          if (!Hawk.contains(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             String[] rss = FeedLists.getFeedListCached(3);
-
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView).execute(rss);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.ENTERTAINMENT.ordinal()).execute(mSpecialFeed);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Hawk.get(CACHE_NAME);
@@ -75,11 +76,9 @@ public class EntertainmentFrag extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d(TAG, "setOnRefreshListener()  ");
+                Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    String[] rss_new = FeedLists.getFeedListLatest(3);
-
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView).execute(rss_new);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.ENTERTAINMENT.ordinal()).execute(mSpecialFeed);
                 } else {
                     SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);

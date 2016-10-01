@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppThemeNoActionBar" />
-        <activity
-            android:name=".DetailFeed"
+            android:name=".activity.DetailFeed"
             android:label="@string/title_activity_detail_feed"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppThemeNoActionBar"
@@ -39,7 +36,7 @@
                 android:value="com.codelite.kr4k3rz.samachar.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:parentActivityName=".MainActivity"
             tools:ignore="UnusedAttribute">
             <meta-data
@@ -47,30 +44,29 @@
                 android:value="com.codelite.kr4k3rz.samachar.MainActivity" />
         </activity>
         <activity
-            android:name=".EditCategory"
-            android:parentActivityName=".SettingsActivity"
+            android:name=".activity.EditCategory"
+            android:parentActivityName=".activity.SettingsActivity"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codelite.kr4k3rz.samachar.SettingsActivity" />
+                android:value="com.codelite.kr4k3rz.samachar.activity.SettingsActivity" />
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name=".activity.AboutActivity"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".MyIntentService" />
+        <service android:name=".worker.MyIntentService" />
 
-        <receiver android:name=".MyAlarmReceiver" />
-
-
-        <receiver android:name=".BootBroadcastReceiver">
+        <receiver android:name=".worker.MyAlarmReceiver" />
+        <receiver android:name=".worker.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
-
+        <activity android:name=".MainActivity" />
     </application>
+
 
 </manifest>

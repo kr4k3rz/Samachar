@@ -8,7 +8,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.codelite.kr4k3rz.samachar.DetailFeed;
 import com.codelite.kr4k3rz.samachar.R;
+import com.codelite.kr4k3rz.samachar.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
@@ -61,7 +60,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         }
         customViewHolder.date.setText(String.format("%s", s)); //to set date time in '3 minutes ago' like
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enableImage", true);
-     //   Log.i("TAG", "enableImage: " + enableImage);
         if (enableImage) {
             Glide.with(mContext)
                     .load(url)

@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class Category {
+
     private String name_category;
     private ArrayList<SubCategory> sub_category;
 
@@ -24,6 +25,22 @@ public class Category {
 
     public void setName_category(String name_category) {
         this.name_category = name_category;
+    }
+
+    public enum CategoryName {
+        Breaking,
+        Newspaper,
+        National,
+        Local,
+        Opinion,
+        World,
+        Business,
+        Technology,
+        Entertainment,
+        Health,
+        Sport
+
+
     }
 
 

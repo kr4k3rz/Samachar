@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
-    private static final String POSTFIX_CACHED = "&num=-1&scoring=h";  //cached and max feeds
+    private static final String POSTFIX_CACHED = "&num=-1";  //cached and max feeds
     private static final String POSTFIX_LATEST = "&num=-1";  //latest and max feeds
 
     /*&scoring=h*/
@@ -24,21 +24,21 @@ public class FeedLists {
         String[][] headlines_feed = new String[][]{
                 {"Online Khabar", "http://www.onlinekhabar.com/feed/"},
                 {"Online Patrika", "http://onlinepatrika.com/feed/"},
-              //  {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
+                // {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
-               // {"Tokyo Nepal", "http://tokyonepal.com/feed"},
-               // {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
-                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},
-               // {"Nepall", "http://nepall.net/feed"},
-               // {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
-              //  {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},
-               // {"Bigul News", "http://bigulnews.com/feed"},
-                {"Nepalgunj News", "http://nepalgunjnews.com/feed"},
-              //  {"Lokaantar", "http://lokaantar.com/feed"},
-                //{"MediaNp", "http://medianp.com/feed"},
-               // {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
-               // {"Nepal Aaja", "http://nepalaaja.com/feed/"},
-                {"lahanonline", "http://lahanonline.com/feed/"}
+                // {"Tokyo Nepal", "http://tokyonepal.com/feed"},
+                {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
+                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},                  /*Not daily posters*/
+                // {"Nepall", "http://nepall.net/feed"},
+                {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
+                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},
+                {"Bigul News", "http://bigulnews.com/feed"},
+                // {"Nepalgunj News", "http://nepalgunjnews.com/feed"},
+                {"Lokaantar", "http://lokaantar.com/feed"},
+                {"MediaNp", "http://medianp.com/feed"},
+                {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
+                {"Nepal Aaja", "http://nepalaaja.com/feed/"},
+               // {"lahanonline", "http://lahanonline.com/feed/"}
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();
@@ -59,36 +59,6 @@ public class FeedLists {
         }
         category_headlines.setSub_category(subCategories_headlines);
         categories.add(category_headlines);
-
-
-        //<--World-->
-
-        Category category_world = new Category();
-        category_world.setName_category("विश्व");
-        ArrayList<SubCategory> subCategories_world = new ArrayList<>();
-        String[][] world_feeds = new String[][]{
-                {"Setopati", "http://setopati.com/rss/"}       /*Just add your feed string here*/
-
-        };
-        for (String[] aWorld_feed : world_feeds) {
-            SubCategory subCategory = new SubCategory();
-            for (int j = 0; j < 2; j++) {
-                if (j == 0) {
-                    subCategory.setSub_name(aWorld_feed[0]);
-                }
-                if (j == 1) {
-                    subCategory.setSub_link_cached(PREFIX_AJAX + aWorld_feed[1] + POSTFIX_CACHED);
-                    subCategory.setSub_link_latest(PREFIX_AJAX + aWorld_feed[1] + POSTFIX_LATEST);
-                    subCategory.setUpdated_sub_link_cached(PREFIX_AJAX + aWorld_feed[1] + POSTFIX_CACHED);
-                    subCategory.setUpdated_sub_link_latest(PREFIX_AJAX + aWorld_feed[1] + POSTFIX_LATEST);
-                    subCategories_world.add(subCategory);
-                }
-
-
-            }
-        }
-        category_world.setSub_category(subCategories_world);
-        categories.add(category_world);
 
 
         //<--Business-->
@@ -217,6 +187,7 @@ public class FeedLists {
 
         return categories;
     }
+
 
     public static String[] getFeedListCached(int numCategory) {
         ArrayList<String> strings = new ArrayList<>();

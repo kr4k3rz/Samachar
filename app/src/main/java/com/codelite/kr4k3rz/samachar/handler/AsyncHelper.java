@@ -2,7 +2,6 @@ package com.codelite.kr4k3rz.samachar.handler;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,27 +20,31 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class AsyncHelper extends AsyncTask<String, Void, Void> {
-
+    private final String TAG = AsyncHelper.class.getName();
     private final SwipeRefreshLayout refreshLayout;
     private final String cacheName;
     private final Context context;
     private final RecyclerView recyclerView;
     private final View rootView;
-    private int newsFeedsSize = 0;
+    private int categoryNum;
+    private int feedSize;
 
-    public AsyncHelper(View rootView, SwipeRefreshLayout refreshLayout, Context context, String cacheName, RecyclerView recyclerView) {
+    public AsyncHelper(View rootView, SwipeRefreshLayout refreshLayout, Context context, String cacheName, RecyclerView recyclerView, int categoryNum) {
         this.refreshLayout = refreshLayout;
         this.context = context;
         this.cacheName = cacheName;
         this.recyclerView = recyclerView;
         this.rootView = rootView;
+        this.categoryNum = categoryNum;
     }
+
 
     @Override
     protected void onPreExecute() {
@@ -56,7 +59,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
             for (String rs : rss) {
                 if (!rs.equalsIgnoreCase("")) {
                     String jsonStr = new PullData().run(rs);    //loads JSON String feeds by Okhttp
-                    Log.i("TAG", " : " + jsonStr);
+                    Log.i(TAG, " : " + jsonStr);
                     JSONObject mainNode = new JSONObject(jsonStr);
                     JSONObject responseData = mainNode.getJSONObject("responseData");
                     JSONObject feeds = responseData.getJSONObject("feed");
@@ -74,9 +77,14 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            Log.i("TAG", "Internet not working or failed to download / 200 error");
+            Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
-        newsFeedsSize = Parse.filterCategories(list).get(3);
+
+        try {
+            feedSize = Parse.filterCategories(list, context).get(categoryNum);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -84,16 +92,17 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         List<Entry> feeds = Hawk.get(cacheName);
-        int limitSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(20)));
-        Log.i("TAG", "limitSize : " + limitSize);
-
-        if (feeds.size() > limitSize) {
-            feeds.subList(limitSize, feeds.size()).clear();
-        }
-
+        Parse.clearFeedsByPref(feeds, context);
         recyclerView.setAdapter(new RvAdapter(context, feeds));
         refreshLayout.setRefreshing(false);
-        SnackMsg.showMsgShort(rootView, "feeds loaded " + newsFeedsSize);
+        if (feedSize == 0)
+            SnackMsg.showMsgLong(rootView, "zero feeds loaded");
+        else
+            SnackMsg.showMsgShort(rootView, feedSize + " feeds loaded");
+
 
     }
+
+
 }
+
