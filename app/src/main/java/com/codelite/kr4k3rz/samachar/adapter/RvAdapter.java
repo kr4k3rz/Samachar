@@ -44,10 +44,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void onBindViewHolder(final CustomViewHolder customViewHolder, final int i) {
+    public void onBindViewHolder(final CustomViewHolder customViewHolder, final int position) {
 
         /*Bind only data here*/
-        Entry e = entries.get(i);
+        Entry e = entries.get(position);
         String url = Parse.parseImg(e.getContent());
         customViewHolder.title.setText(e.getTitle());
         customViewHolder.contentSnippet.setText(Html.fromHtml(e.getContentSnippet().replace("...", "")).toString());
@@ -68,6 +68,19 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
                     .placeholder(R.drawable.placeholderimg)
                     .into(customViewHolder.imageView);
         }
+        customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, DetailFeed.class);
+                intent.putExtra("title", entries.get(position).getTitle());
+                intent.putExtra("date", entries.get(position).getDate());
+                intent.putExtra("content", entries.get(position).getContent().replace("...", "").replace("[…]", ""));
+                intent.putExtra("author", entries.get(position).getAuthor());
+                intent.putExtra("link", entries.get(position).getLink());
+                intent.putStringArrayListExtra("categories", (ArrayList<String>) entries.get(position).getCategories());
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 
@@ -79,7 +92,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CustomViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView date;
         final CardView cardView;
@@ -95,21 +108,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             source = (TextView) itemView.findViewById(R.id.source);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
-            cardView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            Context context = itemView.getContext();
-            Intent intent = new Intent(context, DetailFeed.class);
-            intent.putExtra("title", entries.get(getAdapterPosition()).getTitle());
-            intent.putExtra("date", entries.get(getAdapterPosition()).getDate());
-            intent.putExtra("content", entries.get(getAdapterPosition()).getContent().replace("...", "").replace("[…]", ""));
-            intent.putExtra("author", entries.get(getAdapterPosition()).getAuthor());
-            intent.putExtra("link", entries.get(getAdapterPosition()).getLink());
-            intent.putStringArrayListExtra("categories", (ArrayList<String>) entries.get(getAdapterPosition()).getCategories());
-            context.startActivity(intent);
-        }
+
     }
 
 

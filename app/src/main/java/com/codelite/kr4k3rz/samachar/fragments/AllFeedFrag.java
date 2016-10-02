@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
-import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.adapter.ComplexRecyclerViewAdapter;
+import com.codelite.kr4k3rz.samachar.handler.AsyncHelperComplex;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.FeedLists;
+import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
-import com.orhanobut.hawk.Hawk;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
 public class AllFeedFrag extends Fragment {
 
     private static final String CACHE_NAME = "AllFeeds";
-    private static final String TAG = BreakingNews.class.getSimpleName();
+    private static final String TAG = AllFeedFrag.class.getSimpleName();
     private View rootView;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -60,16 +59,19 @@ public class AllFeedFrag extends Fragment {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
-                                         if (!Hawk.contains(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
+                                         Log.d(TAG, "Cache Pref present / Not  : " + Parse.checkPref(getContext(), CACHE_NAME));
+                                         if (!Parse.checkPref(getContext(), CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
+                                             new AsyncHelperComplex(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
-                                             List<Entry> list = Hawk.get(CACHE_NAME);
-                                             if (!Hawk.contains(CACHE_NAME)) {
+                                             List<Object> objects;
+                                             objects = Parse.loadSharedPreferencesLogList(getContext(), CACHE_NAME);
+                                             Log.d(TAG, "Size : " + objects.size());
+                                             if (!Parse.checkPref(getContext(), CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
-                                                 recyclerView.setAdapter(new RvAdapter(getContext(), list));
+                                                 recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
                                              mSwipeRefreshLayout.setRefreshing(false);
                                          }
 
@@ -83,7 +85,7 @@ public class AllFeedFrag extends Fragment {
                 Log.d(TAG, " SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
                     String[] rss_new = FeedLists.getFeedListLatest(0);
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss_new);
+                    new AsyncHelperComplex(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss_new);
                 } else {
                     SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);

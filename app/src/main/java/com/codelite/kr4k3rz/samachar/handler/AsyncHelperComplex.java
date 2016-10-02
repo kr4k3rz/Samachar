@@ -7,13 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
+import com.codelite.kr4k3rz.samachar.adapter.ComplexRecyclerViewAdapter;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,9 +24,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class AsyncHelper extends AsyncTask<String, Void, Void> {
-    private final String TAG = AsyncHelper.class.getName();
+public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
+    private final String TAG = AsyncHelperComplex.class.getName();
     private final SwipeRefreshLayout refreshLayout;
     private final String cacheName;
     private final Context context;
@@ -36,13 +34,13 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     private int categoryNum;
     private int feedSize;
 
-    public AsyncHelper(View rootView, SwipeRefreshLayout refreshLayout, Context context, String cacheName, RecyclerView recyclerView, int categoryNum) {
-        this.refreshLayout = refreshLayout;
+    public AsyncHelperComplex(View rootView, SwipeRefreshLayout mSwipeRefreshLayout, Context context, String cacheName, RecyclerView recyclerView, int ordinal) {
+        this.refreshLayout = mSwipeRefreshLayout;
         this.context = context;
         this.cacheName = cacheName;
         this.recyclerView = recyclerView;
         this.rootView = rootView;
-        this.categoryNum = categoryNum;
+        this.categoryNum = ordinal;
     }
 
 
@@ -55,6 +53,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... rss) {
         List<Entry> list = new ArrayList<>();
+
         try {
             for (String rs : rss) {
                 if (!rs.equalsIgnoreCase("")) {
@@ -70,6 +69,11 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
                     }.getType();
                     List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
                     list.addAll(posts);
+
+
+                    //  Parse.saveSharedPreferencesLogList(context, list, cacheName);
+
+
                 }
 
             }
@@ -79,6 +83,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
+
 
         try {
             feedSize = Parse.filterCategories(list, context).get(categoryNum);
@@ -91,9 +96,13 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        List<Entry> feeds = Hawk.get(cacheName);
-        // Parse.clearFeedsByPref(feeds, context);
-        recyclerView.setAdapter(new RvAdapter(context, feeds));
+
+
+        List<Object> objects;
+        objects = Parse.loadSharedPreferencesLogList(context, cacheName);
+
+        Log.d(TAG, "Size : " + objects.size());
+        recyclerView.setAdapter(new ComplexRecyclerViewAdapter(context, objects));
         refreshLayout.setRefreshing(false);
         if (feedSize == 0)
             SnackMsg.showMsgLong(rootView, "zero feeds loaded");
