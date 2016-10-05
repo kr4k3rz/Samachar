@@ -5,30 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:layout_scrollFlags="exitUntilCollapsed"
     tools:context="com.codelite.kr4k3rz.samachar.activity.DetailFeed">
 
+    <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
+    <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="false"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
+        <!-- Toolbar is the actual app bar with text and the action items -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="bottom"
             android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        <SeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="40"
-            android:visibility="gone" />
-
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -36,6 +33,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -47,17 +45,28 @@
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical">
 
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/discrete1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    app:dsb_max="40"
+                    app:dsb_min="10" />
+
+
                 <TextView
                     android:id="@+id/title_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/discrete1"
                     android:layout_marginEnd="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:text="Title"
-                    android:textColor="#3B494C"
+                    android:textColor="@color/primary_text"
                     android:textSize="20sp"
                     android:textStyle="bold|normal"
                     android:typeface="normal"
@@ -75,7 +84,7 @@
                     android:drawableLeft="@drawable/icon_author"
                     android:gravity="center"
                     android:text="Author"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/accent"
                     android:textSize="12sp"
                     android:typeface="normal"
                     tools:ignore="HardcodedText,RtlHardcoded,SmallSp" />
@@ -89,10 +98,10 @@
                     android:layout_below="@id/title_detail"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="6dp"
-                    android:drawableLeft="@drawable/ic_time"
+                    android:drawableLeft="@drawable/ic_clock"
                     android:gravity="center"
                     android:text="Date"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/accent"
                     android:textSize="12sp"
                     android:textStyle="italic"
                     android:typeface="normal"
@@ -132,7 +141,7 @@
                     android:linksClickable="true"
                     android:scrollbars="vertical"
                     android:text="Content"
-                    android:textColor="#3B494C"
+                    android:textColor="@color/secondary_text"
                     android:textSize="18sp"
                     android:typeface="sans"
                     tools:ignore="HardcodedText" />

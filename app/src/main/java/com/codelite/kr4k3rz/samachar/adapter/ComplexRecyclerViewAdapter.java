@@ -16,24 +16,21 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
+import com.codelite.kr4k3rz.samachar.activity.CategoryActivity;
 import com.codelite.kr4k3rz.samachar.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.Header;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by kr4k3rz on 10/1/16.
- */
 
 public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int CATEGORY_NAME = 0, ENTRY = 1;
-    private String TAG = ComplexRecyclerViewAdapter.class.getSimpleName();
-    private Context context;
-    private List<Object> items;
+    private final int HEADER = 0, ENTRY = 1;
+    private final Context context;
+    private final List<Object> items;
 
     public ComplexRecyclerViewAdapter(Context context, List<Object> items) {
         this.items = items;
@@ -46,9 +43,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         switch (viewType) {
-            case CATEGORY_NAME:
+            case HEADER:
                 View v1 = inflater.inflate(R.layout.category_name, parent, false);
-
                 viewHolder = new ViewHolder1(v1);
                 break;
             case ENTRY:
@@ -64,8 +60,10 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        // Here you apply the animation when the view is bound
+        // setAnimation(holder.itemView, position);
         switch (holder.getItemViewType()) {
-            case CATEGORY_NAME:
+            case HEADER:
                 ViewHolder1 vh1 = (ViewHolder1) holder;
                 configureViewHolder1(vh1, position);
                 break;
@@ -77,15 +75,20 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
         }
 
+
     }
 
     private void configureViewHolder2(final ViewHolder2 vh2, final int position) {
-        Entry entry = (Entry) items.get(position);
+        final Entry entry = (Entry) items.get(position);
 
         /*Bind only data here*/
         String url = Parse.parseImg(entry.getContent());
         vh2.title.setText(entry.getTitle());
-        vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
+        } else {
+            vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
+        }
         String s = String.valueOf(DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_ALL));
         try {
@@ -98,21 +101,14 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         if (enableImage) {
             Glide.with(context)
                     .load(url)
-                    .error(R.drawable.ic_newspaper)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .placeholder(R.drawable.placeholderimg)
                     .into(vh2.imageView);
         }
         vh2.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailFeed.class);
-                intent.putExtra("title", ((Entry) items.get(position)).getTitle());
-                intent.putExtra("date", ((Entry) items.get(position)).getDate());
-                intent.putExtra("content", ((Entry) items.get(position)).getContent().replace("...", "").replace("[…]", ""));
-                intent.putExtra("author", ((Entry) items.get(position)).getAuthor());
-                intent.putExtra("link", ((Entry) items.get(position)).getLink());
-                intent.putStringArrayListExtra("categories", (ArrayList<String>) ((Entry) items.get(position)).getCategories());
+                intent.putExtra("ENTRY", entry);
                 context.startActivity(intent);
 
             }
@@ -121,9 +117,19 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     }
 
+
     private void configureViewHolder1(ViewHolder1 vh1, int position) {
-        String s = (String) items.get(position);
-        vh1.textView.setText(s);
+        final Header header = (Header) items.get(position);
+        vh1.tv_category_name.setText(header.getFirstName());
+        vh1.tv_view_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, CategoryActivity.class);
+                intent.putExtra("HEADER", header);
+                context.startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -138,8 +144,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof String) {
-            return CATEGORY_NAME;
+        if (items.get(position) instanceof Header) {
+            return HEADER;
         } else if (items.get(position) instanceof Entry) {
             return ENTRY;
         }
@@ -149,16 +155,18 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private class ViewHolder1 extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        final TextView tv_category_name;
+        final TextView tv_view_all;
 
         ViewHolder1(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text1);
+            tv_category_name = (TextView) itemView.findViewById(R.id.category_name);
+            tv_view_all = (TextView) itemView.findViewById(R.id.viewall);
         }
 
     }
 
-    private class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class ViewHolder2 extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView date;
         final CardView cardView;
@@ -174,15 +182,9 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             source = (TextView) itemView.findViewById(R.id.source);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
-            cardView.setOnClickListener(this);
 
         }
 
-
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 
 

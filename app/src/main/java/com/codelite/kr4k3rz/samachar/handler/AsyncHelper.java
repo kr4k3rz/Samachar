@@ -13,17 +13,17 @@ import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.paperdb.Paper;
 
 
 public class AsyncHelper extends AsyncTask<String, Void, Void> {
@@ -33,7 +33,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     private final Context context;
     private final RecyclerView recyclerView;
     private final View rootView;
-    private int categoryNum;
+    private final int categoryNum;
     private int feedSize;
 
     public AsyncHelper(View rootView, SwipeRefreshLayout refreshLayout, Context context, String cacheName, RecyclerView recyclerView, int categoryNum) {
@@ -80,18 +80,14 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
 
-        try {
-            feedSize = Parse.filterCategories(list, context).get(categoryNum);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        feedSize = Parse.filterCategories(list, context).get(categoryNum);
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        List<Entry> feeds = Hawk.get(cacheName);
+        List<Entry> feeds = Paper.book().read(cacheName);
         // Parse.clearFeedsByPref(feeds, context);
         recyclerView.setAdapter(new RvAdapter(context, feeds));
         refreshLayout.setRefreshing(false);

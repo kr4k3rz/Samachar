@@ -13,15 +13,17 @@ import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
+import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
-import com.orhanobut.hawk.Hawk;
 
 import java.util.List;
+
+import io.paperdb.Paper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +31,7 @@ import java.util.List;
 public class OpinionFrag extends Fragment {
 
     private static final String TAG = OpinionFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.OPINION.name();
+    private static final String CACHE_NAME = WhichCategory.OPINION.getSecondName();
     /*for loading at postRefresh at first lunch*/
     private View rootView;
     private RecyclerView recyclerView;
@@ -48,6 +50,7 @@ public class OpinionFrag extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_opinion);
         initSwipeRefresh();
         return rootView;
@@ -59,14 +62,14 @@ public class OpinionFrag extends Fragment {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
-                                         if (!Hawk.contains(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
+                                         if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
                                              new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.OPINION.ordinal()).execute(rss);
 
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
-                                             List<Entry> list = Hawk.get(CACHE_NAME);
-                                             if (!Hawk.contains(CACHE_NAME)) {
+                                             List<Entry> list = Paper.book().read(CACHE_NAME);
+                                             if (!Paper.book().exist(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
                                                  recyclerView.setAdapter(new RvAdapter(getContext(), list));

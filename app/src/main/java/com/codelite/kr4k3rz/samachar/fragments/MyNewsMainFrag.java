@@ -18,10 +18,8 @@ import java.util.List;
 
 public class MyNewsMainFrag extends Fragment {
 
-    Adapter adapter;
-
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new Adapter(getChildFragmentManager());
+        Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new NationalFrag(), "राष्ट्रिय");
         adapter.addFragment(new NewsPaperFrag(), "पत्रपत्रिका");
         adapter.addFragment(new LocalFrag(), "स्थानिय");

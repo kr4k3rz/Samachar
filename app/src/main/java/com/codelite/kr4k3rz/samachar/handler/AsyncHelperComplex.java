@@ -19,10 +19,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.paperdb.Paper;
 
 public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
     private final String TAG = AsyncHelperComplex.class.getName();
@@ -31,7 +32,7 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
     private final Context context;
     private final RecyclerView recyclerView;
     private final View rootView;
-    private int categoryNum;
+    private final int categoryNum;
     private int feedSize;
 
     public AsyncHelperComplex(View rootView, SwipeRefreshLayout mSwipeRefreshLayout, Context context, String cacheName, RecyclerView recyclerView, int ordinal) {
@@ -70,10 +71,6 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
                     List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
                     list.addAll(posts);
 
-
-                    //  Parse.saveSharedPreferencesLogList(context, list, cacheName);
-
-
                 }
 
             }
@@ -83,13 +80,7 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
-
-
-        try {
-            feedSize = Parse.filterCategories(list, context).get(categoryNum);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        feedSize = Parse.filterCategories(list, context).get(categoryNum);
         return null;
     }
 
@@ -97,12 +88,11 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-
         List<Object> objects;
-        objects = Parse.loadSharedPreferencesLogList(context, cacheName);
-
+        objects = Paper.book().read(cacheName);
         Log.d(TAG, "Size : " + objects.size());
         recyclerView.setAdapter(new ComplexRecyclerViewAdapter(context, objects));
+
         refreshLayout.setRefreshing(false);
         if (feedSize == 0)
             SnackMsg.showMsgLong(rootView, "zero feeds loaded");

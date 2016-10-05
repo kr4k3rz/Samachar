@@ -1,31 +1,34 @@
 package com.codelite.kr4k3rz.samachar.model;
 
-/**
- * Created by kr4k3rz on 9/28/16.
- */
 
 public enum WhichCategory {
 
-    BREAKING("breaking"),
-    NEWSPAPER("newspaper"),
-    NATIONAL("national"),
-    LOCAL("local"),
-    OPINION("opinion"),
-    WORLD("world"),
-    BUSINESS("business"),
-    TECHNOLOGY("technology"),
-    ENTERTAINMENT("entertainment"),
-    HEALTH("health"),
-    SPORT("sport");
+    BREAKING("ताजा खबर", "BreakingNews"),
+    NEWSPAPER("पत्रपत्रिका", "NewsPaperFrag"),
+    NATIONAL("राष्ट्रिय समाचार", "NationalFrag"),
+    LOCAL("समाज", "LocalFrag"),
+    OPINION("विचार", "OpinionFrag"),
+    WORLD("विश्व", "WorldFrag"),
+    BUSINESS("अर्थ", "BusinessFrag"),
+    TECHNOLOGY("सूचना प्रविधि", "TechnologyFrag"),
+    ENTERTAINMENT("मनोरञ्जन", "EntertainmentFrag"),
+    HEALTH("स्वास्थ्य", "HealthFrag"),
+    SPORT("खेलकुद", "SportFrag");
 
 
-    String mNmae;
+    final String mFirstName;
+    final String mSecondName;
 
-    WhichCategory(String mNmae) {
-        this.mNmae = mNmae;
+    WhichCategory(String mFirstName, String mSecondName) {
+        this.mFirstName = mFirstName;
+        this.mSecondName = mSecondName;
     }
 
-    String getName() {
-        return mNmae;
+    public String getFirstName() {
+        return mFirstName;
+    }
+
+    public String getSecondName() {
+        return mSecondName;
     }
 }

@@ -20,7 +20,6 @@ import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orhanobut.hawk.Hawk;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +29,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.paperdb.Paper;
 
 
 public class MyIntentService extends IntentService {
@@ -81,7 +82,7 @@ public class MyIntentService extends IntentService {
 
 
         if (list.size() != 0) {
-            List<Entry> oldFeeds = Hawk.get("Headlines");
+            List<Entry> oldFeeds = Paper.book().read("Headlines");
             if (oldFeeds != null) {
                 list.addAll(oldFeeds);
             }
@@ -89,19 +90,12 @@ public class MyIntentService extends IntentService {
             newFeeds = Parse.deleteDuplicate(list); //delete duplicate
             newFeeds = Parse.deleteEnglishFeeds(newFeeds);  //delete english feed if present
             Parse.sortByTime(newFeeds).size();
-            Hawk.put("Headlines", newFeeds);
+            Paper.book().write("Headlines", newFeeds);
             Entry entry;
             entry = newFeeds.get(0);
             Intent intent = new Intent(getApplicationContext(), DetailFeed.class);
-            intent.putExtra("title", entry.getTitle());
-            intent.putExtra("date", entry.getDate());
-            intent.putExtra("content", entry.getContent());
-            intent.putExtra("author", entry.getAuthor());
-            intent.putExtra("link", entry.getLink());
-            intent.putStringArrayListExtra("categories", (ArrayList<String>) entry.getCategories());
+            intent.putExtra("ENTRY", entry);
             Log.i("TAG", " Title : " + entry.getTitle() + "\n Content : " + Html.fromHtml(entry.getContentSnippet().replace("...", "").replace("[…]", "")));
-
-
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 

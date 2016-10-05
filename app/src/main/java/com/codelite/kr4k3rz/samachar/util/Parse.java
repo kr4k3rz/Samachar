@@ -2,21 +2,17 @@ package com.codelite.kr4k3rz.samachar.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.Header;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
-import com.orhanobut.hawk.Hawk;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -28,6 +24,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import io.paperdb.Paper;
 
 
 /* a class that handles parsing*/
@@ -112,8 +110,8 @@ public class Parse {
     * filters the feeds categories (eg. World) passed
     * @param entries feed entries passed*/
 
-    public static ArrayList<Integer> filterCategories(List<Entry> entries, Context context) throws UnsupportedEncodingException {
-        List<String> categories = new ArrayList<>();
+    public static ArrayList<Integer> filterCategories(List<Entry> entries, Context context) {
+        List<Header> categories = new ArrayList<>();
         List<List<Entry>> main = new ArrayList<>();
         float total_feeds = 0;
         float feeds_filtered = 0;
@@ -122,96 +120,95 @@ public class Parse {
         List<Integer> mFeedSize = new ArrayList<>();
         List<Object> objects = new ArrayList<>();
 
-        /*initialization for Storage DB*/
-        categories.add(WhichCategory.BREAKING.name());
-        categories.add(WhichCategory.NEWSPAPER.name());
-        categories.add(WhichCategory.NATIONAL.name());
-        categories.add(WhichCategory.LOCAL.name());
-        categories.add(WhichCategory.OPINION.name());
-        categories.add(WhichCategory.WORLD.name());
-        categories.add(WhichCategory.BUSINESS.name());
-        categories.add(WhichCategory.TECHNOLOGY.name());
-        categories.add(WhichCategory.ENTERTAINMENT.name());
-        categories.add(WhichCategory.HEALTH.name());
-        categories.add(WhichCategory.SPORT.name());
+        categories.add(new Header(WhichCategory.BREAKING.getFirstName(), WhichCategory.BREAKING.getSecondName()));
+        categories.add(new Header(WhichCategory.NEWSPAPER.getFirstName(), WhichCategory.NEWSPAPER.getSecondName()));
+        categories.add(new Header(WhichCategory.NATIONAL.getFirstName(), WhichCategory.NATIONAL.getSecondName()));
+        categories.add(new Header(WhichCategory.LOCAL.getFirstName(), WhichCategory.LOCAL.getSecondName()));
+        categories.add(new Header(WhichCategory.OPINION.getFirstName(), WhichCategory.OPINION.getSecondName()));
+        categories.add(new Header(WhichCategory.WORLD.getFirstName(), WhichCategory.WORLD.getSecondName()));
+        categories.add(new Header(WhichCategory.BUSINESS.getFirstName(), WhichCategory.BUSINESS.getSecondName()));
+        categories.add(new Header(WhichCategory.TECHNOLOGY.getFirstName(), WhichCategory.TECHNOLOGY.getSecondName()));
+        categories.add(new Header(WhichCategory.ENTERTAINMENT.getFirstName(), WhichCategory.ENTERTAINMENT.getSecondName()));
+        categories.add(new Header(WhichCategory.HEALTH.getFirstName(), WhichCategory.HEALTH.getSecondName()));
+        categories.add(new Header(WhichCategory.SPORT.getFirstName(), WhichCategory.SPORT.getSecondName()));
 
         List<Entry> breaking = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.BREAKING.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.BREAKING.name());
+        if (Paper.book().exist(WhichCategory.BREAKING.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.BREAKING.getSecondName());
             breaking.addAll(entries1);
             mPriorSize.add(breaking.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> newspaper = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.NEWSPAPER.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.NEWSPAPER.name());
+        if (Paper.book().exist(WhichCategory.NEWSPAPER.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.NEWSPAPER.getSecondName());
             newspaper.addAll(entries1);
             mPriorSize.add(newspaper.size());
         } else mPriorSize.add(0);
 
         List<Entry> national = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.NATIONAL.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.NATIONAL.name());
+        if (Paper.book().exist(WhichCategory.NATIONAL.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.NATIONAL.getSecondName());
             national.addAll(entries1);
             mPriorSize.add(national.size());
         } else mPriorSize.add(0);
 
         List<Entry> local = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.LOCAL.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.LOCAL.name());
+        if (Paper.book().exist(WhichCategory.LOCAL.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.LOCAL.getSecondName());
             local.addAll(entries1);
             mPriorSize.add(local.size());
         } else mPriorSize.add(0);
 
         List<Entry> opinion = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.OPINION.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.OPINION.name());
+        if (Paper.book().exist(WhichCategory.OPINION.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.OPINION.getSecondName());
             opinion.addAll(entries1);
             mPriorSize.add(opinion.size());
         } else mPriorSize.add(0);
 
         List<Entry> world = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.WORLD.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.WORLD.name());
+        if (Paper.book().exist(WhichCategory.WORLD.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.WORLD.getSecondName());
             world.addAll(entries1);
             mPriorSize.add(world.size());
         } else mPriorSize.add(0);
 
         List<Entry> business = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.BUSINESS.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.BUSINESS.name());
+        if (Paper.book().exist(WhichCategory.BUSINESS.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.BUSINESS.getSecondName());
             business.addAll(entries1);
             mPriorSize.add(business.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> technology = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.TECHNOLOGY.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.TECHNOLOGY.name());
+        if (Paper.book().exist(WhichCategory.TECHNOLOGY.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.TECHNOLOGY.getSecondName());
             technology.addAll(entries1);
             mPriorSize.add(technology.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> entertain = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.ENTERTAINMENT.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.ENTERTAINMENT.name());
+        if (Paper.book().exist(WhichCategory.ENTERTAINMENT.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.ENTERTAINMENT.getSecondName());
             entertain.addAll(entries1);
             mPriorSize.add(entertain.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> health = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.HEALTH.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.HEALTH.name());
+        if (Paper.book().exist(WhichCategory.HEALTH.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.HEALTH.getSecondName());
             health.addAll(entries1);
             mPriorSize.add(health.size());
         } else mPriorSize.add(0);
 
         List<Entry> sport = new ArrayList<>();
-        if (Hawk.contains(WhichCategory.SPORT.name())) {
-            List<Entry> entries1 = Hawk.get(WhichCategory.SPORT.name());
+        if (Paper.book().exist(WhichCategory.SPORT.getSecondName())) {
+            List<Entry> entries1 = Paper.book().read(WhichCategory.SPORT.getSecondName());
             sport.addAll(entries1);
             mPriorSize.add(sport.size());
         } else mPriorSize.add(0);
@@ -278,8 +275,8 @@ public class Parse {
                     breaking.add(entry);
                     feeds_filtered++;
                     break;
-                } else//newspaper
-                    if (s.equalsIgnoreCase("newspaper")
+                } else//ic_newspaper
+                    if (s.equalsIgnoreCase("ic_newspaper")
                             || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
                             || s.equalsIgnoreCase("आजको पत्रिका बाट")
                             || s.equalsIgnoreCase("छापामा")
@@ -374,6 +371,8 @@ public class Parse {
                         break;
                     }//Business
                     else if (s.equalsIgnoreCase("अर्थनीति")
+                            || s.contains("पर्यटन")
+                            || s.contains("बिजनेस")
                             || s.equalsIgnoreCase("अर्थतन्त्र फिचर")
                             || s.equalsIgnoreCase("अर्थतन्त्र फिचर")
                             || s.equalsIgnoreCase("अर्थ | वाणिज्य | बजार")
@@ -453,6 +452,7 @@ public class Parse {
                         break;
                     }//Health
                     else if (s.equalsIgnoreCase("स्वास्थ्य")
+                            || s.contains("शारीरिक")
                             || s.equalsIgnoreCase("मोफसल")
                             || s.equalsIgnoreCase("उपभाेक्ता")
                             || s.equalsIgnoreCase("श्वास्थ्य")
@@ -521,23 +521,25 @@ public class Parse {
             processedFeeds = deleteEnglishFeeds(processedFeeds);  //delete english feeds
             processedFeeds = sortByTime(processedFeeds);  //sort by time feeds feeds*//*
 
-            if (processedFeeds.size() >= 10 && i != 0) {
-                String s = categories.get(i);
-                objects.add(s);
-                for (int ii = 0; ii < 10; ii++) {
+            int LIMIT_FEED = 5;
+            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {
+                // String s = categories.get(i);
+                Header header;
+                header = categories.get(i);
+                objects.add(header);
+                for (int ii = 0; ii < LIMIT_FEED; ii++) {
                     Entry entry = processedFeeds.get(ii);
                     objects.add(entry);
                 }
 
             }
 
-
+            Header header = categories.get(i);
             clearFeedsByPref(processedFeeds, context);
-            Hawk.put(categories.get(i), processedFeeds);  //Hawk.put(nameFeed,List);
+            Paper.book().write(header.getSecondName(), processedFeeds);
             mFeedSize.add(processedFeeds.size() - mPriorSize.get(i));
         }
-
-        Parse.saveSharedPreferencesLogList(context, objects, "AllFeeds");
+        Paper.book().write("AllFeeds", objects);
         return (ArrayList<Integer>) mFeedSize;
     }
 
@@ -548,38 +550,6 @@ public class Parse {
         if (feeds.size() > limitSize) {
             feeds.subList(limitSize, feeds.size()).clear();
         }
-    }
-
-
-    private static void saveSharedPreferencesLogList(Context context, List<Object> list, String cacheName) {
-        SharedPreferences prefs = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-//save the user list to preference
-        SharedPreferences.Editor editor = prefs.edit();
-        try {
-            editor.putString(cacheName, ObjectSerializer.serialize((Serializable) list));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        editor.apply();
-
-    }
-
-    public static boolean checkPref(Context context, String cacheName) {
-        SharedPreferences prefs = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        boolean b = prefs.contains(cacheName);
-        return b;
-    }
-
-    public static List<Object> loadSharedPreferencesLogList(Context context, String cacheName) {
-
-        List<Object> objects = new ArrayList<>();
-        SharedPreferences prefs = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        try {
-            objects = (List<Object>) ObjectSerializer.deserialize(prefs.getString(cacheName, ObjectSerializer.serialize(new ArrayList())));
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return objects;
     }
 
 

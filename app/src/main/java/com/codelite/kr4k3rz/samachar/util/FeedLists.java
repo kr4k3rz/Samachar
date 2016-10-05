@@ -2,9 +2,10 @@ package com.codelite.kr4k3rz.samachar.util;
 
 import com.codelite.kr4k3rz.samachar.model.Category;
 import com.codelite.kr4k3rz.samachar.model.SubCategory;
-import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
+
+import io.paperdb.Paper;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
@@ -191,7 +192,7 @@ public class FeedLists {
 
     public static String[] getFeedListCached(int numCategory) {
         ArrayList<String> strings = new ArrayList<>();
-        ArrayList<Category> categories = Hawk.get("updatedData");
+        ArrayList<Category> categories = Paper.book().read("updatedData");
         ArrayList<SubCategory> subCategory = categories.get(numCategory).getSub_category();
         for (SubCategory subCategory1 : subCategory) {
             strings.add(subCategory1.getUpdated_sub_link_cached());
@@ -201,7 +202,7 @@ public class FeedLists {
 
     public static String[] getFeedListLatest(int numCategory) {
         ArrayList<String> strings = new ArrayList<>();
-        ArrayList<Category> categories = Hawk.get("updatedData");
+        ArrayList<Category> categories =Paper.book().read("updatedData");
         ArrayList<SubCategory> subCategory = categories.get(numCategory).getSub_category();
         for (SubCategory subCategory1 : subCategory) {
             strings.add(subCategory1.getUpdated_sub_link_latest());

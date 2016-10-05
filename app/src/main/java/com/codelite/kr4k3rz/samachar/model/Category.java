@@ -2,9 +2,6 @@ package com.codelite.kr4k3rz.samachar.model;
 
 import java.util.ArrayList;
 
-/**
- * Created by kr4k3rz on 9/4/16.
- */
 
 public class Category {
 
@@ -26,22 +23,5 @@ public class Category {
     public void setName_category(String name_category) {
         this.name_category = name_category;
     }
-
-    public enum CategoryName {
-        Breaking,
-        Newspaper,
-        National,
-        Local,
-        Opinion,
-        World,
-        Business,
-        Technology,
-        Entertainment,
-        Health,
-        Sport
-
-
-    }
-
 
 }

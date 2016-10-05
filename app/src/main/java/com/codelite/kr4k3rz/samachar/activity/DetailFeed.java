@@ -15,14 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
+import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
@@ -32,9 +33,8 @@ import java.util.Date;
 /*
 * shows the details of the  every feeds clicked*/
 public class DetailFeed extends AppCompatActivity {
+    DiscreteSeekBar discreteSeekBar1;
     private TextView content;
-    private SeekBar seekBar;
-
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -43,41 +43,47 @@ public class DetailFeed extends AppCompatActivity {
         setContentView(R.layout.activity_detail_feed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
-        }
+
+
+        discreteSeekBar1 = (DiscreteSeekBar) findViewById(R.id.discrete1);
+        discreteSeekBar1.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
+            @Override
+            public int transform(int value) {
+                return value;
+            }
+        });
         FlowLayout flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
         TextView title = (TextView) findViewById(R.id.title_detail);
         TextView date = (TextView) findViewById(R.id.date_detail);
         content = (TextView) findViewById(R.id.content_detail);
         ImageView imageView = (ImageView) findViewById(R.id.detailImageView);
         CardView cardView = (CardView) findViewById(R.id.myCardview);
         TextView author = (TextView) findViewById(R.id.authorTv);
-        content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
-        title.setText(getIntent().getExtras().getString("title"));
 
-        date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(getIntent().getExtras().getString("date")),
+        Entry entry = (Entry) getIntent().getSerializableExtra("ENTRY");
+
+        Log.d("DETAIL FEEDS", "Entry : " + entry.getTitle());
+        content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
+        title.setText(entry.getTitle());
+        date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));
 
 
-        content.setText(Html.fromHtml(getIntent().getExtras().getString("content"), Parse.EMPTY_IMAGE_GETTER, null));
-        author.setText(getIntent().getExtras().getString("author"));
+        content.setText(Html.fromHtml(entry.getContent(), Parse.EMPTY_IMAGE_GETTER, null));
+        author.setText(entry.getAuthor());
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("enableImage", true);
-        //   Log.i("TAG", "enableImage: " + enableImage);
         if (enableImage) {
             cardView.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
-                    .load(Parse.parseImg(getIntent()
-                            .getExtras().getString("content")))
+                    .load(Parse.parseImg(entry.getContent()))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageView);
         }
 
         ArrayList<String> fetchList;
-        fetchList = getIntent().getStringArrayListExtra("categories");
-
+        fetchList = (ArrayList<String>) entry.getCategories();
         if (flowLayout != null) {
             if (!fetchList.isEmpty()) {
                 Log.e("TEXT", "setTags: " + flowLayout.getChildCount());
@@ -107,6 +113,10 @@ public class DetailFeed extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
+            case android.R.id.home:
+                finish();
+                return true;
+
             case R.id.action_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
@@ -115,42 +125,45 @@ public class DetailFeed extends AppCompatActivity {
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share this article with..."));
 
-                break;
+                return true;
             case R.id.action_textSize:
-                if (seekBar.getVisibility() == View.VISIBLE) {
-                    seekBar.setVisibility(View.GONE);
+
+                if (discreteSeekBar1.getVisibility() == View.VISIBLE) {
+                    discreteSeekBar1.setVisibility(View.GONE);
                     break;
                 }
-                seekBar.setVisibility(View.VISIBLE);
-                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    float value;
+                discreteSeekBar1.setVisibility(View.VISIBLE);
+                discreteSeekBar1.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+                    float _value;
 
                     @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        content.setTextSize(i);
-                        value = i;
+                    public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                        content.setTextSize(value);
+                        _value = value;
                     }
 
                     @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                        seekBar.setProgress((int) value);
+                    public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+                        _value = getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 12);
+                        seekBar.setProgress((int) _value);
+
                     }
 
                     @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
                         seekBar.setVisibility(View.GONE);
                         SharedPreferences preferences = getSharedPreferences("setting", MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putFloat("textsize", value);
+                        editor.putFloat("textsize", _value);
                         editor.apply();
                     }
-
                 });
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-        /*seekbar issue TODO
-        * 1. size increase*/
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
+        }
+
+        return false;
     }
 }

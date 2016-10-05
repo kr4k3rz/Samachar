@@ -1,9 +1,8 @@
 package com.codelite.kr4k3rz.samachar.util;
 
-/**
- * Created by kr4k3rz on 8/31/16.
- */
+
 import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,9 +10,7 @@ import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
 
-/**
- * Created by andy on 14/08/15.
- */
+
 class UniqueList<T> extends ArrayList<T> implements List<T> , Set<T> , RandomAccess
 {
     private final HashMap<T,Integer> hash; // T -> int

@@ -13,7 +13,8 @@ import android.util.Log;
 import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
-import com.orhanobut.hawk.Hawk;
+
+import io.paperdb.Paper;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -21,8 +22,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Hawk.init(getBaseContext()).build();
-        //  FirebaseCrash.log("Activity created");
+
+        Paper.init(getBaseContext());
 
         /*initialize the newspapers list by their category*/
 
@@ -58,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initFeedList() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("firstTime", false)) {
-            Hawk.put("updatedData", FeedLists.feedsListSetup());   //<---- Setups your feed into database
+            Paper.book().write("updatedData", FeedLists.feedsListSetup());   //<---- Setups your feed into database
             // mark first time has run.
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTime", true);

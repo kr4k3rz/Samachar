@@ -13,14 +13,16 @@ import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.adapter.ComplexRecyclerViewAdapter;
+import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelperComplex;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.FeedLists;
-import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
 import java.util.List;
+
+import io.paperdb.Paper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +50,9 @@ public class AllFeedFrag extends Fragment {
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+
         recyclerView.setLayoutManager(llm);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_AllFeeds);
         initSwipeRefresh();
         return rootView;
@@ -59,16 +63,15 @@ public class AllFeedFrag extends Fragment {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
-                                         Log.d(TAG, "Cache Pref present / Not  : " + Parse.checkPref(getContext(), CACHE_NAME));
-                                         if (!Parse.checkPref(getContext(), CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
+                                         if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
                                              new AsyncHelperComplex(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Object> objects;
-                                             objects = Parse.loadSharedPreferencesLogList(getContext(), CACHE_NAME);
+                                             objects = Paper.book().read(CACHE_NAME);
                                              Log.d(TAG, "Size : " + objects.size());
-                                             if (!Parse.checkPref(getContext(), CACHE_NAME)) {
+                                             if (!Paper.book().exist(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
                                                  recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));

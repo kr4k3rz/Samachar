@@ -44,17 +44,23 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void onBindViewHolder(final CustomViewHolder customViewHolder, final int position) {
+    public void onBindViewHolder(final CustomViewHolder customViewHolder, final int _position) {
 
         /*Bind only data here*/
-        Entry e = entries.get(position);
-        String url = Parse.parseImg(e.getContent());
-        customViewHolder.title.setText(e.getTitle());
-        customViewHolder.contentSnippet.setText(Html.fromHtml(e.getContentSnippet().replace("...", "")).toString());
-        String s = String.valueOf(DateUtils.getRelativeTimeSpanString(Date.parse(e.getDate()),
+        final int position = customViewHolder.getAdapterPosition();
+        final Entry entry = entries.get(customViewHolder.getAdapterPosition());
+        String url = Parse.parseImg(entry.getContent());
+        customViewHolder.title.setText(entry.getTitle());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
+        } else {
+            customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
+        }
+
+        String s = String.valueOf(DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_ALL));
         try {
-            customViewHolder.source.setText(String.format("%s", Parse.getSource(e.getLink())));
+            customViewHolder.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
@@ -63,21 +69,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         if (enableImage) {
             Glide.with(mContext)
                     .load(url)
-                    .error(R.drawable.ic_newspaper)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .placeholder(R.drawable.placeholderimg)
                     .into(customViewHolder.imageView);
         }
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailFeed.class);
-                intent.putExtra("title", entries.get(position).getTitle());
-                intent.putExtra("date", entries.get(position).getDate());
-                intent.putExtra("content", entries.get(position).getContent().replace("...", "").replace("[…]", ""));
-                intent.putExtra("author", entries.get(position).getAuthor());
-                intent.putExtra("link", entries.get(position).getLink());
-                intent.putStringArrayListExtra("categories", (ArrayList<String>) entries.get(position).getCategories());
+                intent.putExtra("ENTRY", entry);
                 mContext.startActivity(intent);
             }
         });

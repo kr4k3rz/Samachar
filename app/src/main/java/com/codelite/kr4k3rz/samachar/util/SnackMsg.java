@@ -1,13 +1,11 @@
 package com.codelite.kr4k3rz.samachar.util;
 
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.codelite.kr4k3rz.samachar.R;
 
-/**
- * Created by kr4k3rz on 8/25/16.
- */
 
 public class SnackMsg {
 
@@ -16,7 +14,7 @@ public class SnackMsg {
         Snackbar snackbar = Snackbar.make(rootView, "" + msg,
                 Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(rootView.getResources().getColor(R.color.colorAccent));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(rootView.getContext(), R.color.accent));
         snackbar.show();
 
     }
@@ -25,7 +23,7 @@ public class SnackMsg {
         Snackbar snackbar = Snackbar.make(rootView, "" + msg,
                 Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(rootView.getResources().getColor(R.color.colorAccent));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(rootView.getContext(), R.color.accent));
         snackbar.show();
     }
 }

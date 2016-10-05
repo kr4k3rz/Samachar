@@ -22,12 +22,10 @@ import java.util.List;
  */
 public class HomeMainFrag extends Fragment {
 
-    MyNewsMainFrag.Adapter adapter;
-
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new MyNewsMainFrag.Adapter(getChildFragmentManager());
-        adapter.addFragment(new AllFeedFrag(), "AllFeed");
-        adapter.addFragment(new BreakingNews(), "Breaking");
+        MyNewsMainFrag.Adapter adapter = new MyNewsMainFrag.Adapter(getChildFragmentManager());
+        adapter.addFragment(new AllFeedFrag(), "समाचार");
+        adapter.addFragment(new BreakingNews(), "ताजा खबर");
         viewPager.setAdapter(adapter);
     }
 
@@ -48,7 +46,7 @@ public class HomeMainFrag extends Fragment {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
-        Adapter(FragmentManager fm) {
+        public Adapter(FragmentManager fm) {
             super(fm);
         }
 

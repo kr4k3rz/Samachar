@@ -25,35 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.DetailFeed"
-            android:label="@string/title_activity_detail_feed"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeNoActionBar"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codelite.kr4k3rz.samachar.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activity.SettingsActivity"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codelite.kr4k3rz.samachar.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activity.EditCategory"
-            android:parentActivityName=".activity.SettingsActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codelite.kr4k3rz.samachar.activity.SettingsActivity" />
-        </activity>
-        <activity
-            android:name=".activity.AboutActivity"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".activity.CategoryActivity" />
+        <activity android:name=".activity.DetailFeed" />
+        <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.EditCategory" />
+        <activity android:name=".activity.AboutActivity" />
 
         <service android:name=".worker.MyIntentService" />
 
@@ -65,8 +42,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".MainActivity" />
-    </application>
 
+    </application>
 
 </manifest>

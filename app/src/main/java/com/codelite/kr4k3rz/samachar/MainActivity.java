@@ -1,11 +1,13 @@
 package com.codelite.kr4k3rz.samachar;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.codelite.kr4k3rz.samachar.activity.EditCategory;
 import com.codelite.kr4k3rz.samachar.activity.SettingsActivity;
@@ -16,14 +18,14 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends AppCompatActivity {
-    private CoordinatorLayout coordinatorLayout;
     private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.three_buttons_activity);
+        setContentView(R.layout.main_activity);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
         setupBottomBar();
     }
 
@@ -41,15 +43,14 @@ public class MainActivity extends AppCompatActivity {
         //      Log.i(MainActivity.class.getSimpleName(), "value : " + newFeeds);
         //    nearby.setBadgeCount(newFeeds);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 switch (tabId) {
                     case R.id.home_item:
                         try {
                             fragment = HomeMainFrag.class.newInstance();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
+                        } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         break;
@@ -58,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
                             fragment = MyNewsMainFrag.class.newInstance();
                             //   nearby.removeBadge();
 
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
+                        } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         //Snackbar.make(coordinatorLayout, "Favorite Item Selected", Snackbar.LENGTH_LONG).show();

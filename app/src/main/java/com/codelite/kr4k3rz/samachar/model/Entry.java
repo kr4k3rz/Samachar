@@ -27,16 +27,8 @@ public class Entry implements Serializable {
         return contentSnippet;
     }
 
-    public void setContentSnippet(String contentSnippet) {
-        this.contentSnippet = contentSnippet;
-    }
-
     public List<String> getCategories() {
         return categories;
-    }
-
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
     }
 
     @Override
@@ -68,40 +60,20 @@ public class Entry implements Serializable {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getLink() {
         return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 
 }
