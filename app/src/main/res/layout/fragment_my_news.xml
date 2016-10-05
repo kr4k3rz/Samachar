@@ -20,8 +20,10 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="4dp"
             app:tabMode="scrollable"
+            app:tabTextAppearance="@style/NavigationTabTextAppearance"
             tools:targetApi="lollipop" />
 
         <android.support.v4.view.ViewPager

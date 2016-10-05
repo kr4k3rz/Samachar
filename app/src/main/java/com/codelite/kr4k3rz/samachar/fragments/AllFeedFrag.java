@@ -15,9 +15,9 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.adapter.ComplexRecyclerViewAdapter;
 import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelperComplex;
+import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class AllFeedFrag extends Fragment {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Object> objects;
                                              objects = Paper.book().read(CACHE_NAME);
-                                             Log.d(TAG, "Size : " + objects.size());
+
                                              if (!Paper.book().exist(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else

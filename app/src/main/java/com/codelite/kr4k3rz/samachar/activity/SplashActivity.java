@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.MainActivity;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
+import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 
 import io.paperdb.Paper;

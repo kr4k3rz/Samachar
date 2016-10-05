@@ -15,9 +15,9 @@ import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
 import java.util.List;

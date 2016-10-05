@@ -20,8 +20,10 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="4dp"
             app:tabMode="fixed"
+            app:tabTextAppearance="@style/NavigationTabTextAppearance"
             tools:targetApi="lollipop" />
         <!--  app:tabIndicatorColor="@android:color/white"-->
 

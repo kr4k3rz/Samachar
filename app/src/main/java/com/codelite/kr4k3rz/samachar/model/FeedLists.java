@@ -1,7 +1,4 @@
-package com.codelite.kr4k3rz.samachar.util;
-
-import com.codelite.kr4k3rz.samachar.model.Category;
-import com.codelite.kr4k3rz.samachar.model.SubCategory;
+package com.codelite.kr4k3rz.samachar.model;
 
 import java.util.ArrayList;
 
@@ -23,23 +20,17 @@ public class FeedLists {
         ArrayList<SubCategory> subCategories_headlines;  // <-- it for subcategory eg. Online Khabar , its cache_link and latest_link
         subCategories_headlines = new ArrayList<>();
         String[][] headlines_feed = new String[][]{
-                {"Online Khabar", "http://www.onlinekhabar.com/feed/"},
-                {"Online Patrika", "http://onlinepatrika.com/feed/"},
-                // {"Ujyaalo Online", "http://ujyaaloonline.com/rss"},  //may be remove
+                {"Online Khabar", "http://www.onlinekhabar.com/feed/"}, //best
+                {"Online Patrika", "http://onlinepatrika.com/feed/"},   //best
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
-                // {"Tokyo Nepal", "http://tokyonepal.com/feed"},
-                {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},
+                {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},  //best
                 {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},                  /*Not daily posters*/
-                // {"Nepall", "http://nepall.net/feed"},
-                {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},
-                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},
-                {"Bigul News", "http://bigulnews.com/feed"},
-                // {"Nepalgunj News", "http://nepalgunjnews.com/feed"},
-                {"Lokaantar", "http://lokaantar.com/feed"},
-                {"MediaNp", "http://medianp.com/feed"},
-                {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},
-                {"Nepal Aaja", "http://nepalaaja.com/feed/"},
-               // {"lahanonline", "http://lahanonline.com/feed/"}
+                {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},    //best
+                {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},  //best
+                {"Lokaantar", "http://lokaantar.com/feed"},     //ok
+                {"MediaNp", "http://medianp.com/feed"},                          //best
+                {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},   //ok and low
+                {"Nepal Aaja", "http://nepalaaja.com/feed/"},         //ok
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();
@@ -202,7 +193,7 @@ public class FeedLists {
 
     public static String[] getFeedListLatest(int numCategory) {
         ArrayList<String> strings = new ArrayList<>();
-        ArrayList<Category> categories =Paper.book().read("updatedData");
+        ArrayList<Category> categories = Paper.book().read("updatedData");
         ArrayList<SubCategory> subCategory = categories.get(numCategory).getSub_category();
         for (SubCategory subCategory1 : subCategory) {
             strings.add(subCategory1.getUpdated_sub_link_latest());
