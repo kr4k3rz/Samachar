@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -28,15 +28,16 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpinionFrag extends Fragment {
-
-    private static final String TAG = OpinionFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.OPINION.getSecondName();
+public class SportFrag extends Fragment {
+    private static final String TAG = SportFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.SPORT.getSecondName();
     /*for loading at postRefresh at first lunch*/
     private View rootView;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    public OpinionFrag() {
+
+
+    public SportFrag() {
         // Required empty public constructor
     }
 
@@ -44,14 +45,14 @@ public class OpinionFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_opinion, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_opinion);
+        rootView = inflater.inflate(R.layout.fragment_sport, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_sport);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_opinion);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_sport);
         initSwipeRefresh();
         return rootView;
     }
@@ -64,8 +65,7 @@ public class OpinionFrag extends Fragment {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.OPINION.ordinal()).execute(rss);
-
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.SPORT.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -86,7 +86,7 @@ public class OpinionFrag extends Fragment {
                 Log.d(TAG, "SwipeRefresh()");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
                     String[] rss_new = FeedLists.getFeedListLatest(0);
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.OPINION.ordinal()).execute(rss_new);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.SPORT.ordinal()).execute(rss_new);
                 } else {
                     SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -95,4 +95,5 @@ public class OpinionFrag extends Fragment {
         });
 
     }
+
 }

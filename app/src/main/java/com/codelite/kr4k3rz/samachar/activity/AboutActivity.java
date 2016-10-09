@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.codelite.kr4k3rz.samachar.BuildConfig;
 import com.codelite.kr4k3rz.samachar.R;
 
 import mehdi.sakout.aboutpage.AboutPage;
@@ -18,8 +19,8 @@ public class AboutActivity extends AppCompatActivity {
         View mAboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
-                .setDescription("all ic_newspaper in one app optimised for network performance")
-                .addItem(new Element().setTitle("Version 6.2"))
+                .setDescription(R.string.app_name + "app is all in one app optimised for network performance and look & feel for latest news feeds.")
+                .addItem(new Element().setTitle(BuildConfig.VERSION_NAME+"v"))
                 .addEmail("xitize@gmail.com")
                 .addFacebook("kr4k3rz")
                 .addPlayStore("com.codelite.kr4k3rz.samachar")

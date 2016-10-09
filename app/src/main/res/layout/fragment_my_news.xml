@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.codelite.kr4k3rz.samachar.fragments.MyNewsMainFrag">
+        tools:context="com.codelite.kr4k3rz.samachar.fragments.allnewstab.NewsTabFrag">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs_mynews"

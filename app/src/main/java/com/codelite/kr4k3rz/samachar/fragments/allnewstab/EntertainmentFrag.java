@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -28,29 +28,29 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BusinessFrag extends Fragment {
+public class EntertainmentFrag extends Fragment {
 
-    private static final String TAG = BusinessFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.BUSINESS.getSecondName();
-    private final String[] mSpecialFeeds = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.karobardaily.com/rss&num=-1&scoring=h"};
+    private static final String TAG = EntertainmentFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.ENTERTAINMENT.getSecondName();
+    private final String[] mSpecialFeed = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://screennepal.com/feed&num=-1"};
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View rootView;
 
-    public BusinessFrag() {
+    public EntertainmentFrag() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_business, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_business);
+        rootView = inflater.inflate(R.layout.fragment_entertainment, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_entertainment);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_business);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_entertainment);
         initSwipeRefresh();
         return rootView;
     }
@@ -61,7 +61,7 @@ public class BusinessFrag extends Fragment {
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BUSINESS.ordinal()).execute(mSpecialFeeds);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.ENTERTAINMENT.ordinal()).execute(mSpecialFeed);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -81,9 +81,9 @@ public class BusinessFrag extends Fragment {
             public void onRefresh() {
                 Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BUSINESS.ordinal()).execute(mSpecialFeeds);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.ENTERTAINMENT.ordinal()).execute(mSpecialFeed);
                 } else {
-                    SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
+                    SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }

@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,9 +49,16 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
     public void onBindViewHolder(final CustomViewHolder customViewHolder, final int _position) {
 
         /*Bind only data here*/
-        final int position = customViewHolder.getAdapterPosition();
+        String actualUrl = null;
         final Entry entry = entries.get(customViewHolder.getAdapterPosition());
         String url = Parse.parseImg(entry.getContent());
+
+        try {
+            actualUrl = convertImgUrl(actualUrl, url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         customViewHolder.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
@@ -68,9 +77,11 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enableImage", true);
         if (enableImage) {
             Glide.with(mContext)
-                    .load(url)
+                    .load(actualUrl)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(customViewHolder.imageView);
+        } else {
+            Log.d("TAG", "Image disabled : " + enableImage);
         }
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +93,22 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         });
 
     }
+
+    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+        if (url != null && url.startsWith("http://")) {
+            if (url.toLowerCase().contains(".png".toLowerCase())) {
+                URL url1 = new URL(url);
+                String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
+                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + actualUrl);
+            } else {
+                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + actualUrl);
+            }
+        } else Log.i("TAG", " String is null");
+        return actualUrl;
+    }
+
 
     @Override
     public int getItemCount() {

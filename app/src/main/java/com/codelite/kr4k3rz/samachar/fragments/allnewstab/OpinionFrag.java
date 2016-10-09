@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
@@ -24,43 +25,47 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TechnologyFrag extends Fragment {
-    private static final String TAG = TechnologyFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.TECHNOLOGY.getSecondName();
+public class OpinionFrag extends Fragment {
+
+    private static final String TAG = OpinionFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.OPINION.getSecondName();
+    /*for loading at postRefresh at first lunch*/
+    private View rootView;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private View rootView;
-    private final String[] mSpecialFeeds = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://feeds.feedburner.com/Aakar&num=-1"};
-
-    public TechnologyFrag() {
+    public OpinionFrag() {
+        // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_technology, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_technology);
+        rootView = inflater.inflate(R.layout.fragment_opinion, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_opinion);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_technology);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_opinion);
         initSwipeRefresh();
         return rootView;
     }
 
     private void initSwipeRefresh() {
+
         mSwipeRefreshLayout.post(new Runnable() {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
+                                             String[] rss = FeedLists.getFeedListCached(0);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.OPINION.ordinal()).execute(rss);
+
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -78,17 +83,16 @@ public class TechnologyFrag extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d(TAG, "SwipeRefresh()  ");
+                Log.d(TAG, "SwipeRefresh()");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
+                    String[] rss_new = FeedLists.getFeedListLatest(0);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.OPINION.ordinal()).execute(rss_new);
                 } else {
-                    SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
+                    SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
 
     }
-
-
 }

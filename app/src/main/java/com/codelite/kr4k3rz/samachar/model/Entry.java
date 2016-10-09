@@ -22,7 +22,6 @@ public class Entry implements Serializable {
     @SerializedName("categories")
     private List<String> categories;
 
-
     public String getContentSnippet() {
         return contentSnippet;
     }

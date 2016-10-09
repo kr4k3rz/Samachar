@@ -106,15 +106,13 @@ public class Parse {
         return entries1;
     }
 
-    /*
-    * filters the feeds categories (eg. World) passed
-    * @param entries feed entries passed*/
 
     public static ArrayList<Integer> filterCategories(List<Entry> entries, Context context) {
         List<Header> categories = new ArrayList<>();
         List<List<Entry>> main = new ArrayList<>();
-        float total_feeds = 0;
-        float feeds_filtered = 0;
+        long total_feeds = 0;
+        long feeds_filtered = 0;
+        long feeds_notFiltered = 0;
         int CATEGORY_NUMBER = 11;
         List<Integer> mPriorSize = new ArrayList<>();
         List<Integer> mFeedSize = new ArrayList<>();
@@ -248,13 +246,18 @@ public class Parse {
                 //Breaking
                 total_feeds++;
                 if (s.equalsIgnoreCase("Breaking")
+                        || s.equalsIgnoreCase("News")
                         || s.equalsIgnoreCase("Breaking News")
                         || s.equalsIgnoreCase("Breaking News")
                         || s.equalsIgnoreCase("currentnews")
                         || s.equalsIgnoreCase("HEADLINES")
                         || s.equalsIgnoreCase("Feature")
                         || s.equalsIgnoreCase("highlight")
+                        || s.equalsIgnoreCase("English")
+                        | s.equalsIgnoreCase("हेडर न्युज")
                         || s.equalsIgnoreCase("Top News")
+                        || s.equalsIgnoreCase("कभर समाचार")
+                        || s.equalsIgnoreCase("टप न्युज")
                         || s.equalsIgnoreCase("CRIME")
                         || s.equalsIgnoreCase("सुरक्षा गतिविधि")
                         || s.equalsIgnoreCase("BreakingNews")
@@ -276,7 +279,9 @@ public class Parse {
                     feeds_filtered++;
                     break;
                 } else//ic_newspaper
-                    if (s.equalsIgnoreCase("ic_newspaper")
+                    if (s.equalsIgnoreCase("सैाजन्य")
+                            || s.equalsIgnoreCase("saujanya")
+                            ||s.equalsIgnoreCase("सम्पादकीय")
                             || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
                             || s.equalsIgnoreCase("आजको पत्रिका बाट")
                             || s.equalsIgnoreCase("छापामा")
@@ -287,6 +292,8 @@ public class Parse {
                     }//national
                     else if (s.equalsIgnoreCase("Nepal News")
                             || s.equalsIgnoreCase("समाचार")
+                            ||s.equalsIgnoreCase("खोजखबर")
+                            ||s.equalsIgnoreCase("मुलुक")
                             || s.equalsIgnoreCase("Community News")
                             || s.equalsIgnoreCase("Night only")
                             || s.equalsIgnoreCase("राष्ट्रिय समाचार")
@@ -295,9 +302,11 @@ public class Parse {
                             || s.equalsIgnoreCase("राष्ट्रिय")
                             || s.equalsIgnoreCase("देश")
                             || s.equalsIgnoreCase("समाज")
+                            || s.equalsIgnoreCase("देश/समाज")
                             || s.equalsIgnoreCase("थारु समाचार")
                             || s.equalsIgnoreCase("राजनीति")
                             || s.equalsIgnoreCase("राजनीति")
+                            || s.equalsIgnoreCase("राजनिति")
                             || s.equalsIgnoreCase("फिचर")
                             ) {
                         national.add(entry);
@@ -308,9 +317,12 @@ public class Parse {
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("DIASPORA")
                             || s.equalsIgnoreCase("DIASPORA/LOCAL")
+                            || s.equalsIgnoreCase("Nepali Diaspora")
                             || s.equalsIgnoreCase("प्रबास/स्थानिय")
                             || s.equalsIgnoreCase(" बैदेशिक रोजगार")
+                            || s.equalsIgnoreCase("प्रवास समाचार")
                             || s.equalsIgnoreCase("रोजगार")
+                            || s.equalsIgnoreCase("प्रवास प्रमुख")
                             || s.equalsIgnoreCase("प्रबास")
                             || s.equalsIgnoreCase("समाज")
                             || s.equalsIgnoreCase("अपराध सुरक्षा")
@@ -325,8 +337,10 @@ public class Parse {
                     else if (s.equalsIgnoreCase("OPINION")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("विचार")
+                            || s.equalsIgnoreCase("अग्रलेख")
                             || s.equalsIgnoreCase("लेख")
-                            || s.equalsIgnoreCase("लेख")
+                            || s.equalsIgnoreCase("अन्तरवार्ता")
+                            || s.equalsIgnoreCase("लेख / रचना")
                             || s.equalsIgnoreCase("आलेख")
                             || s.equalsIgnoreCase("बिचार")
                             || s.equalsIgnoreCase("फिचर")
@@ -351,6 +365,8 @@ public class Parse {
                             || s.equalsIgnoreCase("सम–सामयिक")
                             || s.equalsIgnoreCase("बिश्व")
                             || s.equalsIgnoreCase("वर्ल्ड")
+                            || s.equalsIgnoreCase("बिबिध")
+                            || s.equalsIgnoreCase("World News")
                             || s.equalsIgnoreCase("Odd World")
                             || s.equalsIgnoreCase("रोचक")
                             || s.equalsIgnoreCase("रोचक / विचित्र")
@@ -372,16 +388,17 @@ public class Parse {
                     }//Business
                     else if (s.equalsIgnoreCase("अर्थनीति")
                             || s.contains("पर्यटन")
+                            || s.equalsIgnoreCase("Finance")
                             || s.contains("बिजनेस")
-                            || s.equalsIgnoreCase("अर्थतन्त्र फिचर")
+                            || s.equalsIgnoreCase("अभिलेख")
                             || s.equalsIgnoreCase("अर्थतन्त्र फिचर")
                             || s.equalsIgnoreCase("अर्थ | वाणिज्य | बजार")
                             || s.contains("अर्थ")
                             || s.equalsIgnoreCase("कृषि")
                             || s.equalsIgnoreCase("बातावरण-कृषि")
                             || s.equalsIgnoreCase("अर्थ")
+                            || s.equalsIgnoreCase("बैंक/शेयर")
                             || s.equalsIgnoreCase("अर्थ बजार")
-                            || s.equalsIgnoreCase("अर्थ/बजार")
                             || s.equalsIgnoreCase("कर्पोरेट")
                             || s.equalsIgnoreCase("बजार")
                             || s.equalsIgnoreCase("ट्रेन्डिङ")
@@ -401,6 +418,9 @@ public class Parse {
                         break;
                     }//Technology
                     else if (s.equalsIgnoreCase("सूचना प्रविधि-प्रमुख")
+                            || s.equalsIgnoreCase("बिज्ञान-प्रबिधि")
+                            || s.equalsIgnoreCase("3G mobile service")
+                            || s.equalsIgnoreCase("nepal telecom")
                             || s.equalsIgnoreCase("विज्ञान  प्रविधि")
                             || s.equalsIgnoreCase("सूचना प्रविधि")
                             || s.equalsIgnoreCase("बिज्ञान प्रबिधि")
@@ -420,12 +440,17 @@ public class Parse {
                             || s.equalsIgnoreCase("बलिउड")
                             || s.equalsIgnoreCase("इतिहासमा आज")
                             || s.equalsIgnoreCase("हलिउड")
+                            || s.equalsIgnoreCase("रंग समाचार")
                             || s.equalsIgnoreCase("फोटो फिचर")
+                            || s.equalsIgnoreCase("कला साहित्य")
+                            || s.equalsIgnoreCase("सिनेमा")
                             || s.equalsIgnoreCase("मनोरञ्जन")
                             || s.equalsIgnoreCase("म्युजिक अपडेट")
                             || s.equalsIgnoreCase("साहित्य आज")
                             || s.equalsIgnoreCase("प्रोफाइल")
+                            || s.equalsIgnoreCase("कलिवुड")
                             || s.equalsIgnoreCase("बलिवुड")
+                            || s.equalsIgnoreCase("चलिरहेको फ्लिम")
                             || s.equalsIgnoreCase("Entertainment News")
                             || s.equalsIgnoreCase("चलचित्र")
                             || s.equalsIgnoreCase("मनोरञ्जन एप")
@@ -453,6 +478,7 @@ public class Parse {
                     }//Health
                     else if (s.equalsIgnoreCase("स्वास्थ्य")
                             || s.contains("शारीरिक")
+                            || s.equalsIgnoreCase("Health")
                             || s.equalsIgnoreCase("मोफसल")
                             || s.equalsIgnoreCase("उपभाेक्ता")
                             || s.equalsIgnoreCase("श्वास्थ्य")
@@ -469,6 +495,8 @@ public class Parse {
                             || s.equalsIgnoreCase("पत्रपत्रिकामा स्वास्थ्य")
                             || s.equalsIgnoreCase("टिप्स")
                             || s.equalsIgnoreCase("यौन")
+                            || s.equalsIgnoreCase("फुड")
+                            || s.equalsIgnoreCase("स्वास्थ्य खबर")
                             || s.equalsIgnoreCase("स्वास्थ्य/यौन")
                             || s.equalsIgnoreCase("स्वास्थ्य/जीवनशैली")) {
                         health.add(entry);
@@ -489,10 +517,9 @@ public class Parse {
                         feeds_filtered++;
                         break;
                     } else {
-                        for (String s1 : entry.getCategories()) {
-                            Log.i(TAG, "Categories not filtered " + s1);
-                        }
 
+                        Log.i(TAG, "Categories not filtered " + s);
+                        feeds_filtered++;
                     }
 
             }
@@ -511,9 +538,7 @@ public class Parse {
         main.add(sport);  //10
         Log.i("TAG", "feeds categorized : " + feeds_filtered);
         Log.i("TAG", "Total Feeds Size : " + total_feeds);
-        if (total_feeds != 0)
-            Log.i(TAG, (total_feeds - feeds_filtered) / total_feeds + "% feeds not filtered ");
-
+        Log.i("TAG", "Feeds not filtered : " + feeds_notFiltered);
         for (int i = 0; i < CATEGORY_NUMBER; i++) {
             List<Entry> processedFeeds;//new
             processedFeeds = main.get(i);
@@ -551,6 +576,5 @@ public class Parse {
             feeds.subList(limitSize, feeds.size()).clear();
         }
     }
-
 
 }

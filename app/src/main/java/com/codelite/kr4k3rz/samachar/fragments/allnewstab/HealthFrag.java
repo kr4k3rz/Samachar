@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
@@ -29,35 +28,33 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BreakingNews extends Fragment {
-    private static final String CACHE_NAME = WhichCategory.BREAKING.getSecondName();
-    private static final String TAG = BreakingNews.class.getSimpleName();
-    private View rootView;
+public class HealthFrag extends Fragment {
+
+    private static final String TAG = HealthFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.HEALTH.getSecondName();
+    private final String[] mSpecialFeed = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.nepalihealth.com/feed/&num=-1",
+            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://nepalhealthnews.com/feed/&num=-1"};
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private View rootView;
 
-
-    public BreakingNews() {
-        // Required empty public constructor
+    public HealthFrag() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_breaking_news, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_Breaking_News);
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
+        rootView = inflater.inflate(R.layout.fragment_health, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_health);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+        recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_breaking);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_health);
         initSwipeRefresh();
         return rootView;
     }
-
 
     private void initSwipeRefresh() {
         mSwipeRefreshLayout.post(new Runnable() {
@@ -65,8 +62,7 @@ public class BreakingNews extends Fragment {
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.HEALTH.ordinal()).execute(mSpecialFeed);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -84,13 +80,11 @@ public class BreakingNews extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d(TAG, " SwipeRefresh()  ");
+                Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    String[] rss_new = FeedLists.getFeedListLatest(0);
-
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss_new);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.HEALTH.ordinal()).execute(mSpecialFeed);
                 } else {
-                    SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
+                    SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }

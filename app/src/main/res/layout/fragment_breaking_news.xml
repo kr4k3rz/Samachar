@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codelite.kr4k3rz.samachar.fragments.BreakingNews">
+    tools:context="com.codelite.kr4k3rz.samachar.fragments.hotnewstab.BreakingNews">
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeRefreshLayout_breaking"

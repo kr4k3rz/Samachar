@@ -6,7 +6,7 @@ import io.paperdb.Paper;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
-    private static final String POSTFIX_CACHED = "&num=-1";  //cached and max feeds
+    private static final String POSTFIX_CACHED = "&num=-1&scoring=h";  //cached and max feeds
     private static final String POSTFIX_LATEST = "&num=-1";  //latest and max feeds
 
     /*&scoring=h*/
@@ -30,7 +30,15 @@ public class FeedLists {
                 {"Lokaantar", "http://lokaantar.com/feed"},     //ok
                 {"MediaNp", "http://medianp.com/feed"},                          //best
                 {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},   //ok and low
-                {"Nepal Aaja", "http://nepalaaja.com/feed/"},         //ok
+                {"Nepal Aaja", "http://nepalaaja.com/feed/"},
+
+                {"OS Nepal", "http://www.onsnews.com/feed/"},
+                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},//ok
+                //   {"Naya Page", "http://www.nayapage.com/feed"},
+                {"Sourya Daily", "http://www.souryadaily.com/feed"},
+                {"Rajdhani Daily", "http://rajdhanidaily.com/feed/"},
+                {"Char disa", "http://chardisha.com/feed/"}
+
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();

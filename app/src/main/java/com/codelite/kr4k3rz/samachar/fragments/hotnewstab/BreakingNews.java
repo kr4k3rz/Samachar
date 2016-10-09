@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.hotnewstab;
 
 
 import android.os.Bundle;
@@ -25,19 +25,19 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewsPaperFrag extends Fragment {
-    private static final String TAG = NewsPaperFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.NEWSPAPER.getSecondName();
-    /*for loading at postRefresh at first lunch*/
+public class BreakingNews extends Fragment {
+    private static final String CACHE_NAME = WhichCategory.BREAKING.getSecondName();
+    private static final String TAG = BreakingNews.class.getSimpleName();
     private View rootView;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
-    public NewsPaperFrag() {
+    public BreakingNews() {
         // Required empty public constructor
     }
 
@@ -45,28 +45,28 @@ public class NewsPaperFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_national, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_headlines);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.fragment_breaking_news, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_Breaking_News);
+        recyclerView.setHasFixedSize(false);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_headlines);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_breaking);
         initSwipeRefresh();
         return rootView;
     }
 
-    private void initSwipeRefresh() {
 
+    private void initSwipeRefresh() {
         mSwipeRefreshLayout.post(new Runnable() {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.NEWSPAPER.ordinal()).execute(rss);
-
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -84,12 +84,13 @@ public class NewsPaperFrag extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d(TAG, "SwipeRefresh()");
+                Log.d(TAG, " SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
                     String[] rss_new = FeedLists.getFeedListLatest(0);
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.NEWSPAPER.ordinal()).execute(rss_new);
+
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss_new);
                 } else {
-                    SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
+                    SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -98,4 +99,3 @@ public class NewsPaperFrag extends Fragment {
     }
 
 }
-

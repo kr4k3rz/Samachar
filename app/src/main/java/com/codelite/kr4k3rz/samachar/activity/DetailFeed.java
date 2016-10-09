@@ -26,6 +26,8 @@ import com.codelite.kr4k3rz.samachar.util.Parse;
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -69,15 +71,27 @@ public class DetailFeed extends AppCompatActivity {
         title.setText(entry.getTitle());
         date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));
+        /*
+        * TODO
+        * remove the TAG of The First Post Appeared by JSOUP*/
 
 
         content.setText(Html.fromHtml(entry.getContent(), Parse.EMPTY_IMAGE_GETTER, null));
+
+
         author.setText(entry.getAuthor());
+        String url = Parse.parseImg(entry.getContent());
+        String actualUrl = null;
+        try {
+            actualUrl = convertImgUrl(actualUrl, url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("enableImage", true);
         if (enableImage) {
             cardView.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
-                    .load(Parse.parseImg(entry.getContent()))
+                    .load(actualUrl)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(imageView);
         }
@@ -101,6 +115,21 @@ public class DetailFeed extends AppCompatActivity {
         }
 
 
+    }
+
+    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+        if (url != null && url.startsWith("http://")) {
+            if (url.toLowerCase().contains(".png".toLowerCase())) {
+                URL url1 = new URL(url);
+                String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
+                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=50";
+                Log.i("PNG TAG", "" + actualUrl);
+            } else {
+                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=50";
+                Log.i("TAG", " String to be shows : " + actualUrl);
+            }
+        } else Log.i("TAG", " String is null");
+        return actualUrl;
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.codelite.kr4k3rz.samachar.model.Header;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -69,7 +71,11 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
             case ENTRY:
                 ViewHolder2 vh2 = (ViewHolder2) holder;
-                configureViewHolder2(vh2, position);
+                try {
+                    configureViewHolder2(vh2, position);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -78,11 +84,12 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     }
 
-    private void configureViewHolder2(final ViewHolder2 vh2, final int position) {
+    private void configureViewHolder2(final ViewHolder2 vh2, final int position) throws MalformedURLException {
         final Entry entry = (Entry) items.get(position);
-
         /*Bind only data here*/
+        String actualUrl = null;
         String url = Parse.parseImg(entry.getContent());
+        actualUrl = convertImgUrl(actualUrl, url);
         vh2.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
@@ -98,9 +105,10 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
         vh2.date.setText(String.format("%s", s)); //to set date time in '3 minutes ago' like
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("enableImage", true);
+
         if (enableImage) {
             Glide.with(context)
-                    .load(url)
+                    .load(actualUrl)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(vh2.imageView);
         }
@@ -115,6 +123,21 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         });
 
 
+    }
+
+    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+        if (url != null && url.startsWith("http://")) {
+            if (url.toLowerCase().contains(".png".toLowerCase())) {
+                URL url1 = new URL(url);
+                String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
+                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + actualUrl);
+            } else {
+                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + actualUrl);
+            }
+        } else Log.i("TAG", " String is null");
+        return actualUrl;
     }
 
 

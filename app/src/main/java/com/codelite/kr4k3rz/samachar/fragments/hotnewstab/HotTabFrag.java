@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.hotnewstab;
 
 
 import android.os.Bundle;
@@ -20,12 +20,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeMainFrag extends Fragment {
+public class HotTabFrag extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
-        MyNewsMainFrag.Adapter adapter = new MyNewsMainFrag.Adapter(getChildFragmentManager());
-        adapter.addFragment(new AllFeedFrag(), "समाचार");
+        Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new BreakingNews(), "ताजा खबर");
+        adapter.addFragment(new AllFeedFrag(), "समाचार");
+
         viewPager.setAdapter(adapter);
     }
 

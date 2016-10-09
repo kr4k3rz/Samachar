@@ -26,7 +26,7 @@ public class CategoryActivity extends AppCompatActivity {
             getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         Fragment fragment;
         try {
-            fragment = (Fragment) Class.forName("com.codelite.kr4k3rz.samachar.fragments." + header.getSecondName()).newInstance();
+            fragment = (Fragment) Class.forName("com.codelite.kr4k3rz.samachar.fragments.allnewstab." + header.getSecondName()).newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

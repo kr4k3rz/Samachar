@@ -11,8 +11,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.codelite.kr4k3rz.samachar.activity.EditCategory;
 import com.codelite.kr4k3rz.samachar.activity.SettingsActivity;
-import com.codelite.kr4k3rz.samachar.fragments.HomeMainFrag;
-import com.codelite.kr4k3rz.samachar.fragments.MyNewsMainFrag;
+import com.codelite.kr4k3rz.samachar.fragments.allnewstab.NewsTabFrag;
+import com.codelite.kr4k3rz.samachar.fragments.hotnewstab.HotTabFrag;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -49,14 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 switch (tabId) {
                     case R.id.home_item:
                         try {
-                            fragment = HomeMainFrag.class.newInstance();
+                            fragment = HotTabFrag.class.newInstance();
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         break;
                     case R.id.mynews_item:
                         try {
-                            fragment = MyNewsMainFrag.class.newInstance();
+                            fragment = NewsTabFrag.class.newInstance();
                             //   nearby.removeBadge();
 
                         } catch (InstantiationException | IllegalAccessException e) {

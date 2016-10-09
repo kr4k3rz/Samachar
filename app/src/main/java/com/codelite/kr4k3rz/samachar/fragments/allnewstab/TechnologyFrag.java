@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.fragments;
+package com.codelite.kr4k3rz.samachar.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
@@ -25,31 +24,35 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
-public class WorldFrag extends Fragment {
-    private static final String TAG = WorldFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.WORLD.getSecondName();
-    private View rootView;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class TechnologyFrag extends Fragment {
+    private static final String TAG = TechnologyFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategory.TECHNOLOGY.getSecondName();
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private View rootView;
+    private final String[] mSpecialFeeds = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://feeds.feedburner.com/Aakar&num=-1"};
 
-    public WorldFrag() {
+    public TechnologyFrag() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_world_frag, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_World);
+        rootView = inflater.inflate(R.layout.fragment_technology, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_technology);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_world);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_technology);
         initSwipeRefresh();
         return rootView;
     }
-
 
     private void initSwipeRefresh() {
         mSwipeRefreshLayout.post(new Runnable() {
@@ -57,8 +60,7 @@ public class WorldFrag extends Fragment {
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.WORLD.ordinal()).execute(rss);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
                                              List<Entry> list = Paper.book().read(CACHE_NAME);
@@ -78,9 +80,7 @@ public class WorldFrag extends Fragment {
             public void onRefresh() {
                 Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    String[] rss_new = FeedLists.getFeedListLatest(0);
-
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.WORLD.ordinal()).execute(rss_new);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
                 } else {
                     SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -89,4 +89,6 @@ public class WorldFrag extends Fragment {
         });
 
     }
+
+
 }
