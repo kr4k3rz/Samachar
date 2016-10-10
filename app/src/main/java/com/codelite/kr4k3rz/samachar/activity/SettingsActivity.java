@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.R;
 
 
@@ -72,7 +73,9 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     getActivity().finish();
-                    Intent refresh = new Intent(getActivity(), SplashActivity.class);
+
+                    Intent refresh = new Intent(getActivity(), MainActivity.class);
+                    refresh.putExtra("CHECK", true);
                     refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(refresh);
                     return true;
@@ -84,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     getActivity().finish();
-                    Intent refresh = new Intent(getActivity(), SplashActivity.class);
+                    Intent refresh = new Intent(getActivity(), MainActivity.class);
                     refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(refresh);
                     return true;

@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,14 +65,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
         }
 
-        String s = String.valueOf(DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
-                System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_ALL));
         try {
             customViewHolder.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
-        customViewHolder.date.setText(String.format("%s", s)); //to set date time in '3 minutes ago' like
+
+
+        customViewHolder.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enableImage", true);
         if (enableImage) {
             Glide.with(mContext)

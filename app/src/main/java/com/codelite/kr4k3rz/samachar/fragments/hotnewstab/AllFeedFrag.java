@@ -65,6 +65,7 @@ public class AllFeedFrag extends Fragment {
                                          Log.i(TAG, "SwipeRefresh post()");
                                          if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
+
                                              new AsyncHelperComplex(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BREAKING.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
@@ -74,7 +75,9 @@ public class AllFeedFrag extends Fragment {
                                              if (!Paper.book().exist(CACHE_NAME)) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
-                                                 recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
+                                                 new ComplexRecyclerViewAdapter(getContext(), objects);
+                                             recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
+
                                              mSwipeRefreshLayout.setRefreshing(false);
                                          }
 

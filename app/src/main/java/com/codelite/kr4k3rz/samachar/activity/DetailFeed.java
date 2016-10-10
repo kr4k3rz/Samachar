@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +27,10 @@ import org.apmem.tools.layouts.FlowLayout;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 
 /*
@@ -69,8 +70,10 @@ public class DetailFeed extends AppCompatActivity {
         Log.d("DETAIL FEEDS", "Entry : " + entry.getTitle());
         content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
         title.setText(entry.getTitle());
-        date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
-                System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));
+        /*date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
+                System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));*/
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM ''yy, HH:mm ", Locale.ENGLISH);
+        date.setText(simpleDateFormat.format(Date.parse(entry.getDate())));
         /*
         * TODO
         * remove the TAG of The First Post Appeared by JSOUP*/

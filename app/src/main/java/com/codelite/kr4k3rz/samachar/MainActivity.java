@@ -1,18 +1,24 @@
 package com.codelite.kr4k3rz.samachar;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.activity.EditCategory;
 import com.codelite.kr4k3rz.samachar.activity.SettingsActivity;
 import com.codelite.kr4k3rz.samachar.fragments.allnewstab.NewsTabFrag;
 import com.codelite.kr4k3rz.samachar.fragments.hotnewstab.HotTabFrag;
+import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -27,8 +33,44 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setupBottomBar();
+             /*setup the alarm when to notify the user when the breaking news is popup*/
+        setupAlarmNotify();
+
     }
 
+    private void setupAlarmNotify() {
+        boolean checked = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("pushNotification", true);
+        Log.i("TAG", "checked value : " + checked);
+
+        if (checked) {
+            scheduleAlarm();
+            Log.i("TAG", "  Alarm scheduled");
+
+        } else {
+            Log.i("TAG", "  Alarm scheduled Canceled");
+            cancelAlarm();
+        }
+    }
+
+
+    private void scheduleAlarm() {
+        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0,
+                intent, 0);
+        long firstMillis = System.currentTimeMillis();
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis + AlarmManager.INTERVAL_HALF_HOUR,
+                AlarmManager.INTERVAL_HOUR, pIntent);
+    }
+
+    private void cancelAlarm() {
+        Intent intent = new Intent(getBaseContext(), MyAlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(getBaseContext(), 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
+
+    }
 
     /*
     * setup bottom bar

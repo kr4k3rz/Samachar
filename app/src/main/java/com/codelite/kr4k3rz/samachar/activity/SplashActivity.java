@@ -1,8 +1,5 @@
 package com.codelite.kr4k3rz.samachar.activity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,7 +16,6 @@ import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.Parse;
-import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,6 +31,7 @@ import java.util.List;
 import io.paperdb.Paper;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -55,17 +52,10 @@ public class SplashActivity extends AppCompatActivity {
                 }
             });
         }
-        mHandler = new Handler(Looper.getMainLooper());
         Paper.init(getBaseContext());
-
-        /*initialize the newspapers list by their category*/
+        mHandler = new Handler(Looper.getMainLooper());
         initFeedList();
-
-         /*setup the alarm when to notify the user when the breaking news is popup*/
-        setupAlarmNotify();
-
         /*starts MainActivity class*/
-        Log.i("TAG", "" + CheckInternet.isNetworkAvailable(getBaseContext()));
         if (CheckInternet.isNetworkAvailable(getBaseContext()))
             loadFeeds();
         else {
@@ -74,14 +64,27 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
 
-
     }
 
+    /*initialize the newspapers list by their category*/
+    private void initFeedList() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("firstTime", false)) {
+            Paper.book().write("updatedData", FeedLists.feedsListSetup());   //<---- Setups your feed into database
+            // mark first time has run.
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.apply();
+        }
+
+
+    }
     private void loadFeeds() {
         final List<Entry> list = new ArrayList<>();
-
         OkHttpClient okHttpClient = new OkHttpClient();
-        final String[] rss = FeedLists.getFeedListCached(0);
+        final Dispatcher dispatcher = okHttpClient.dispatcher();
+
+        final String[] rss = onFirstLoadFeedUrl();
         for (int i = 0; i < rss.length; i++) {
             Request request = new Request.Builder().url(rss[i]).build();
             final int finalI = i;
@@ -89,8 +92,13 @@ public class SplashActivity extends AppCompatActivity {
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    call.cancel();
                     Log.i("TAG", "" + e);
+                    dispatcher.cancelAll();
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
+
                 }
 
                 @Override
@@ -141,54 +149,24 @@ public class SplashActivity extends AppCompatActivity {
 
 
     }
-
-
-    private void setupAlarmNotify() {
-        boolean checked = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("pushNotification", true);
-        Log.i("TAG", "checked value : " + checked);
-
-        if (checked) {
-            scheduleAlarm();
-            Log.i("TAG", "  Alarm scheduled");
+    private String[] onFirstLoadFeedUrl() {
+        String[] test;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("firstTime1", false)) {
+            Log.i("TAG", "on first time" + FeedLists.getFeedListCached(0).length);
+            test = FeedLists.getFeedListCached(0);// mark first time has run.
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime1", true);
+            editor.apply();
+            return test;
 
         } else {
-            Log.i("TAG", "  Alarm scheduled Canceled");
-            cancelAlarm();
+            Log.i("TAG", "on second time" + FeedLists.getFeedListCached(0).length);
+            test = FeedLists.getFeedListLatest(0);
+            return test;
+
         }
     }
 
-
-    private void initFeedList() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("firstTime", false)) {
-            Paper.book().write("updatedData", FeedLists.feedsListSetup());   //<---- Setups your feed into database
-            // mark first time has run.
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstTime", true);
-            editor.apply();
-        }
-
-
-    }
-
-
-    private void scheduleAlarm() {
-        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0,
-                intent, 0);
-        long firstMillis = System.currentTimeMillis();
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis + AlarmManager.INTERVAL_HALF_HOUR,
-                AlarmManager.INTERVAL_HOUR, pIntent);
-    }
-
-    private void cancelAlarm() {
-        Intent intent = new Intent(getBaseContext(), MyAlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(getBaseContext(), 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm.cancel(pIntent);
-
-    }
 
 }

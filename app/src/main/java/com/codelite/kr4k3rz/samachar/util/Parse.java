@@ -2,6 +2,7 @@ package com.codelite.kr4k3rz.samachar.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import io.paperdb.Paper;
@@ -93,6 +95,114 @@ public class Parse {
         return newFeeds;
     }
 
+    public static String convertLongDateToAgoString(Long createdDate, Long timeNow) {
+        Long timeElapsed = timeNow - createdDate;
+
+        // For logging in Android for testing purposes
+        /*
+        Date dateCreatedFriendly = new Date(createdDate);
+        Log.d("MicroR", "dateCreatedFriendly: " + dateCreatedFriendly.toString());
+        Log.d("MicroR", "timeNow: " + timeNow.toString());
+        Log.d("MicroR", "timeElapsed: " + timeElapsed.toString());*/
+
+        // Lengths of respective time durations in Long format.
+        Long oneMin = 60000L;
+        Long oneHour = 3600000L;
+        Long oneDay = 86400000L;
+        Long oneWeek = 604800000L;
+
+        String finalString = "Now";
+        String unit;
+
+        if (timeElapsed < oneMin) {
+            // Convert milliseconds to seconds.
+            double seconds = (double) ((timeElapsed / 1000));
+            // Round up
+            seconds = Math.round(seconds);
+            // Generate the friendly unit of the ago time
+            if (seconds == 1) {
+                unit = "few seconds ago";
+            } else {
+                unit = "few seconds ago";
+            }
+            finalString = String.format(Locale.ENGLISH, "%.0f", seconds) + unit;
+        } else if (timeElapsed < oneHour) {
+            double minutes = (double) ((timeElapsed / 1000) / 60);
+            minutes = Math.round(minutes);
+            if (minutes == 1) {
+                unit = "m";
+            } else {
+                unit = "m";
+            }
+            finalString = String.format(Locale.ENGLISH, "%.0f", minutes) + unit;
+        } else if (timeElapsed < oneDay) {
+            double hours = (double) ((timeElapsed / 1000) / 60 / 60);
+            hours = Math.round(hours);
+            if (hours == 1) {
+                unit = "h";
+            } else {
+                unit = "h";
+            }
+            finalString = String.format(Locale.ENGLISH, "%.0f", hours) + unit;
+        } else if (timeElapsed < oneWeek) {
+            double days = (double) ((timeElapsed / 1000) / 60 / 60 / 24);
+            days = Math.round(days);
+            if (days == 1) {
+                unit = "d";
+            } else {
+                unit = "d";
+            }
+            finalString = String.format(Locale.ENGLISH, "%.0f", days) + unit;
+        } else if (timeElapsed > oneWeek) {
+            double weeks = (double) ((timeElapsed / 1000) / 60 / 60 / 24 / 7);
+            weeks = Math.round(weeks);
+            if (weeks == 1) {
+                unit = "w";
+            } else {
+                unit = "w";
+            }
+            finalString = String.format(Locale.ENGLISH, "%.0f", weeks) + unit;
+        }
+        return finalString;
+    }
+
+    public static int colorFinder(String link) {
+        int color = 0;
+        if (link.toLowerCase().contains("onlinekhabar".toLowerCase()))
+            color = Color.parseColor("#D32F2F");
+
+        if (link.toLowerCase().contains("medianp".toLowerCase()))
+            color = Color.parseColor("#C2185B");
+        if (link.toLowerCase().contains("onlinepatrika".toLowerCase()))
+            color = Color.parseColor("#7B1FA2");
+        if (link.toLowerCase().contains("nepaliheadlines".toLowerCase()))
+            color = Color.parseColor("#512DA8");
+        if (link.toLowerCase().contains("nepalisamachar".toLowerCase()))
+            color = Color.parseColor("#303F9F");
+        if (link.toLowerCase().contains("nayasamachar".toLowerCase()))
+            color = Color.parseColor("#1976D2");
+        if (link.toLowerCase().contains("sambadmedia".toLowerCase()))
+            color = Color.parseColor("#0288D1");
+        if (link.toLowerCase().contains("tajaonlinekhabar".toLowerCase()))
+            color = Color.parseColor("#0097A7");
+        if (link.toLowerCase().contains("lokaantar".toLowerCase()))
+            color = Color.parseColor("#00796B");
+        if (link.toLowerCase().contains("enepalikhabar".toLowerCase()))
+            color = Color.parseColor("#388E3C");
+        if (link.toLowerCase().contains("nepalaaja".toLowerCase()))
+            color = Color.parseColor("#689F38");
+        if (link.toLowerCase().contains("onsnews".toLowerCase()))
+            color = Color.parseColor("#AFB42B");
+        if (link.toLowerCase().contains("nayapage".toLowerCase()))
+            color = Color.parseColor("#FBC02D");
+        if (link.toLowerCase().contains("souryadaily".toLowerCase()))
+            color = Color.parseColor("#F57C00");
+        if (link.toLowerCase().contains("rajdhanidaily".toLowerCase()))
+            color = Color.parseColor("#E64A19");
+        if (link.toLowerCase().contains("chardisha".toLowerCase()))
+            color = Color.parseColor("#5D4037");
+        return color;
+    }
 
     public static List<Entry> deleteEnglishFeeds(List<Entry> entries) {
         ArrayList<Entry> entries1 = new ArrayList<>();
@@ -220,7 +330,7 @@ public class Parse {
         //for special category
         for (Entry entry : entries) {
 
-            if (entry.getLink().contains("http://www.nepalihealth.com/") || entry.getLink().contains("http://nepalhealthnews.com")) {
+            if (entry.getLink().contains("http://www.nepalihealth.com/") || entry.getLink().contains("http://nepalhealthnews.com") || entry.getLink().contains("http://swasthyakhabar.com")) {
                 health.add(entry);
                 feeds_filtered++;
             }
@@ -281,7 +391,7 @@ public class Parse {
                 } else//ic_newspaper
                     if (s.equalsIgnoreCase("सैाजन्य")
                             || s.equalsIgnoreCase("saujanya")
-                            ||s.equalsIgnoreCase("सम्पादकीय")
+                            || s.equalsIgnoreCase("सम्पादकीय")
                             || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
                             || s.equalsIgnoreCase("आजको पत्रिका बाट")
                             || s.equalsIgnoreCase("छापामा")
@@ -292,8 +402,8 @@ public class Parse {
                     }//national
                     else if (s.equalsIgnoreCase("Nepal News")
                             || s.equalsIgnoreCase("समाचार")
-                            ||s.equalsIgnoreCase("खोजखबर")
-                            ||s.equalsIgnoreCase("मुलुक")
+                            || s.equalsIgnoreCase("खोजखबर")
+                            || s.equalsIgnoreCase("मुलुक")
                             || s.equalsIgnoreCase("Community News")
                             || s.equalsIgnoreCase("Night only")
                             || s.equalsIgnoreCase("राष्ट्रिय समाचार")
@@ -362,6 +472,7 @@ public class Parse {
                             || s.equalsIgnoreCase("अन्तर्राष्ट्रिय समाचार")
                             || s.equalsIgnoreCase("बिविध")
                             || s.equalsIgnoreCase("विविध")
+                            || s.equalsIgnoreCase("Offbeat")
                             || s.equalsIgnoreCase("सम–सामयिक")
                             || s.equalsIgnoreCase("बिश्व")
                             || s.equalsIgnoreCase("वर्ल्ड")
@@ -482,6 +593,7 @@ public class Parse {
                             || s.equalsIgnoreCase("मोफसल")
                             || s.equalsIgnoreCase("उपभाेक्ता")
                             || s.equalsIgnoreCase("श्वास्थ्य")
+                            || s.equalsIgnoreCase("हेल्थ न्यूज")
                             || s.equalsIgnoreCase("खन")
                             || s.equalsIgnoreCase("धर्म / संस्कृति")
                             || s.equalsIgnoreCase("स्वास्थ्य जानकारी")

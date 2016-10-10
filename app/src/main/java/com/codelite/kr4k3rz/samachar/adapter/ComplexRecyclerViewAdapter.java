@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,14 +95,16 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         } else {
             vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
         }
-        String s = String.valueOf(DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
-                System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_ALL));
+
         try {
             vh2.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
-        vh2.date.setText(String.format("%s", s)); //to set date time in '3 minutes ago' like
+
+        vh2.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
+
+
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("enableImage", true);
 
         if (enableImage) {
@@ -124,6 +125,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
     }
+
 
     private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
         if (url != null && url.startsWith("http://")) {

@@ -94,6 +94,7 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
         recyclerView.setAdapter(new ComplexRecyclerViewAdapter(context, objects));
 
         refreshLayout.setRefreshing(false);
+
         if (feedSize == 0)
             SnackMsg.showMsgLong(rootView, "zero feeds loaded");
         else

@@ -26,7 +26,6 @@ public class HotTabFrag extends Fragment {
         Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new BreakingNews(), "ताजा खबर");
         adapter.addFragment(new AllFeedFrag(), "समाचार");
-
         viewPager.setAdapter(adapter);
     }
 
@@ -47,7 +46,7 @@ public class HotTabFrag extends Fragment {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(FragmentManager fm) {
+        Adapter(FragmentManager fm) {
             super(fm);
         }
 
