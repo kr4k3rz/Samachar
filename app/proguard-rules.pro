@@ -23,6 +23,8 @@
 -dontwarn android.test.**
 -dontwarn android.support.test.**
 
+-dontwarn com.tojc.ormlite.android.compiler.**
+-dontwarn com.squareup.javawriter.**
 -keep class org.hamcrest.** {
    *;
 }
