@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.codelite.kr4k3rz.samachar.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.util.Parse;
+import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
+import com.codelite.kr4k3rz.samachar.util.FilterCategory;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -80,7 +80,8 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
 
-        feedSize = Parse.filterCategories(list, context).get(categoryNum);
+        FilterCategory filterCategory = new FilterCategory(list, context);
+        feedSize = filterCategory.filter().get(categoryNum);
         return null;
     }
 

@@ -13,7 +13,8 @@ public enum WhichCategory {
     TECHNOLOGY("सूचना प्रविधि", "TechnologyFrag"),
     ENTERTAINMENT("मनोरञ्जन", "EntertainmentFrag"),
     HEALTH("स्वास्थ्य", "HealthFrag"),
-    SPORT("खेलकुद", "SportFrag");
+    SPORT("खेलकुद", "SportFrag"),
+    IMGVID("ImageVideo", "ImgVid");
 
 
     final String mFirstName;

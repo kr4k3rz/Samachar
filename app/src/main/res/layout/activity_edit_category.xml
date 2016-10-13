@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codelite.kr4k3rz.samachar.activity.SettingsActivity">
+    tools:context=".ui.activity.SettingsActivity">
 
     <include
         android:id="@+id/toolbar_edit_category"

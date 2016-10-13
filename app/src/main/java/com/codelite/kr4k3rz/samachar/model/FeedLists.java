@@ -14,7 +14,6 @@ public class FeedLists {
 
         ArrayList<Category> categories = new ArrayList<>();//<-- its collects all the Category
         Category category_headlines = new Category();
-
         //<-- Headlines -->
         category_headlines.setName_category("मुख्य समाचार");   //<--it for Category name eg. Headline
         ArrayList<SubCategory> subCategories_headlines;  // <-- it for subcategory eg. Online Khabar , its cache_link and latest_link
@@ -33,16 +32,11 @@ public class FeedLists {
                 {"Nepal Aaja", "http://nepalaaja.com/feed/"},
                 {"ONS Nepal", "http://www.onsnews.com/feed/"},
                 {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},//ok
-               // {"Naya Page", "http://www.nayapage.com/feed"},
+                {"Naya Page", "http://www.nayapage.com/feed"},
                 {"Sourya Daily", "http://www.souryadaily.com/feed"},
                 {"Rajdhani Daily", "http://rajdhanidaily.com/feed/"},
                 {"Char disa", "http://chardisha.com/feed/"},
-                {"Karobar Daily", "http://www.karobardaily.com/rss"},
-                {"Screen Nepal", "http://screennepal.com/feed"},
                 {"Nepali Health", "http://www.nepalihealth.com/feed/"},
-                {"Nepal Health New", "http://nepalhealthnews.com/feed/"},
-                {"Swasthya Khabar", "http://swasthyakhabar.com/feed"},
-                {"Aaakar Post", "http://feeds.feedburner.com/Aakar"}
 
 
         };

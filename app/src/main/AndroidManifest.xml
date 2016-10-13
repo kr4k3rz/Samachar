@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".ui.activity.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,19 +18,19 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activity.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:name=".ui.activity.SplashActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".activity.CategoryActivity" />
-        <activity android:name=".activity.DetailFeed" />
-        <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.EditCategory" />
-        <activity android:name=".activity.AboutActivity" />
+        <activity android:name=".ui.activity.CategoryActivity" />
+        <activity android:name=".ui.activity.DetailFeed" />
+        <activity android:name=".ui.activity.SettingsActivity" />
+        <activity android:name=".ui.activity.EditCategory" />
+        <activity android:name=".ui.activity.AboutActivity" />
 
         <service android:name=".worker.MyIntentService" />
 
