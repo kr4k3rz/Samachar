@@ -81,7 +81,7 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
         FilterCategory filterCategory = new FilterCategory(list, context);
-        feedSize = filterCategory.filter().get(categoryNum);
+        filterCategory.filter();
         return null;
     }
 

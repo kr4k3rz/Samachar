@@ -59,7 +59,7 @@ public class FilterCategory {
      *
      * @return the array list of integer that contains the category feeds loaded
      */
-    public ArrayList<Integer> filter() {
+    public void filter() {
         List<Header> categories = new ArrayList<>();
         List<List<Entry>> main = new ArrayList<>();
         int total_feeds = 0;
@@ -69,7 +69,7 @@ public class FilterCategory {
         List<Integer> mPriorSize = new ArrayList<>();
         List<Integer> mFeedSize = new ArrayList<>();
         List<Object> objects = new ArrayList<>();
-       // List<Entry> filteredWithImg;
+        // List<Entry> filteredWithImg;
         // filteredWithImg = feedsWithImg();
         categories.add(new Header(WhichCategory.BREAKING.getFirstName(), WhichCategory.BREAKING.getSecondName()));
         categories.add(new Header(WhichCategory.NEWSPAPER.getFirstName(), WhichCategory.NEWSPAPER.getSecondName()));
@@ -180,7 +180,8 @@ public class FilterCategory {
         for (Entry entry : entryList) {
             total_feeds++;
             //Only health
-            if (entry.getLink().contains("http://www.nepalihealth.com/") || entry.getLink().contains("http://nepalhealthnews.com") || entry.getLink().contains("http://swasthyakhabar.com")) {
+            if (entry.getLink().contains("http://www.nepalihealth.com/")
+                    || entry.getLink().contains("http://nepalhealthnews.com")) {
                 health.add(entry);
                 feeds_filtered++;
             }
@@ -451,6 +452,7 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("स्पेशल स्टोरी")
                             || s.equalsIgnoreCase("Health")
                             || s.equalsIgnoreCase("डाक्टर आर्टिकल")
+                            || s.equalsIgnoreCase("थायरोइड समस्या")
                             || s.equalsIgnoreCase("यौन स्वास्थ्य")
                             || s.equalsIgnoreCase("मोफसल")
                             || s.equalsIgnoreCase("उपभाेक्ता")
@@ -515,8 +517,12 @@ public class FilterCategory {
         Log.i(TAG, "Total Feeds Size : " + total_feeds);
         Log.i(TAG, "feeds categorized : " + feeds_filtered);
         Log.i(TAG, "feeds not filtered : " + feeds_notFiltered);
+        int categoryNewFeeds = 0;
+        int breakingNUm = 0;
+        int imgvid = 0;
         for (int i = 0; i < CATEGORY_NUMBER; i++) {
             List<Entry> processedFeeds;//new
+
             processedFeeds = main.get(i);
             processedFeeds = Parse.deleteDuplicate(processedFeeds); //delete duplicate feeds
             processedFeeds = Parse.deleteEnglishFeeds(processedFeeds);  //delete english feeds
@@ -534,10 +540,25 @@ public class FilterCategory {
             Header header = categories.get(i);
             clearFeedsByPref(processedFeeds, context);
             Paper.book().write(header.getSecondName(), processedFeeds);
-            mFeedSize.add(processedFeeds.size() - mPriorSize.get(i));
+            if (i == 0) {
+                breakingNUm = processedFeeds.size() - mPriorSize.get(i);
+                Log.i(TAG, "Breaking news : " + breakingNUm);
+                Paper.book().write("BREAKINGNUM", breakingNUm);
+            }
+            if (i > 0 && i <= 10) {
+                categoryNewFeeds += processedFeeds.size() - mPriorSize.get(i);  //size of all category news latest
+                Log.i(TAG, "Category news : " + categoryNewFeeds);
+                Paper.book().write("CATEGORYNUM", categoryNewFeeds);
+            }
+            if (i == 11) {
+                imgvid = processedFeeds.size() - mPriorSize.get(i);
+                Log.i(TAG, "ImgVid : " + imgvid);
+                Paper.book().write("IMGVIDNUM", imgvid);
+            }
+
+
         }
         Paper.book().write("AllFeeds", objects);
-        return (ArrayList<Integer>) mFeedSize;
     }
 
     private void clearFeedsByPref(List<Entry> feeds, Context context) {

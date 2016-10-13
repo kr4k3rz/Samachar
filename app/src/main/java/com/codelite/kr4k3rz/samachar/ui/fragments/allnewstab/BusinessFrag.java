@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.model.WhichCategory;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
@@ -32,7 +33,7 @@ public class BusinessFrag extends Fragment {
 
     private static final String TAG = BusinessFrag.class.getSimpleName();
     private static final String CACHE_NAME = WhichCategory.BUSINESS.getSecondName();
-    private final String[] mSpecialFeeds = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.karobardaily.com/rss&num=-1&scoring=h"};
+    private final String[] mSpecialFeeds = FeedLists.getFeedListCached(1);
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View rootView;
@@ -51,30 +52,13 @@ public class BusinessFrag extends Fragment {
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_business);
+        List<Entry> list = Paper.book().read(CACHE_NAME);
+        recyclerView.setAdapter(new RvAdapter(getContext(), list));
         initSwipeRefresh();
         return rootView;
     }
 
     private void initSwipeRefresh() {
-        mSwipeRefreshLayout.post(new Runnable() {
-                                     @Override
-                                     public void run() {
-                                         Log.i(TAG, "SwipeRefresh post()");
-                                         if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.BUSINESS.ordinal()).execute(mSpecialFeeds);
-                                         } else {
-                                             mSwipeRefreshLayout.setRefreshing(true);
-                                             List<Entry> list = Paper.book().read(CACHE_NAME);
-                                             if (!Paper.book().exist(CACHE_NAME)) {
-                                                 SnackMsg.showMsgShort(rootView, "connect to internet");
-                                             } else
-                                                 recyclerView.setAdapter(new RvAdapter(getContext(), list));
-                                             mSwipeRefreshLayout.setRefreshing(false);
-                                         }
-
-                                     }
-                                 }
-        );
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

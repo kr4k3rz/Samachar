@@ -8,15 +8,14 @@
     <tab
         barColorWhenSelected="#D3D3D3"
         icon="@drawable/ic_newspaper"
-        id="@+id/mynews_item"
+        id="@+id/categoryAll"
 
         title="News" />
     <tab
         barColorWhenSelected="#D3D3D3"
         icon="@drawable/icon_entertainment"
-        id="@+id/edit_category"
-
-        title="Favourite" />
+        id="@+id/imgvid"
+        title="ImgVid" />
     <tab
         barColorWhenSelected="#D3D3D3"
         icon="@drawable/icon_setting"

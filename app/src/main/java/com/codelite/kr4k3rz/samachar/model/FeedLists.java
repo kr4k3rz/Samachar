@@ -14,7 +14,7 @@ public class FeedLists {
 
         ArrayList<Category> categories = new ArrayList<>();//<-- its collects all the Category
         Category category_headlines = new Category();
-        //<-- Headlines -->
+        //<-- Headlines --> 0
         category_headlines.setName_category("मुख्य समाचार");   //<--it for Category name eg. Headline
         ArrayList<SubCategory> subCategories_headlines;  // <-- it for subcategory eg. Online Khabar , its cache_link and latest_link
         subCategories_headlines = new ArrayList<>();
@@ -61,7 +61,7 @@ public class FeedLists {
         categories.add(category_headlines);
 
 
-        //<--Business-->
+        //<--Business--> 1
         Category category_business = new Category();
         category_business.setName_category("अर्थ");
         ArrayList<SubCategory> subCategories_businesses = new ArrayList<>();
@@ -91,7 +91,7 @@ public class FeedLists {
         category_business.setSub_category(subCategories_businesses);
         categories.add(category_business);
 
-        //<--Entertainment-->
+        //<--Entertainment--> 2
         Category category_entertainment = new Category();
         category_entertainment.setName_category("कला");
 
@@ -123,7 +123,7 @@ public class FeedLists {
         categories.add(category_entertainment);
 
 
-        //<--Health-->
+        //<--Health--> 3
         Category category_health;
         category_health = new Category();
         category_health.setName_category("स्वास्थ्य");
@@ -131,8 +131,7 @@ public class FeedLists {
 
         String[][] health_feed = new String[][]{
                 {"Nepali Health", "http://www.nepalihealth.com/feed/"},
-                {"Nepal Health New", "http://nepalhealthnews.com/feed/"},
-                {"Swasthya Khabar", "http://swasthyakhabar.com/feed"}
+                {"Nepal Health New", "http://nepalhealthnews.com/feed/"}
         };
 
         for (String[] aHealth_feed : health_feed) {
@@ -156,7 +155,7 @@ public class FeedLists {
         categories.add(category_health);
 
 
-        //<--Technology
+        //<--Technology 4
         Category category_technology;
         category_technology = new Category();
         category_technology.setName_category("प्रविधि");

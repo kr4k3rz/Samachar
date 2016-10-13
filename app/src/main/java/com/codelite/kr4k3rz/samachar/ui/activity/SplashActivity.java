@@ -122,7 +122,7 @@ public class SplashActivity extends AppCompatActivity {
                             }
                             if (responseCount == rss.length - 1) {
                                 FilterCategory filterCategory = new FilterCategory(list, getBaseContext());
-                                filterCategory.filter().get(1);
+                                filterCategory.filter();
                                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -157,7 +157,7 @@ public class SplashActivity extends AppCompatActivity {
                         public void run() {
                             if (failureCount == rss.length - 1) {
                                 FilterCategory filterCategory = new FilterCategory(list, getBaseContext());
-                                filterCategory.filter().get(1);
+                                filterCategory.filter();
                                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -199,7 +199,7 @@ public class SplashActivity extends AppCompatActivity {
                                 public void progressToComplete() {
                                     Log.i("TAG", "on completed: ");
                                     FilterCategory filterCategory = new FilterCategory(list, getBaseContext());
-                                    filterCategory.filter().get(1);
+                                    filterCategory.filter();
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     startActivity(intent);
                                     finish();

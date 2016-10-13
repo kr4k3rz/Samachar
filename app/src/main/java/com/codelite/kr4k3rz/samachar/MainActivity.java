@@ -21,8 +21,11 @@ import com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab.NewsTabFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab.HotTabFrag;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
     private Fragment fragment;
@@ -49,16 +52,26 @@ public class MainActivity extends AppCompatActivity {
 
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         /*TODO add number feeds count updated when Broadcaster runs at background*/
-        //  final BottomBarTab nearby = bottomBar.getTabWithId(R.id.mynews_item);
+        //  final BottomBarTab nearby = bottomBar.getTabWithId(R.id.categoryAll);
 //        int newFeeds = Hawk.get("NewFeedsLoaded");
         //      Log.i(MainActivity.class.getSimpleName(), "value : " + newFeeds);
         //    nearby.setBadgeCount(newFeeds);
+        final BottomBarTab breakingNum = bottomBar.getTabWithId(R.id.home_item);
+        final int breakingNewNumber = Paper.book().read("BREAKINGNUM");
+        breakingNum.setBadgeCount(breakingNewNumber);
+        final BottomBarTab categoryAllNum = bottomBar.getTabWithId(R.id.categoryAll);
+        int allCategoryNewNum = Paper.book().read("CATEGORYNUM");
+        categoryAllNum.setBadgeCount(allCategoryNewNum);
+        final BottomBarTab imgVidNum = bottomBar.getTabWithId(R.id.imgvid);
+        int imgVidNewNumber = Paper.book().read("IMGVIDNUM");
+        imgVidNum.setBadgeCount(imgVidNewNumber);
+
+
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 boolean flag = false;
-
                 switch (tabId) {
                     case R.id.home_item:
                         try {
@@ -68,20 +81,23 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         break;
-                    case R.id.mynews_item:
+                    case R.id.categoryAll:
                         try {
                             fragment = NewsTabFrag.class.newInstance();
-                            //   nearby.removeBadge();
+                            categoryAllNum.removeBadge();
+                            breakingNum.removeBadge();
 
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         //Snackbar.make(coordinatorLayout, "Favorite Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
-                    case R.id.edit_category:
-                        //  startActivity(new Intent(MainActivity.this, EditCategory.class));
+                    case R.id.imgvid:
                         try {
                             fragment = ImgVidFrag.class.newInstance();
+                            imgVidNum.removeBadge();
+                            breakingNum.removeBadge();
+
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -90,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.more_item:
                         /*TODO make setting Fragment best memory optimized*/
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        breakingNum.removeBadge();
+
                         break;
                 }
 
@@ -112,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 if (tabId == R.id.more_item)
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
-                if (tabId == R.id.edit_category)
+                if (tabId == R.id.imgvid)
                     startActivity(new Intent(MainActivity.this, EditCategory.class));
             }
         });

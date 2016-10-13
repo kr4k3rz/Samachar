@@ -81,7 +81,7 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
         }
 
         FilterCategory filterCategory = new FilterCategory(list, context);
-        feedSize = filterCategory.filter().get(categoryNum);
+        filterCategory.filter();
         return null;
     }
 
@@ -89,7 +89,6 @@ public class AsyncHelper extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         List<Entry> feeds = Paper.book().read(cacheName);
-        // Parse.clearFeedsByPref(feeds, context);
         recyclerView.setAdapter(new RvAdapter(context, feeds));
         refreshLayout.setRefreshing(false);
         if (feedSize == 0)
