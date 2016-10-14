@@ -21,6 +21,24 @@ public class Entry implements Serializable {
     private String link;
     @SerializedName("categories")
     private List<String> categories;
+    private String linkFeed;
+    private String titleFeed;
+
+    public String getTitleFeed() {
+        return titleFeed;
+    }
+
+    public void setTitleFeed(String titleFeed) {
+        this.titleFeed = titleFeed;
+    }
+
+    public String getLinkFeed() {
+        return linkFeed;
+    }
+
+    public void setLinkFeed(String linkFeed) {
+        this.linkFeed = linkFeed;
+    }
 
     public String getContentSnippet() {
         return contentSnippet;

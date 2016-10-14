@@ -91,6 +91,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         actualUrl = convertImgUrl(actualUrl, url);
         vh2.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+
             vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
         } else {
             vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());

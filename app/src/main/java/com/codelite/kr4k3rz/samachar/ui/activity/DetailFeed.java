@@ -74,13 +74,11 @@ public class DetailFeed extends AppCompatActivity {
                 System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));*/
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM ''yy, HH:mm ", Locale.ENGLISH);
         date.setText(simpleDateFormat.format(Date.parse(entry.getDate())));
-        /*
-        * TODO
-        * remove the TAG of The First Post Appeared by JSOUP*/
 
-
-        content.setText(Html.fromHtml(entry.getContent(), Parse.EMPTY_IMAGE_GETTER, null));
-
+       /*use to remove the TAG */
+        String check = "<p>The post <a rel=\"nofollow\" href=\"" + entry.getLink() + "\">" + entry.getTitle() + "</a> appeared first on <a rel=\"nofollow\" href=\"" + entry.getLinkFeed() + "\">" + entry.getTitleFeed() + "</a>.</p>";
+        String contentHtml = entry.getContent().replace(check, "");
+        content.setText(Html.fromHtml(contentHtml, Parse.EMPTY_IMAGE_GETTER, null));
 
         author.setText(entry.getAuthor());
         String url = Parse.parseImg(entry.getContent());
@@ -106,7 +104,7 @@ public class DetailFeed extends AppCompatActivity {
                 Log.e("TEXT", "setTags: " + flowLayout.getChildCount());
                 flowLayout.removeAllViews();
                 for (String s : fetchList) {
-                    FlowLayout.LayoutParams lparams = new FlowLayout.LayoutParams(org.apmem.tools.layouts.FlowLayout.LayoutParams.WRAP_CONTENT, org.apmem.tools.layouts.FlowLayout.LayoutParams.WRAP_CONTENT);
+                    FlowLayout.LayoutParams lparams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
                     lparams.setMargins(5, 5, 5, 5);
                     @SuppressLint("InflateParams") TextView rowTextView = (TextView) getLayoutInflater().inflate(R.layout.custom_tag_textview, null);
                     rowTextView.setText(s);

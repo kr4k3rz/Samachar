@@ -57,7 +57,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         customViewHolder.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());

@@ -99,11 +99,16 @@ public class SplashActivity extends AppCompatActivity {
                         JSONObject mainNode = new JSONObject(jsonStr);
                         JSONObject responseData = mainNode.getJSONObject("responseData");
                         JSONObject feeds = responseData.getJSONObject("feed");
+                        String feedTitle = feeds.getString("title");
+                        String feedLink = feeds.getString("link");
+                        Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
                         JSONArray entries = feeds.getJSONArray("entries");
+
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Entry>>() {
                         }.getType();
                         List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
+                        addTitleLink(feedTitle, feedLink, posts);
                         list.addAll(posts);
 
                     } catch (JSONException e) {
@@ -131,6 +136,13 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     });
 
+                }
+
+                private void addTitleLink(String feedTitle, String feedLink, List<Entry> posts) {
+                    for (Entry entry : posts) {
+                        entry.setTitleFeed(feedTitle);
+                        entry.setLinkFeed(feedLink);
+                    }
                 }
             });
 
@@ -174,11 +186,18 @@ public class SplashActivity extends AppCompatActivity {
                         JSONObject mainNode = new JSONObject(jsonStr);
                         JSONObject responseData = mainNode.getJSONObject("responseData");
                         JSONObject feeds = responseData.getJSONObject("feed");
+                        String feedTitle = feeds.getString("title");
+                        String feedLink = feeds.getString("link");
+                        Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
                         JSONArray entries = feeds.getJSONArray("entries");
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Entry>>() {
                         }.getType();
                         List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
+                        for (Entry entry : posts) {
+                            entry.setTitleFeed(feedTitle);
+                            entry.setLinkFeed(feedLink);
+                        }
                         list.addAll(posts);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -206,8 +225,10 @@ public class SplashActivity extends AppCompatActivity {
                                 }
                             });
 
+
                         }
                     });
+
                 }
             });
 
