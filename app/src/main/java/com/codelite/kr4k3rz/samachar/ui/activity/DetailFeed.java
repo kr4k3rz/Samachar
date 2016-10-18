@@ -1,6 +1,7 @@
 package com.codelite.kr4k3rz.samachar.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
+import com.codelite.kr4k3rz.samachar.util.ToastMsg;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apmem.tools.layouts.FlowLayout;
@@ -30,13 +32,19 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import io.paperdb.Paper;
 
 
 /*
 * shows the details of the  every feeds clicked*/
 public class DetailFeed extends AppCompatActivity {
+    static final String TAG = DetailFeed.class.getSimpleName();
     DiscreteSeekBar discreteSeekBar1;
+    Entry entry;
+    boolean checked = false;
     private TextView content;
 
     @SuppressLint("SetTextI18n")
@@ -65,18 +73,18 @@ public class DetailFeed extends AppCompatActivity {
         CardView cardView = (CardView) findViewById(R.id.myCardview);
         TextView author = (TextView) findViewById(R.id.authorTv);
 
-        Entry entry = (Entry) getIntent().getSerializableExtra("ENTRY");
+        entry = (Entry) getIntent().getSerializableExtra("ENTRY");
 
         Log.d("DETAIL FEEDS", "Entry : " + entry.getTitle());
         content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
         title.setText(entry.getTitle());
-        /*date.setText(" " + DateUtils.getRelativeTimeSpanString(Date.parse(entry.getDate()),
-                System.currentTimeMillis(), DateUtils.FORMAT_ABBREV_RELATIVE));*/
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM ''yy, HH:mm ", Locale.ENGLISH);
         date.setText(simpleDateFormat.format(Date.parse(entry.getDate())));
-
+        Log.i(TAG,entry.getContent());
        /*use to remove the TAG */
         String check = "<p>The post <a rel=\"nofollow\" href=\"" + entry.getLink() + "\">" + entry.getTitle() + "</a> appeared first on <a rel=\"nofollow\" href=\"" + entry.getLinkFeed() + "\">" + entry.getTitleFeed() + "</a>.</p>";
+        Log.i(TAG,""+check);
         String contentHtml = entry.getContent().replace(check, "");
         content.setText(Html.fromHtml(contentHtml, Parse.EMPTY_IMAGE_GETTER, null));
 
@@ -154,10 +162,8 @@ public class DetailFeed extends AppCompatActivity {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, getIntent().getExtras().getString("link"));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share this article with..."));
-
                 return true;
             case R.id.action_textSize:
-
                 if (discreteSeekBar1.getVisibility() == View.VISIBLE) {
                     discreteSeekBar1.setVisibility(View.GONE);
                     break;
@@ -189,11 +195,48 @@ public class DetailFeed extends AppCompatActivity {
                     }
                 });
                 return true;
+            case R.id.action_bookmark:
+                if (item.isChecked()) {
+                    ToastMsg.shortMsg(getBaseContext(), "inside checked");
+                    item.setIcon(R.drawable.ic_star_selected);
+                    if (Paper.book().exist("BookMark")) {
+                        List<Entry> entries;
+                        entries = Paper.book().read("BookMark");
+                        entries.add(entry);
+                        Paper.book().write("BookMark", entries);
+                    } else {
+                        List<Entry> entries = new ArrayList<>();
+                        entries.clear();
+                        entries.add(entry);
+                        Paper.book().write("BookMark", entries);
+                    }
+                    checked = true;
+                    item.setChecked(false);
+                } else {
+                    ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
+                    item.setIcon(R.drawable.ic_star_unselected);
+                    item.setChecked(true);
+                    if (Paper.book().exist("BookMark")) {
+                        List<Entry> entries;
+                        entries = Paper.book().read("BookMark");
+                        entries.remove(entry);
+                        Paper.book().write("BookMark", entries);
+                    }
+                    checked = false;
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
 
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("RESULT", checked);
+        setResult(Activity.RESULT_OK, intent);
     }
 }

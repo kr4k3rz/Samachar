@@ -23,6 +23,7 @@
             android:key="editCategories"
             android:summary="select the newspapers want to load and read "
             android:title="Edit Categories" />
+
         <ListPreference
             android:entries="@array/listDisplayWord"
             android:entryValues="@array/listReturnValue"
@@ -31,8 +32,15 @@
             android:title="Numbers of Feeds to Store" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="About">
+    <PreferenceCategory android:title="Articles">
+        <Preference
+            android:enabled="true"
+            android:key="savedarticle"
+            android:summary="opens the saved articles "
+            android:title="Saved Articles" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="About">
         <Preference
             android:key="aboutPref"
             android:title="About the Samachar App" />

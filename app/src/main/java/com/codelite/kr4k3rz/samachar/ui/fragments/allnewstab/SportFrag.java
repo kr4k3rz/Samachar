@@ -15,9 +15,10 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.FeedLists;
-import com.codelite.kr4k3rz.samachar.model.WhichCategory;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
@@ -30,7 +31,7 @@ import io.paperdb.Paper;
  */
 public class SportFrag extends Fragment {
     private static final String TAG = SportFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.SPORT.getSecondName();
+    private static final String CACHE_NAME = WhichCategoryNP.SPORT.getSecondName();
     /*for loading at postRefresh at first lunch*/
     private View rootView;
     private RecyclerView recyclerView;
@@ -63,13 +64,13 @@ public class SportFrag extends Fragment {
                                      @Override
                                      public void run() {
                                          Log.i(TAG, "SwipeRefresh post()");
-                                         if (!Paper.book().exist(CACHE_NAME) && CheckInternet.isNetworkAvailable(getContext())) {
+                                         if (!Paper.book().exist(CacheLang.findLang(CACHE_NAME)) && CheckInternet.isNetworkAvailable(getContext())) {
                                              String[] rss = FeedLists.getFeedListCached(0);
-                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.SPORT.ordinal()).execute(rss);
+                                             new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CacheLang.findLang(CACHE_NAME), recyclerView, WhichCategoryNP.SPORT.ordinal()).execute(rss);
                                          } else {
                                              mSwipeRefreshLayout.setRefreshing(true);
-                                             List<Entry> list = Paper.book().read(CACHE_NAME);
-                                             if (!Paper.book().exist(CACHE_NAME)) {
+                                             List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+                                             if (!Paper.book().exist(CacheLang.findLang(CACHE_NAME))) {
                                                  SnackMsg.showMsgShort(rootView, "connect to internet");
                                              } else
                                                  recyclerView.setAdapter(new RvAdapter(getContext(), list));
@@ -86,7 +87,7 @@ public class SportFrag extends Fragment {
                 Log.d(TAG, "SwipeRefresh()");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
                     String[] rss_new = FeedLists.getFeedListLatest(0);
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.SPORT.ordinal()).execute(rss_new);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CacheLang.findLang(CACHE_NAME), recyclerView, WhichCategoryNP.SPORT.ordinal()).execute(rss_new);
                 } else {
                     SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);

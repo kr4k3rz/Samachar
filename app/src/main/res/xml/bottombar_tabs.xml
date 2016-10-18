@@ -2,24 +2,22 @@
 <tabs>
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/icon_headlines"
+        icon="@drawable/ic_home"
         id="@+id/home_item"
-        title="Breaking" />
+        title="home" />
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/ic_newspaper"
+        icon="@drawable/ic_view_carousel"
         id="@+id/categoryAll"
-
-        title="News" />
+        title="my news" />
     <tab
         barColorWhenSelected="#D3D3D3"
         icon="@drawable/icon_entertainment"
         id="@+id/imgvid"
-        title="ImgVid" />
+        title="imgvid" />
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/icon_setting"
-        id="@+id/more_item"
-
+        icon="@drawable/ic_book"
+        id="@+id/mylist"
         title="more" />
 </tabs>

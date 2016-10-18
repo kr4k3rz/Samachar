@@ -13,16 +13,19 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.codelite.kr4k3rz.samachar.ui.activity.EditCategory;
+import com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SettingsActivity;
+import com.codelite.kr4k3rz.samachar.ui.activity.SplashActivity;
 import com.codelite.kr4k3rz.samachar.ui.fragments.ImgVidFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.MyListFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab.NewsTabFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab.HotTabFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab.HomeFrag;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.BottomBarTab;
-import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import io.paperdb.Paper;
@@ -35,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
         setupBottomBar();
-
         /*setup the alarm when to notify the user when the breaking news is popup*/
         setupAlarmNotify();
     }
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 //        int newFeeds = Hawk.get("NewFeedsLoaded");
         //      Log.i(MainActivity.class.getSimpleName(), "value : " + newFeeds);
         //    nearby.setBadgeCount(newFeeds);
-        final BottomBarTab breakingNum = bottomBar.getTabWithId(R.id.home_item);
+       /* final BottomBarTab breakingNum = bottomBar.getTabWithId(R.id.home_item);
         final int breakingNewNumber = Paper.book().read("BREAKINGNUM");
         breakingNum.setBadgeCount(breakingNewNumber);
         final BottomBarTab categoryAllNum = bottomBar.getTabWithId(R.id.categoryAll);
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         final BottomBarTab imgVidNum = bottomBar.getTabWithId(R.id.imgvid);
         int imgVidNewNumber = Paper.book().read("IMGVIDNUM");
         imgVidNum.setBadgeCount(imgVidNewNumber);
-
+*/
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (tabId) {
                     case R.id.home_item:
                         try {
-                            fragment = HotTabFrag.class.newInstance();
+                            fragment = HomeFrag.class.newInstance();
                             flag = true;
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
@@ -84,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.categoryAll:
                         try {
                             fragment = NewsTabFrag.class.newInstance();
-                            categoryAllNum.removeBadge();
-                            breakingNum.removeBadge();
+                            //   categoryAllNum.removeBadge();
+                            //  breakingNum.removeBadge();
 
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
@@ -95,19 +98,20 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.imgvid:
                         try {
                             fragment = ImgVidFrag.class.newInstance();
-                            imgVidNum.removeBadge();
-                            breakingNum.removeBadge();
+                            //   imgVidNum.removeBadge();
+                            // breakingNum.removeBadge();
 
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         //Snackbar.make(coordnatorLayout, "Location Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
-                    case R.id.more_item:
-                        /*TODO make setting Fragment best memory optimized*/
-                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                        breakingNum.removeBadge();
-
+                    case R.id.mylist:
+                        try {
+                            fragment = MyListFrag.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                         break;
                 }
 
@@ -122,18 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-// Remove the badge when you're done with it.
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
-                if (tabId == R.id.more_item)
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-
-                if (tabId == R.id.imgvid)
-                    startActivity(new Intent(MainActivity.this, EditCategory.class));
-            }
-        });
     }
 
     private void setupAlarmNotify() {
@@ -160,5 +152,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setting_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_setting:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_search:
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                return true;
+            case R.id.action_language:
+                if (CacheLang.lang().equalsIgnoreCase("NP")){
+                     String language = "EN";
+                    Paper.book().write("language", language);
+                    startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                 }else {
+                     String language = "NP";
+                     Paper.book().write("language", language);
+                     startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                 }
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

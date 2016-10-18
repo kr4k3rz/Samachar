@@ -1,13 +1,16 @@
 package com.codelite.kr4k3rz.samachar.ui.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,8 @@ import java.util.List;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> {
     private final Context mContext;
+    private String TAG = RvAdapter.class.getSimpleName();
+    private SparseBooleanArray selectedItems = new SparseBooleanArray();
     private List<Entry> entries = new ArrayList<>();
 
     public RvAdapter(Context context, List<Entry> entries) {
@@ -45,13 +50,21 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void onBindViewHolder(final CustomViewHolder customViewHolder, final int _position) {
-
-        /*Bind only data here*/
-        String actualUrl = null;
+    public void onBindViewHolder(final CustomViewHolder customViewHolder, @SuppressLint("RecyclerView") final int _position) {
         final Entry entry = entries.get(customViewHolder.getAdapterPosition());
-        String url = Parse.parseImg(entry.getContent());
 
+        if (selectedItems.get(customViewHolder.getAdapterPosition())) {
+            //if already selected set the same color
+            customViewHolder.title.setTextColor(Color.LTGRAY);
+            customViewHolder.contentSnippet.setTextColor(Color.LTGRAY);
+        } else {
+            //if not selected set the default color
+            customViewHolder.title.setTextColor(mContext.getResources().getColor(R.color.primary_text));
+            customViewHolder.contentSnippet.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+        }
+
+        String actualUrl = null;
+        String url = Parse.parseImg(entry.getContent());
         try {
             actualUrl = convertImgUrl(actualUrl, url);
         } catch (MalformedURLException e) {
@@ -70,9 +83,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             e1.printStackTrace();
         }
 
-
         customViewHolder.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
+        customViewHolder.date.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enableImage", true);
+
         if (enableImage) {
             Glide.with(mContext)
                     .load(actualUrl)
@@ -84,13 +98,19 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                customViewHolder.title.setTextColor(Color.LTGRAY);
+                customViewHolder.contentSnippet.setTextColor(Color.LTGRAY);
+                selectedItems.put(customViewHolder.getAdapterPosition(), true);
+                Log.i(TAG, "Inside on Click\n" + "_position :  " + _position + "\n getadapter position : " + customViewHolder.getAdapterPosition());
                 Intent intent = new Intent(mContext, DetailFeed.class);
                 intent.putExtra("ENTRY", entry);
-                mContext.startActivity(intent);
+                ((Activity) mContext).startActivityForResult(intent, 2);
+
             }
         });
 
     }
+
 
     private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
         if (url != null && url.startsWith("http://")) {
@@ -114,7 +134,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             return entries.size();
         else return 0;
     }
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         final TextView title;

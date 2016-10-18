@@ -82,7 +82,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="8dp"
                     android:drawableLeft="@drawable/icon_author"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:text="Author"
                     android:textColor="@color/accent"
                     android:textSize="12sp"

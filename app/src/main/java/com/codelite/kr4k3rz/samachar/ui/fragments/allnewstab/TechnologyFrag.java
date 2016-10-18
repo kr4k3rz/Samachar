@@ -15,9 +15,10 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.FeedLists;
-import com.codelite.kr4k3rz.samachar.model.WhichCategory;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
@@ -31,7 +32,7 @@ import io.paperdb.Paper;
  */
 public class TechnologyFrag extends Fragment {
     private static final String TAG = TechnologyFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.TECHNOLOGY.getSecondName();
+    private static final String CACHE_NAME = WhichCategoryNP.TECHNOLOGY.getSecondName();
     private final String[] mSpecialFeeds = FeedLists.getFeedListCached(4);
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,7 +52,7 @@ public class TechnologyFrag extends Fragment {
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_technology);
-        List<Entry> list = Paper.book().read(CACHE_NAME);
+        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
         initSwipeRefresh();
         return rootView;
@@ -64,7 +65,7 @@ public class TechnologyFrag extends Fragment {
             public void onRefresh() {
                 Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CacheLang.findLang(CACHE_NAME), recyclerView, WhichCategoryNP.TECHNOLOGY.ordinal()).execute(mSpecialFeeds);
                 } else {
                     SnackMsg.showMsgShort(rootView, "Couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);

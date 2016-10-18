@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryEN;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +23,26 @@ public class NewsTabFrag extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new NationalFrag(), "राष्ट्रिय");
-        adapter.addFragment(new NewsPaperFrag(), "पत्रपत्रिका");
-        adapter.addFragment(new LocalFrag(), "स्थानिय");
-        adapter.addFragment(new OpinionFrag(), "बिचार");
-        adapter.addFragment(new BusinessFrag(), "अर्थ");
-        adapter.addFragment(new WorldFrag(), "अन्तराष्ट्रिय");
-        adapter.addFragment(new EntertainmentFrag(), "मनोरञ्जन");
-        adapter.addFragment(new TechnologyFrag(), "प्रविधि");
-        adapter.addFragment(new HealthFrag(), "स्वास्थ्य");
-        adapter.addFragment(new SportFrag(), "खेल");
+        if (CacheLang.lang().equalsIgnoreCase("NP")) {
+            adapter.addFragment(new BreakingFrag(), WhichCategoryNP.BREAKING.getFirstName());
+            adapter.addFragment(new NationalFrag(), WhichCategoryNP.NATIONAL.getFirstName());
+            adapter.addFragment(new BusinessFrag(), WhichCategoryNP.BUSINESS.getFirstName());
+            adapter.addFragment(new WorldFrag(), WhichCategoryNP.WORLD.getFirstName());
+            adapter.addFragment(new EntertainmentFrag(), WhichCategoryNP.ENTERTAINMENT.getFirstName());
+            adapter.addFragment(new TechnologyFrag(), WhichCategoryNP.TECHNOLOGY.getFirstName());
+            adapter.addFragment(new HealthFrag(), WhichCategoryNP.HEALTH.getFirstName());
+            adapter.addFragment(new SportFrag(), WhichCategoryNP.SPORT.getFirstName());
+        } else {
+            adapter.addFragment(new BreakingFrag(), WhichCategoryEN.BREAKING.getFirstName());
+            adapter.addFragment(new NationalFrag(), WhichCategoryEN.NATIONAL.getFirstName());
+            adapter.addFragment(new BusinessFrag(), WhichCategoryEN.BUSINESS.getFirstName());
+            adapter.addFragment(new WorldFrag(), WhichCategoryEN.WORLD.getFirstName());
+            adapter.addFragment(new EntertainmentFrag(), WhichCategoryEN.ENTERTAINMENT.getFirstName());
+            adapter.addFragment(new TechnologyFrag(), WhichCategoryEN.TECHNOLOGY.getFirstName());
+            adapter.addFragment(new HealthFrag(), WhichCategoryEN.HEALTH.getFirstName());
+            adapter.addFragment(new SportFrag(), WhichCategoryEN.SPORT.getFirstName());
+        }
+
         viewPager.setAdapter(adapter);
     }
 

@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab;
+package com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab;
 
 
 import android.os.Bundle;
@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.WhichCategory;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.List;
 
@@ -23,12 +24,12 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BreakingNews extends Fragment {
-    private static final String CACHE_NAME = WhichCategory.BREAKING.getSecondName();
-    private static final String TAG = BreakingNews.class.getSimpleName();
+public class BreakingFrag extends Fragment {
+    private static final String CACHE_NAME = WhichCategoryNP.BREAKING.getSecondName();
+    private static final String TAG = BreakingFrag.class.getSimpleName();
 
 
-    public BreakingNews() {
+    public BreakingFrag() {
         // Required empty public constructor
     }
 
@@ -44,7 +45,7 @@ public class BreakingNews extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        List<Entry> list = Paper.book().read(CACHE_NAME);
+        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
         return rootView;
     }

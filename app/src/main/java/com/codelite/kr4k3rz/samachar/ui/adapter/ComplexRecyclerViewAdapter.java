@@ -33,6 +33,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Context context;
     private final List<Object> items;
 
+
     public ComplexRecyclerViewAdapter(Context context, List<Object> items) {
         this.items = items;
         this.context = context;
@@ -104,8 +105,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         vh2.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
-
-
+        vh2.date.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         boolean enableImage = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("enableImage", true);
 
         if (enableImage) {
@@ -120,6 +120,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 Intent intent = new Intent(context, DetailFeed.class);
                 intent.putExtra("ENTRY", entry);
                 context.startActivity(intent);
+                // ((Activity) context).startActivityForResult(intent, 2);
+
 
             }
         });
@@ -144,15 +146,17 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    private void configureViewHolder1(ViewHolder1 vh1, int position) {
+    private void configureViewHolder1(final ViewHolder1 vh1, int position) {
+
         final Header header = (Header) items.get(position);
         vh1.tv_category_name.setText(header.getFirstName());
-        vh1.tv_view_all.setOnClickListener(new View.OnClickListener() {
+        vh1.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CategoryActivity.class);
                 intent.putExtra("HEADER", header);
                 context.startActivity(intent);
+
             }
         });
 
@@ -183,11 +187,13 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         final TextView tv_category_name;
         final TextView tv_view_all;
+        final CardView linearLayout;
 
         ViewHolder1(View itemView) {
             super(itemView);
             tv_category_name = (TextView) itemView.findViewById(R.id.category_name);
             tv_view_all = (TextView) itemView.findViewById(R.id.viewall);
+            linearLayout = (CardView) itemView.findViewById(R.id.ll_item);
         }
 
     }

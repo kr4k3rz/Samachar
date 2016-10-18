@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab;
+package com.codelite.kr4k3rz.samachar.ui.fragments;
 
 
 import android.os.Bundle;
@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.ui.adapter.ComplexRecyclerViewAdapter;
+import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 
 import java.util.List;
@@ -20,13 +21,11 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllFeedFrag extends Fragment {
+public class MyListFrag extends Fragment {
+    private static final String CACHE_NAME = "BookMark";
+    private static final String TAG = MyListFrag.class.getSimpleName();
 
-    private static final String CACHE_NAME = "AllFeeds";
-    private static final String TAG = AllFeedFrag.class.getSimpleName();
-
-
-    public AllFeedFrag() {
+    public MyListFrag() {
         // Required empty public constructor
     }
 
@@ -35,17 +34,16 @@ public class AllFeedFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_all_feed, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_All_Feeds);
+        View rootView = inflater.inflate(R.layout.fragment_my_list, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_myList);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        List<Object> objects = Paper.book().read(CACHE_NAME);
-        recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
+        List<Entry> list = Paper.book().read(CACHE_NAME);
+        recyclerView.setAdapter(new RvAdapter(getContext(), list));
         return rootView;
     }
-
 
 }

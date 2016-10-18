@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.Header;
-import com.codelite.kr4k3rz.samachar.model.WhichCategory;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import io.paperdb.Paper;
 /**
  * The type Filter category.
  */
-public class FilterCategory {
+public class FilterCategoryNP {
     private static final String TAG = Parse.class.getSimpleName();
     private List<Entry> entryList = new ArrayList<>();
     private Context context;
@@ -29,7 +29,7 @@ public class FilterCategory {
      * @param entryList the entry list
      * @param context   the context
      */
-    public FilterCategory(List<Entry> entryList, Context context) {
+    public FilterCategoryNP(List<Entry> entryList, Context context) {
         this.entryList = entryList;
         this.context = context;
     }
@@ -59,115 +59,89 @@ public class FilterCategory {
      *
      * @return the array list of integer that contains the category feeds loaded
      */
-    public void filter() {
+    public void filter() throws ClassNotFoundException {
         List<Header> categories = new ArrayList<>();
         List<List<Entry>> main = new ArrayList<>();
         int total_feeds = 0;
         int feeds_filtered = 0;
         int feeds_notFiltered = 0;
-        int CATEGORY_NUMBER = 12;
+        int CATEGORY_NUMBER = 9;
         List<Integer> mPriorSize = new ArrayList<>();
         List<Integer> mFeedSize = new ArrayList<>();
         List<Object> objects = new ArrayList<>();
         // List<Entry> filteredWithImg;
         // filteredWithImg = feedsWithImg();
-        categories.add(new Header(WhichCategory.BREAKING.getFirstName(), WhichCategory.BREAKING.getSecondName()));
-        categories.add(new Header(WhichCategory.NEWSPAPER.getFirstName(), WhichCategory.NEWSPAPER.getSecondName()));
-        categories.add(new Header(WhichCategory.NATIONAL.getFirstName(), WhichCategory.NATIONAL.getSecondName()));
-        categories.add(new Header(WhichCategory.LOCAL.getFirstName(), WhichCategory.LOCAL.getSecondName()));
-        categories.add(new Header(WhichCategory.OPINION.getFirstName(), WhichCategory.OPINION.getSecondName()));
-        categories.add(new Header(WhichCategory.WORLD.getFirstName(), WhichCategory.WORLD.getSecondName()));
-        categories.add(new Header(WhichCategory.BUSINESS.getFirstName(), WhichCategory.BUSINESS.getSecondName()));
-        categories.add(new Header(WhichCategory.TECHNOLOGY.getFirstName(), WhichCategory.TECHNOLOGY.getSecondName()));
-        categories.add(new Header(WhichCategory.ENTERTAINMENT.getFirstName(), WhichCategory.ENTERTAINMENT.getSecondName()));
-        categories.add(new Header(WhichCategory.HEALTH.getFirstName(), WhichCategory.HEALTH.getSecondName()));
-        categories.add(new Header(WhichCategory.SPORT.getFirstName(), WhichCategory.SPORT.getSecondName()));
-        categories.add(new Header(WhichCategory.IMGVID.getFirstName(), WhichCategory.IMGVID.getSecondName()));
+
+        /*Initialization of Header by First and Second Name*/
+        for (WhichCategoryNP whichCategory :
+                WhichCategoryNP.values()) {
+            categories.add(new Header(whichCategory.getFirstName(), whichCategory.getSecondName()));
+        }
+
 
         List<Entry> breaking = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.BREAKING.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.BREAKING.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.BREAKING.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.BREAKING.getSecondName() + "NP");
             breaking.addAll(entries1);
             mPriorSize.add(breaking.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> newspaper = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.NEWSPAPER.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.NEWSPAPER.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.NATIONAL.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.NATIONAL.getSecondName() + "NP");
             newspaper.addAll(entries1);
             mPriorSize.add(newspaper.size());
         } else mPriorSize.add(0);
 
-        List<Entry> national = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.NATIONAL.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.NATIONAL.getSecondName());
-            national.addAll(entries1);
-            mPriorSize.add(national.size());
-        } else mPriorSize.add(0);
-
-        List<Entry> local = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.LOCAL.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.LOCAL.getSecondName());
-            local.addAll(entries1);
-            mPriorSize.add(local.size());
-        } else mPriorSize.add(0);
-
-        List<Entry> opinion = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.OPINION.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.OPINION.getSecondName());
-            opinion.addAll(entries1);
-            mPriorSize.add(opinion.size());
-        } else mPriorSize.add(0);
-
         List<Entry> world = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.WORLD.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.WORLD.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.WORLD.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.WORLD.getSecondName() + "NP");
             world.addAll(entries1);
             mPriorSize.add(world.size());
         } else mPriorSize.add(0);
 
         List<Entry> business = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.BUSINESS.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.BUSINESS.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.BUSINESS.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.BUSINESS.getSecondName() + "NP");
             business.addAll(entries1);
             mPriorSize.add(business.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> technology = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.TECHNOLOGY.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.TECHNOLOGY.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.TECHNOLOGY.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.TECHNOLOGY.getSecondName() + "NP");
             technology.addAll(entries1);
             mPriorSize.add(technology.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> entertain = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.ENTERTAINMENT.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.ENTERTAINMENT.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.ENTERTAINMENT.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.ENTERTAINMENT.getSecondName() + "NP");
             entertain.addAll(entries1);
             mPriorSize.add(entertain.size());
 
         } else mPriorSize.add(0);
 
         List<Entry> health = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.HEALTH.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.HEALTH.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.HEALTH.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.HEALTH.getSecondName() + "NP");
             health.addAll(entries1);
             mPriorSize.add(health.size());
         } else mPriorSize.add(0);
 
         List<Entry> sport = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.SPORT.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.SPORT.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.SPORT.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.SPORT.getSecondName() + "NP");
             sport.addAll(entries1);
             mPriorSize.add(sport.size());
         } else mPriorSize.add(0);
 
         List<Entry> imgVid = new ArrayList<>();
-        if (Paper.book().exist(WhichCategory.IMGVID.getSecondName())) {
-            List<Entry> entries1 = Paper.book().read(WhichCategory.IMGVID.getSecondName());
+        if (Paper.book().exist(WhichCategoryNP.IMGVID.getSecondName() + "NP")) {
+            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.IMGVID.getSecondName() + "NP");
             imgVid.addAll(entries1);
             mPriorSize.add(imgVid.size());
         } else mPriorSize.add(0);
@@ -203,11 +177,10 @@ public class FilterCategory {
 
 //for category
             for (String s : entry.getCategories()) {
-                //Breaking
-                if (s.equalsIgnoreCase("Breaking")
+                //BreakingFrag
+                if (s.equalsIgnoreCase("BreakingFrag")
                         || s.equalsIgnoreCase("News")
-                        || s.equalsIgnoreCase("Breaking News")
-                        || s.equalsIgnoreCase("Breaking News")
+                        ||s.equalsIgnoreCase("Breaking News")
                         || s.equalsIgnoreCase("currentnews")
                         || s.equalsIgnoreCase("HEADLINES")
                         || s.equalsIgnoreCase("Feature")
@@ -217,9 +190,10 @@ public class FilterCategory {
                         || s.equalsIgnoreCase("Top News")
                         || s.equalsIgnoreCase("कभर समाचार")
                         || s.equalsIgnoreCase("टप न्युज")
+                        || s.equalsIgnoreCase("बिशेष")
                         || s.equalsIgnoreCase("CRIME")
                         || s.equalsIgnoreCase("सुरक्षा गतिविधि")
-                        || s.equalsIgnoreCase("BreakingNews")
+                        || s.equalsIgnoreCase("BreakingFrag")
                         || s.equalsIgnoreCase("समाचार")
                         || s.equalsIgnoreCase("भर्खरै")
                         || s.equalsIgnoreCase("ताजा अपडेट")
@@ -244,12 +218,8 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
                             || s.equalsIgnoreCase("आजको पत्रिका बाट")
                             || s.equalsIgnoreCase("छापामा")
-                            || s.equalsIgnoreCase("पत्रपत्रिका")) {
-                        newspaper.add(entry);
-                        feeds_filtered++;
-                        break;
-                    }//national
-                    else if (s.equalsIgnoreCase("Nepal News")
+                            || s.equalsIgnoreCase("पत्रपत्रिका")
+                            || s.equalsIgnoreCase("Nepal News")
                             || s.equalsIgnoreCase("समाचार")
                             || s.equalsIgnoreCase("खोजखबर")
                             || s.equalsIgnoreCase("मुलुक")
@@ -267,12 +237,7 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("राजनीति")
                             || s.equalsIgnoreCase("राजनिति")
                             || s.equalsIgnoreCase("फिचर")
-                            ) {
-                        national.add(entry);
-                        feeds_filtered++;
-                        break;
-                    }//local
-                    else if (s.equalsIgnoreCase("LOCAL")
+                            || s.equalsIgnoreCase("LOCAL")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("DIASPORA")
                             || s.equalsIgnoreCase("DIASPORA/LOCAL")
@@ -287,12 +252,8 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("अपराध सुरक्षा")
                             || s.equalsIgnoreCase("प्रवास | बैदेशिक रोजगार")
                             || s.equalsIgnoreCase("प्रवास")
-                            || s.equalsIgnoreCase("स्थानिय")) {
-                        local.add(entry);
-                        feeds_filtered++;
-                        break;
-                    }//opinion
-                    else if (s.equalsIgnoreCase("OPINION")
+                            || s.equalsIgnoreCase("स्थानिय")
+                            || s.equalsIgnoreCase("OPINION")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("विचार")
                             || s.equalsIgnoreCase("अग्रलेख")
@@ -312,10 +273,10 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("सम्यक संवाद")
                             || s.equalsIgnoreCase("घुम्दा घुम्दै")
                             || s.equalsIgnoreCase("विचार/अनुभूति")) {
-                        opinion.add(entry);
+                        newspaper.add(entry);
                         feeds_filtered++;
                         break;
-                    }//world
+                    } //world
                     else if (s.equalsIgnoreCase("अन्तराष्ट्रिय समाचार")
                             || s.equalsIgnoreCase("अन्तर्राष्ट्रिय समाचार")
                             || s.equalsIgnoreCase("बिविध")
@@ -356,6 +317,7 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("अभिलेख")
                             || s.equalsIgnoreCase("अर्थतन्त्र फिचर")
                             || s.equalsIgnoreCase("अर्थ | वाणिज्य | बजार")
+                            || s.equalsIgnoreCase("शेयर")
                             || s.contains("अर्थ")
                             || s.equalsIgnoreCase("कृषि")
                             || s.equalsIgnoreCase("बातावरण-कृषि")
@@ -413,6 +375,7 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("रंग प्रमुख")
                             || s.equalsIgnoreCase("फोटो फिचर")
                             || s.equalsIgnoreCase("कला साहित्य")
+                            || s.equalsIgnoreCase("मनोरञ्जन / कला")
                             || s.equalsIgnoreCase("सिनेमा")
                             || s.equalsIgnoreCase("मनोरञ्जन")
                             || s.equalsIgnoreCase("म्युजिक अपडेट")
@@ -427,7 +390,6 @@ public class FilterCategory {
                             || s.equalsIgnoreCase("मनोरन्जन")
                             || s.equalsIgnoreCase("मनोरन्जन")
                             || s.equalsIgnoreCase("मनोरञ्जन")
-                            || s.equalsIgnoreCase("बिशेष")
                             || s.equalsIgnoreCase("विविध")
                             || s.equalsIgnoreCase("LITERATURE")
                             || s.equalsIgnoreCase("मनोरन्जन प्रमुख होम")
@@ -450,7 +412,10 @@ public class FilterCategory {
                             || s.contains("शारीरिक")
                             || s.equalsIgnoreCase("पोषण")
                             || s.equalsIgnoreCase("स्पेशल स्टोरी")
+                            ||s.equalsIgnoreCase("अवसर")
                             || s.equalsIgnoreCase("Health")
+                            || s.equalsIgnoreCase("जिज्ञासा र जवाफ")
+                            || s.equalsIgnoreCase("सौन्दर्य")
                             || s.equalsIgnoreCase("डाक्टर आर्टिकल")
                             || s.equalsIgnoreCase("थायरोइड समस्या")
                             || s.equalsIgnoreCase("यौन स्वास्थ्य")
@@ -504,61 +469,41 @@ public class FilterCategory {
 
         main.add(breaking);  //0
         main.add(newspaper);  //1
-        main.add(national); //2
-        main.add(local);  //3
-        main.add(opinion);  //4
-        main.add(world);  //5
-        main.add(business);   //6
-        main.add(technology);  //7
-        main.add(entertain);  //8
-        main.add(health); //9
-        main.add(sport);  //10
-        main.add(imgVid); //11
+        main.add(world);  //2
+        main.add(business);   //3
+        main.add(technology);  //4
+        main.add(entertain);  //5
+        main.add(health); //6
+        main.add(sport);  //7
+        main.add(imgVid); //8
         Log.i(TAG, "Total Feeds Size : " + total_feeds);
         Log.i(TAG, "feeds categorized : " + feeds_filtered);
         Log.i(TAG, "feeds not filtered : " + feeds_notFiltered);
-        int categoryNewFeeds = 0;
-        int breakingNUm = 0;
-        int imgvid = 0;
+
         for (int i = 0; i < CATEGORY_NUMBER; i++) {
             List<Entry> processedFeeds;//new
-
             processedFeeds = main.get(i);
             processedFeeds = Parse.deleteDuplicate(processedFeeds); //delete duplicate feeds
             processedFeeds = Parse.deleteEnglishFeeds(processedFeeds);  //delete english feeds
             processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds*//*
             int LIMIT_FEED = 5;
-            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {
+            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);
+
                 for (int ii = 0; ii < LIMIT_FEED; ii++) {
                     Entry entry = processedFeeds.get(ii);
                     objects.add(entry);
                 }
             }
+             /*calculate feed size by  processedFeeds.size()-mPriorSize.size() */
             Header header = categories.get(i);
             clearFeedsByPref(processedFeeds, context);
-            Paper.book().write(header.getSecondName(), processedFeeds);
-            if (i == 0) {
-                breakingNUm = processedFeeds.size() - mPriorSize.get(i);
-                Log.i(TAG, "Breaking news : " + breakingNUm);
-                Paper.book().write("BREAKINGNUM", breakingNUm);
-            }
-            if (i > 0 && i <= 10) {
-                categoryNewFeeds += processedFeeds.size() - mPriorSize.get(i);  //size of all category news latest
-                Log.i(TAG, "Category news : " + categoryNewFeeds);
-                Paper.book().write("CATEGORYNUM", categoryNewFeeds);
-            }
-            if (i == 11) {
-                imgvid = processedFeeds.size() - mPriorSize.get(i);
-                Log.i(TAG, "ImgVid : " + imgvid);
-                Paper.book().write("IMGVIDNUM", imgvid);
-            }
-
+            Paper.book().write(header.getSecondName() + "NP", processedFeeds);
 
         }
-        Paper.book().write("AllFeeds", objects);
+        Paper.book().write("AllFeedsNP", objects);
     }
 
     private void clearFeedsByPref(List<Entry> feeds, Context context) {

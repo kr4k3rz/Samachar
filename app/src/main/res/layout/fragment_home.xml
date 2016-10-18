@@ -22,7 +22,7 @@
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="4dp"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabTextAppearance="@style/NavigationTabTextAppearance"
             tools:targetApi="lollipop" />
         <!--  app:tabIndicatorColor="@android:color/white"-->

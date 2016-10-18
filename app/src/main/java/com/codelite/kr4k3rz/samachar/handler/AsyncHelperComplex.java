@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.ui.adapter.ComplexRecyclerViewAdapter;
-import com.codelite.kr4k3rz.samachar.util.FilterCategory;
+import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -80,8 +80,12 @@ public class AsyncHelperComplex extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
             Log.i(TAG, "Internet not working or failed to download / 200 error");
         }
-        FilterCategory filterCategory = new FilterCategory(list, context);
-        filterCategory.filter();
+        FilterCategoryNP filterCategory = new FilterCategoryNP(list, context);
+        try {
+            filterCategory.filter();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

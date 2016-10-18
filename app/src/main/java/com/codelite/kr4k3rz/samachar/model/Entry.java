@@ -23,6 +23,16 @@ public class Entry implements Serializable {
     private List<String> categories;
     private String linkFeed;
     private String titleFeed;
+    private boolean clicked = false;
+
+    public boolean isClicked() {
+        return clicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
 
     public String getTitleFeed() {
         return titleFeed;

@@ -24,7 +24,6 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         getFragmentManager().beginTransaction().replace(R.id.fContent, new MyPrefFragment()).commit();
 
     }
@@ -57,6 +56,17 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
+            Preference preference_savedArticle = findPreference("savedarticle");
+            preference_savedArticle.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(getActivity(), SavedArticle.class);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
 
             Preference preference_about = findPreference("aboutPref");
             preference_about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

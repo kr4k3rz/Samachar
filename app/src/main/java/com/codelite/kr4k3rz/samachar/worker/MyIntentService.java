@@ -36,7 +36,7 @@ import io.paperdb.Paper;
 public class MyIntentService extends IntentService {
 
     /*
-    * download all newsFeeds show only the Breaking news
+    * download all newsFeeds show only the BreakingFrag news
     * save the feeds into file show that later it used*/
     public MyIntentService() {
         super("MyIntentService");

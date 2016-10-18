@@ -15,9 +15,10 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.handler.AsyncHelper;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.FeedLists;
-import com.codelite.kr4k3rz.samachar.model.WhichCategory;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
+import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 
@@ -32,7 +33,7 @@ import io.paperdb.Paper;
 public class HealthFrag extends Fragment {
 
     private static final String TAG = HealthFrag.class.getSimpleName();
-    private static final String CACHE_NAME = WhichCategory.HEALTH.getSecondName();
+    private static final String CACHE_NAME = WhichCategoryNP.HEALTH.getSecondName();
     private final String[] mSpecialFeed = FeedLists.getFeedListCached(3);
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -52,7 +53,7 @@ public class HealthFrag extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout_health);
-        List<Entry> list = Paper.book().read(CACHE_NAME);
+        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
         initSwipeRefresh();
         return rootView;
@@ -64,7 +65,7 @@ public class HealthFrag extends Fragment {
             public void onRefresh() {
                 Log.d(TAG, "SwipeRefresh()  ");
                 if (CheckInternet.isNetworkAvailable(getContext())) {
-                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CACHE_NAME, recyclerView, WhichCategory.HEALTH.ordinal()).execute(mSpecialFeed);
+                    new AsyncHelper(rootView, mSwipeRefreshLayout, getContext(), CacheLang.findLang(CACHE_NAME), recyclerView, WhichCategoryNP.HEALTH.ordinal()).execute(mSpecialFeed);
                 } else {
                     SnackMsg.showMsgShort(rootView, "couldn't connect to internet");
                     mSwipeRefreshLayout.setRefreshing(false);

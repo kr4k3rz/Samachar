@@ -10,6 +10,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Paper.init(getBaseContext());
+        String lang = "NP";
+        Paper.book().write("language", lang);
+
 
     }
 }
