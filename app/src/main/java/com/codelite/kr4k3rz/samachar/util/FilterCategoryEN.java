@@ -13,10 +13,6 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
-/**
- * Created by kr4k3rz on 10/16/16.
- */
-
 public class FilterCategoryEN {
     private static final String TAG = Parse.class.getSimpleName();
     private List<Entry> entryList = new ArrayList<>();
@@ -154,10 +150,12 @@ public class FilterCategoryEN {
                     break;
                 } else //National
                     if (s.equalsIgnoreCase("Nepal")
+                            || s.equalsIgnoreCase("Political News")
                             || s.equalsIgnoreCase("OPINION")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("Interview")
                             || s.equalsIgnoreCase("LOCAL")
+                            || s.equalsIgnoreCase("Society News")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("DIASPORA")
                             || s.equalsIgnoreCase("DIASPORA/LOCAL")
@@ -180,15 +178,17 @@ public class FilterCategoryEN {
                     }//Business
                     else if (s.equalsIgnoreCase("Business")
                             || s.equalsIgnoreCase("Finance")
+                            || s.equalsIgnoreCase("Business News")
                             ) {
                         business.add(entry);
                         feeds_filtered++;
                         break;
                     }//Technology
                     else if (s.equalsIgnoreCase("Mobile &amp; Apps")
+                            || s.equalsIgnoreCase("TECHNOLOGY NEWS")
                             || s.equalsIgnoreCase("3G mobile service")
                             || s.equalsIgnoreCase("nepal telecom")
-                            ||s.equalsIgnoreCase("Science &amp; Technology")
+                            || s.equalsIgnoreCase("Science &amp; Technology")
                             || s.equalsIgnoreCase("Internet")
                             || s.equalsIgnoreCase("Samsung")) {
                         technology.add(entry);
@@ -212,6 +212,8 @@ public class FilterCategoryEN {
                     }//Health
                     else if (s.equalsIgnoreCase("Environment")
                             || s.equalsIgnoreCase("Temp")
+                            || s.equalsIgnoreCase("Health")
+                            || s.equalsIgnoreCase("LIFE STYLE")
                             || s.equalsIgnoreCase("Lifestyle News")
                             || s.equalsIgnoreCase("Travel")
                             || s.equalsIgnoreCase("Lifestyle")) {

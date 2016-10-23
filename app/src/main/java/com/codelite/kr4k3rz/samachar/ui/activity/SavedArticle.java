@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.ui.fragments.MyListFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.FavouriteFrag;
 
 public class SavedArticle extends AppCompatActivity {
 
@@ -18,7 +18,7 @@ public class SavedArticle extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fContent_saved_article, new MyListFrag()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fContent_saved_article, new FavouriteFrag()).commit();
 
     }
 }

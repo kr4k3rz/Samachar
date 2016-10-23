@@ -12,12 +12,12 @@ import android.text.Html;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.handler.PullData;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
+import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.Parse;
+import com.codelite.kr4k3rz.samachar.util.PullData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

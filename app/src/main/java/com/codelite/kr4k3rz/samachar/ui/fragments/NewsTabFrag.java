@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab;
+package com.codelite.kr4k3rz.samachar.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,6 +13,14 @@ import android.view.ViewGroup;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryEN;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.BreakingFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.BusinessFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.EntertainmentFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.HealthFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.NationalFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.SportFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.TechnologyFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.category.WorldFrag;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.ArrayList;

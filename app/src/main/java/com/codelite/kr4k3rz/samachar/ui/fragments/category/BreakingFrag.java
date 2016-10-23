@@ -1,17 +1,18 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab;
+package com.codelite.kr4k3rz.samachar.ui.fragments.category;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.ui.adapter.ComplexRecyclerViewAdapter;
+import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
+import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
@@ -19,17 +20,16 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFrag extends Fragment {
+public class BreakingFrag extends Fragment {
+    private static final String CACHE_NAME = WhichCategoryNP.BREAKING.getSecondName();
+    private static final String TAG = BreakingFrag.class.getSimpleName();
 
 
-    private static final String CACHE_NAME = "AllFeeds";
-    private static final String TAG = HomeFrag.class.getSimpleName();
-
-
-    public HomeFrag() {
+    public BreakingFrag() {
         // Required empty public constructor
     }
 
@@ -38,18 +38,15 @@ public class HomeFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_all_feed, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_All_Feeds);
+        View rootView = inflater.inflate(R.layout.fragment_breaking_news, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_Breaking_News);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        Log.i(TAG, CacheLang.findLang(CACHE_NAME));
-        List<Object> objects = Paper.book().read(CacheLang.findLang(CACHE_NAME));
-        recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
+        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+        recyclerView.setAdapter(new RvAdapter(getContext(), list));
         return rootView;
     }
-
-
 }

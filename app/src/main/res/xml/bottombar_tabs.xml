@@ -15,9 +15,4 @@
         icon="@drawable/icon_entertainment"
         id="@+id/imgvid"
         title="imgvid" />
-    <tab
-        barColorWhenSelected="#D3D3D3"
-        icon="@drawable/ic_book"
-        id="@+id/mylist"
-        title="more" />
 </tabs>

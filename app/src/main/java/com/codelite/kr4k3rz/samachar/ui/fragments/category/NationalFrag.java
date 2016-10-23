@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab;
+package com.codelite.kr4k3rz.samachar.ui.fragments.category;
 
 
 import android.os.Bundle;
@@ -20,16 +20,18 @@ import java.util.List;
 
 import io.paperdb.Paper;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BreakingFrag extends Fragment {
-    private static final String CACHE_NAME = WhichCategoryNP.BREAKING.getSecondName();
-    private static final String TAG = BreakingFrag.class.getSimpleName();
+public class NationalFrag extends Fragment {
+    private static final String TAG = NationalFrag.class.getSimpleName();
+    private static final String CACHE_NAME = WhichCategoryNP.NATIONAL.getSecondName();
+    /*for loading at postRefresh at first lunch*/
+    private View rootView;
+    private RecyclerView recyclerView;
 
 
-    public BreakingFrag() {
+    public NationalFrag() {
         // Required empty public constructor
     }
 
@@ -37,16 +39,19 @@ public class BreakingFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_breaking_news, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_Breaking_News);
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
+        rootView = inflater.inflate(R.layout.fragment_national, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_headlines);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
+
         return rootView;
     }
+
+
 }
+

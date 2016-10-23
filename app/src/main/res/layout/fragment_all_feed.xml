@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.allnewstab.BreakingFrag">
+    tools:context=".ui.fragments.category.BreakingFrag">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_All_Feeds"
@@ -10,6 +10,5 @@
         android:layout_height="wrap_content"
         android:background="@color/icons"
         android:scrollbars="vertical" />
-
 
 </FrameLayout>

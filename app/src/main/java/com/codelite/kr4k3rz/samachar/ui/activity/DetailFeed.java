@@ -22,7 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.util.Parse;
-import com.codelite.kr4k3rz.samachar.util.ToastMsg;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apmem.tools.layouts.FlowLayout;
@@ -197,7 +196,7 @@ public class DetailFeed extends AppCompatActivity {
                 return true;
             case R.id.action_bookmark:
                 if (item.isChecked()) {
-                    ToastMsg.shortMsg(getBaseContext(), "inside checked");
+                  //  ToastMsg.shortMsg(getBaseContext(), "inside checked");
                     item.setIcon(R.drawable.ic_star_selected);
                     if (Paper.book().exist("BookMark")) {
                         List<Entry> entries;
@@ -213,7 +212,7 @@ public class DetailFeed extends AppCompatActivity {
                     checked = true;
                     item.setChecked(false);
                 } else {
-                    ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
+                  //  ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
                     item.setIcon(R.drawable.ic_star_unselected);
                     item.setChecked(true);
                     if (Paper.book().exist("BookMark")) {

@@ -2,19 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.allnewstab.SportFrag">
+    tools:context=".ui.fragments.category.SportFrag">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeRefreshLayout_sport"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_sport"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_sport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

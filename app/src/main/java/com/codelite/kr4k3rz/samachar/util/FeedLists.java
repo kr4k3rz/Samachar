@@ -1,4 +1,7 @@
-package com.codelite.kr4k3rz.samachar.model;
+package com.codelite.kr4k3rz.samachar.util;
+
+import com.codelite.kr4k3rz.samachar.model.Category;
+import com.codelite.kr4k3rz.samachar.model.SubCategory;
 
 import java.util.ArrayList;
 
@@ -6,8 +9,8 @@ import io.paperdb.Paper;
 
 public class FeedLists {
     private static final String PREFIX_AJAX = "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=";
-    private static final String POSTFIX_CACHED = "&num=-1";  //cached and max feeds
-    private static final String POSTFIX_LATEST = "";  //latest and max feeds
+    private static final String POSTFIX_CACHED = "&num=30";  //cached and max feeds
+    private static final String POSTFIX_LATEST = "&num=30";  //latest and max feeds
 
     /*&scoring=h*/
     public static ArrayList<Category> feedsListSetup() {
@@ -23,7 +26,7 @@ public class FeedLists {
                 {"Online Patrika", "http://onlinepatrika.com/feed/"},   //best
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
                 {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},  //best
-                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},                  /*Not daily posters*/
+                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},        // https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.bizkhabar.com/feed&num=40         /*Not daily posters*/
                 {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},    //best
                 {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},  //best
                 {"Lokaantar", "http://lokaantar.com/feed"},     //ok
@@ -37,8 +40,8 @@ public class FeedLists {
                 {"Rajdhani Daily", "http://rajdhanidaily.com/feed/"},
                 {"Char disa", "http://chardisha.com/feed/"},
                 {"Nepali Health", "http://www.nepalihealth.com/feed/"},
-
-
+                {"BizKhabar", "http://www.bizkhabar.com/feed"},
+                {"EverestDainik", "http://www.everestdainik.com/feed/"}
         };
         for (String[] aHeadlines_feed : headlines_feed) {
             SubCategory subCategory = new SubCategory();

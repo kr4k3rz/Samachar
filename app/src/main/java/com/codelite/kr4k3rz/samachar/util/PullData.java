@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.handler;
+package com.codelite.kr4k3rz.samachar.util;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

@@ -16,13 +16,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SettingsActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SplashActivity;
+import com.codelite.kr4k3rz.samachar.ui.fragments.HomeFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.ImgVidFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.MyListFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.allnewstab.NewsTabFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.hotnewstab.HomeFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.NewsTabFrag;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.roughike.bottombar.BottomBar;
@@ -52,24 +50,7 @@ public class MainActivity extends AppCompatActivity {
     * */
 
     private void setupBottomBar() {
-
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        /*TODO add number feeds count updated when Broadcaster runs at background*/
-        //  final BottomBarTab nearby = bottomBar.getTabWithId(R.id.categoryAll);
-//        int newFeeds = Hawk.get("NewFeedsLoaded");
-        //      Log.i(MainActivity.class.getSimpleName(), "value : " + newFeeds);
-        //    nearby.setBadgeCount(newFeeds);
-       /* final BottomBarTab breakingNum = bottomBar.getTabWithId(R.id.home_item);
-        final int breakingNewNumber = Paper.book().read("BREAKINGNUM");
-        breakingNum.setBadgeCount(breakingNewNumber);
-        final BottomBarTab categoryAllNum = bottomBar.getTabWithId(R.id.categoryAll);
-        int allCategoryNewNum = Paper.book().read("CATEGORYNUM");
-        categoryAllNum.setBadgeCount(allCategoryNewNum);
-        final BottomBarTab imgVidNum = bottomBar.getTabWithId(R.id.imgvid);
-        int imgVidNewNumber = Paper.book().read("IMGVIDNUM");
-        imgVidNum.setBadgeCount(imgVidNewNumber);
-*/
-
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -87,28 +68,16 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.categoryAll:
                         try {
                             fragment = NewsTabFrag.class.newInstance();
-                            //   categoryAllNum.removeBadge();
-                            //  breakingNum.removeBadge();
 
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
-                        //Snackbar.make(coordinatorLayout, "Favorite Item Selected", Snackbar.LENGTH_LONG).show();
                         break;
                     case R.id.imgvid:
                         try {
                             fragment = ImgVidFrag.class.newInstance();
-                            //   imgVidNum.removeBadge();
-                            // breakingNum.removeBadge();
 
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        //Snackbar.make(coordnatorLayout, "Location Item Selected", Snackbar.LENGTH_LONG).show();
-                        break;
-                    case R.id.mylist:
-                        try {
-                            fragment = MyListFrag.class.newInstance();
+
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -164,10 +133,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_setting:
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-                return true;
-
-            case R.id.action_search:
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;
             case R.id.action_language:
                 if (CacheLang.lang().equalsIgnoreCase("NP")){

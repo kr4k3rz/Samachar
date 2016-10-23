@@ -12,8 +12,8 @@ import android.util.Log;
 import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
+import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryEN;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.google.gson.Gson;
@@ -42,8 +42,9 @@ public class SplashActivity extends AppCompatActivity {
     Handler mHandler;
     RingProgressBar ringProgressBar;
     int tempProgressCounter = 0;
-    String[] rss_english = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://thehimalayantimes.com/feed/&num=-1",
-            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://english.onlinekhabar.com/feed&num=-1"};
+    String[] rss_english = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://thehimalayantimes.com/feed/&num=30",
+            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://english.onlinekhabar.com/feed&num=30",
+            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://dainikpost.com/feed/&num=30"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class SplashActivity extends AppCompatActivity {
             editor.putBoolean("firstTime_loadFeed", true);
             editor.apply();
         } else {
-
             if (CheckInternet.isNetworkAvailable(getBaseContext()))
                 loadFeeds();
             else {
@@ -236,16 +236,11 @@ public class SplashActivity extends AppCompatActivity {
             }
         } else if (lang.equalsIgnoreCase("EN")) {
             final List<Entry> list_English = new ArrayList<>();
-
             /*ENGLISH*/
-            for (String aRss_english : rss_english) {
-                int test = 0;
-                test++;
-                Request request = new Request.Builder().url(aRss_english).build();
-                final int failureCount = test;
-                final float responseCount = test;
-
-
+            for (int i = 0; i < rss_english.length; i++) {
+                Request request = new Request.Builder().url(rss_english[i]).build();
+                final int failureCount = i;
+                final float responseCount = i;
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -270,9 +265,8 @@ public class SplashActivity extends AppCompatActivity {
                             JSONObject feeds = responseData.getJSONObject("feed");
                             String feedTitle = feeds.getString("title");
                             String feedLink = feeds.getString("link");
-                            Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
+                            Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
                             JSONArray entries = feeds.getJSONArray("entries");
-
                             Gson gson = new Gson();
                             Type listType = new TypeToken<List<Entry>>() {
                             }.getType();
@@ -284,22 +278,17 @@ public class SplashActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                progressShow(responseCount, rss_english);
-                                ringProgressBar.setOnProgressListener(new RingProgressBar.OnProgressListener() {
-                                    @Override
-                                    public void progressToComplete() {
-                                        FilterCategoryEN filterCategoryEN = new FilterCategoryEN(list_English, getBaseContext());
-                                        filterCategoryEN.filter();
-                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                        finish();
-                                    }
-                                });
-
-
+                                if (responseCount == rss_english.length - 1) {
+                                    Log.i("IN FINAL", "OK");
+                                    FilterCategoryEN filterCategoryEN = new FilterCategoryEN(list_English, getBaseContext());
+                                    filterCategoryEN.filter();
+                                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             }
                         });
                     }

@@ -21,11 +21,11 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyListFrag extends Fragment {
+public class FavouriteFrag extends Fragment {
     private static final String CACHE_NAME = "BookMark";
-    private static final String TAG = MyListFrag.class.getSimpleName();
+    private static final String TAG = FavouriteFrag.class.getSimpleName();
 
-    public MyListFrag() {
+    public FavouriteFrag() {
         // Required empty public constructor
     }
 
