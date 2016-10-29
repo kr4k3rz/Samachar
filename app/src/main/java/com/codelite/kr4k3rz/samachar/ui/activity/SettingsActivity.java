@@ -47,16 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference);
 
-            Preference preference_editCategory = findPreference("editCategories");
-            preference_editCategory.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(getActivity(), EditCategory.class);
-                    startActivity(intent);
-                    return true;
-                }
-            });
-
             Preference preference_savedArticle = findPreference("savedarticle");
             preference_savedArticle.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override

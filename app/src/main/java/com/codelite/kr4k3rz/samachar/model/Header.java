@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 
 public class Header implements Serializable {
-    private String firstName;
-    private String secondName;
+    private final String firstName;
+    private final String secondName;
     private int numFeeds;
 
     public Header(String firstName, String secondName) {

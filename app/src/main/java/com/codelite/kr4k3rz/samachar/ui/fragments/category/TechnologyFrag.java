@@ -25,7 +25,6 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class TechnologyFrag extends Fragment {
-    private static final String TAG = TechnologyFrag.class.getSimpleName();
     private static final String CACHE_NAME = WhichCategoryNP.TECHNOLOGY.getSecondName();
     private RecyclerView recyclerView;
     private View rootView;

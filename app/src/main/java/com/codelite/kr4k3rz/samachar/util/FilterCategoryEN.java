@@ -16,7 +16,7 @@ import io.paperdb.Paper;
 public class FilterCategoryEN {
     private static final String TAG = Parse.class.getSimpleName();
     private List<Entry> entryList = new ArrayList<>();
-    private Context context;
+    private final Context context;
 
     /**
      * Instantiates a new Filter category.
@@ -150,6 +150,7 @@ public class FilterCategoryEN {
                     break;
                 } else //National
                     if (s.equalsIgnoreCase("Nepal")
+                            || s.equalsIgnoreCase("Political")
                             || s.equalsIgnoreCase("Political News")
                             || s.equalsIgnoreCase("OPINION")
                             || s.equalsIgnoreCase("Uncategorized")
@@ -178,6 +179,7 @@ public class FilterCategoryEN {
                     }//Business
                     else if (s.equalsIgnoreCase("Business")
                             || s.equalsIgnoreCase("Finance")
+                            || s.equalsIgnoreCase("nepal travel")
                             || s.equalsIgnoreCase("Business News")
                             ) {
                         business.add(entry);
@@ -222,14 +224,17 @@ public class FilterCategoryEN {
                         break;
                     }//sport
                     else if (s.equalsIgnoreCase("Sports")
-                            || s.equalsIgnoreCase("SPORT")) {
+                            || s.equalsIgnoreCase("SPORT") || s.equalsIgnoreCase("Sports News")) {
                         sport.add(entry);
                         feeds_filtered++;
                         break;
                     } else {
-                        Log.i(TAG, "unfiltered category : " + s);
-                        imgVid.add(entry);
-                        feeds_notFiltered++;
+                        if (!s.equalsIgnoreCase("Photo Feature")) {
+                            Log.i(TAG, "unfiltered category : " + s);
+                            imgVid.add(entry);
+                            feeds_notFiltered++;
+                        }
+
                     }
 
             }
@@ -247,30 +252,18 @@ public class FilterCategoryEN {
         Log.i(TAG, "Total Feeds Size : " + total_feeds);
         Log.i(TAG, "feeds categorized : " + feeds_filtered);
         Log.i(TAG, "feeds not filtered : " + feeds_notFiltered);
-        main.add(breaking);  //0
-        main.add(newspaper);  //1
-        main.add(world);  //2
-        main.add(business);   //3
-        main.add(technology);  //4
-        main.add(entertain);  //5
-        main.add(health); //6
-        main.add(sport);  //7
-        main.add(imgVid); //8
-        Log.i(TAG, "Total Feeds Size : " + total_feeds);
-        Log.i(TAG, "feeds categorized : " + feeds_filtered);
-        Log.i(TAG, "feeds not filtered : " + feeds_notFiltered);
-
         for (int i = 0; i < CATEGORY_NUMBER; i++) {
             List<Entry> processedFeeds;//new
             processedFeeds = main.get(i);
             processedFeeds = Parse.deleteDuplicate(processedFeeds); //delete duplicate feeds
-            processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds*//*
-            int LIMIT_FEED = 5;
+            processedFeeds = Parse.deleteNonEngFeeds(processedFeeds);  //delete non english feeds
+            processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds
+
+            int LIMIT_FEED = 4;
             if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);
-
                 for (int ii = 0; ii < LIMIT_FEED; ii++) {
                     Entry entry = processedFeeds.get(ii);
                     objects.add(entry);
@@ -280,7 +273,6 @@ public class FilterCategoryEN {
             Header header = categories.get(i);
             clearFeedsByPref(processedFeeds, context);
             Paper.book().write(header.getSecondName() + "EN", processedFeeds);
-
         }
         Paper.book().write("AllFeedsEN", objects);
     }

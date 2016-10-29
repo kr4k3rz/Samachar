@@ -23,7 +23,6 @@ import io.paperdb.Paper;
  */
 public class FavouriteFrag extends Fragment {
     private static final String CACHE_NAME = "BookMark";
-    private static final String TAG = FavouriteFrag.class.getSimpleName();
 
     public FavouriteFrag() {
         // Required empty public constructor

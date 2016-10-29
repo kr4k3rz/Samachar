@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryEN;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
-import com.codelite.kr4k3rz.samachar.ui.fragments.category.BreakingFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.category.BusinessFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.category.EntertainmentFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.category.HealthFrag;
@@ -32,7 +31,6 @@ public class NewsTabFrag extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
         if (CacheLang.lang().equalsIgnoreCase("NP")) {
-            adapter.addFragment(new BreakingFrag(), WhichCategoryNP.BREAKING.getFirstName());
             adapter.addFragment(new NationalFrag(), WhichCategoryNP.NATIONAL.getFirstName());
             adapter.addFragment(new BusinessFrag(), WhichCategoryNP.BUSINESS.getFirstName());
             adapter.addFragment(new WorldFrag(), WhichCategoryNP.WORLD.getFirstName());
@@ -41,7 +39,6 @@ public class NewsTabFrag extends Fragment {
             adapter.addFragment(new HealthFrag(), WhichCategoryNP.HEALTH.getFirstName());
             adapter.addFragment(new SportFrag(), WhichCategoryNP.SPORT.getFirstName());
         } else {
-            adapter.addFragment(new BreakingFrag(), WhichCategoryEN.BREAKING.getFirstName());
             adapter.addFragment(new NationalFrag(), WhichCategoryEN.NATIONAL.getFirstName());
             adapter.addFragment(new BusinessFrag(), WhichCategoryEN.BUSINESS.getFirstName());
             adapter.addFragment(new WorldFrag(), WhichCategoryEN.WORLD.getFirstName());

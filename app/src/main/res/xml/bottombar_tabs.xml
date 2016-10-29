@@ -15,4 +15,9 @@
         icon="@drawable/icon_entertainment"
         id="@+id/imgvid"
         title="imgvid" />
+    <tab
+        barColorWhenSelected="#D3D3D3"
+        icon="@drawable/icon_newspaper_list"
+        id="@+id/newspaper"
+        title="newspaper" />
 </tabs>

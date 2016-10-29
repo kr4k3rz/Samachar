@@ -18,12 +18,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Categories">
-        <Preference
-            android:enabled="true"
-            android:key="editCategories"
-            android:summary="select the newspapers want to load and read "
-            android:title="Edit Categories" />
-
         <ListPreference
             android:entries="@array/listDisplayWord"
             android:entryValues="@array/listReturnValue"

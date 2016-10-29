@@ -40,10 +40,10 @@ import io.paperdb.Paper;
 /*
 * shows the details of the  every feeds clicked*/
 public class DetailFeed extends AppCompatActivity {
-    static final String TAG = DetailFeed.class.getSimpleName();
-    DiscreteSeekBar discreteSeekBar1;
-    Entry entry;
-    boolean checked = false;
+    private static final String TAG = DetailFeed.class.getSimpleName();
+    private DiscreteSeekBar discreteSeekBar1;
+    private Entry entry;
+    private boolean checked = false;
     private TextView content;
 
     @SuppressLint("SetTextI18n")
@@ -80,10 +80,10 @@ public class DetailFeed extends AppCompatActivity {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM ''yy, HH:mm ", Locale.ENGLISH);
         date.setText(simpleDateFormat.format(Date.parse(entry.getDate())));
-        Log.i(TAG,entry.getContent());
+        Log.i(TAG, entry.getContent());
        /*use to remove the TAG */
         String check = "<p>The post <a rel=\"nofollow\" href=\"" + entry.getLink() + "\">" + entry.getTitle() + "</a> appeared first on <a rel=\"nofollow\" href=\"" + entry.getLinkFeed() + "\">" + entry.getTitleFeed() + "</a>.</p>";
-        Log.i(TAG,""+check);
+        Log.i(TAG, "" + check);
         String contentHtml = entry.getContent().replace(check, "");
         content.setText(Html.fromHtml(contentHtml, Parse.EMPTY_IMAGE_GETTER, null));
 
@@ -91,7 +91,7 @@ public class DetailFeed extends AppCompatActivity {
         String url = Parse.parseImg(entry.getContent());
         String actualUrl = null;
         try {
-            actualUrl = convertImgUrl(actualUrl, url);
+            actualUrl = convertImgUrl(null, url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -196,7 +196,7 @@ public class DetailFeed extends AppCompatActivity {
                 return true;
             case R.id.action_bookmark:
                 if (item.isChecked()) {
-                  //  ToastMsg.shortMsg(getBaseContext(), "inside checked");
+                    //  ToastMsg.shortMsg(getBaseContext(), "inside checked");
                     item.setIcon(R.drawable.ic_star_selected);
                     if (Paper.book().exist("BookMark")) {
                         List<Entry> entries;
@@ -212,7 +212,7 @@ public class DetailFeed extends AppCompatActivity {
                     checked = true;
                     item.setChecked(false);
                 } else {
-                  //  ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
+                    //  ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
                     item.setIcon(R.drawable.ic_star_unselected);
                     item.setChecked(true);
                     if (Paper.book().exist("BookMark")) {

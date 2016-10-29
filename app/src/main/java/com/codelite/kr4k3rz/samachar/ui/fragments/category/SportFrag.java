@@ -24,7 +24,6 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class SportFrag extends Fragment {
-    private static final String TAG = SportFrag.class.getSimpleName();
     private static final String CACHE_NAME = WhichCategoryNP.SPORT.getSecondName();
     /*for loading at postRefresh at first lunch*/
     private View rootView;

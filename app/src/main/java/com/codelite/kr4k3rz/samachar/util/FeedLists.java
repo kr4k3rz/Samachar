@@ -23,9 +23,7 @@ public class FeedLists {
         subCategories_headlines = new ArrayList<>();
         String[][] headlines_feed = new String[][]{
                 {"Online Khabar", "http://www.onlinekhabar.com/feed/"}, //best
-                {"Online Patrika", "http://onlinepatrika.com/feed/"},   //best
                 {"Nepali Headlines", "http://nepaliheadlines.com/feed/"},
-                {"Nepali Samachar", "http://nepalisamachar.com/?feed=rss2"},  //best
                 {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},        // https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.bizkhabar.com/feed&num=40         /*Not daily posters*/
                 {"Sambad Media", "http://www.sambadmedia.com/?feed=rss2"},    //best
                 {"Taja Onlinekhabar", "http://www.tajaonlinekhabar.com/feed"},  //best
@@ -34,11 +32,10 @@ public class FeedLists {
                 {"eNepali Khabar", "http://www.enepalikhabar.com/feed"},   //ok and low
                 {"Nepal Aaja", "http://nepalaaja.com/feed/"},
                 {"ONS Nepal", "http://www.onsnews.com/feed/"},
-                {"Naya Samachar", "http://nayasamachar.com/?feed=rss2"},//ok
                 {"Naya Page", "http://www.nayapage.com/feed"},
                 {"Sourya Daily", "http://www.souryadaily.com/feed"},
                 {"Rajdhani Daily", "http://rajdhanidaily.com/feed/"},
-                {"Char disa", "http://chardisha.com/feed/"},
+                {"Chardisa", "http://chardisha.com/feed/"},
                 {"Nepali Health", "http://www.nepalihealth.com/feed/"},
                 {"BizKhabar", "http://www.bizkhabar.com/feed"},
                 {"EverestDainik", "http://www.everestdainik.com/feed/"}
@@ -56,8 +53,6 @@ public class FeedLists {
                     subCategory.setUpdated_sub_link_latest(PREFIX_AJAX + aHeadlines_feed[1] + POSTFIX_LATEST);
                     subCategories_headlines.add(subCategory);
                 }
-
-
             }
         }
         category_headlines.setSub_category(subCategories_headlines);
@@ -201,10 +196,10 @@ public class FeedLists {
         return FeedLists.convertArrayListToStringArray(strings);
     }
 
-    public static String[] getFeedListLatest(int numCategory) {
+    public static String[] getFeedListLatest() {
         ArrayList<String> strings = new ArrayList<>();
         ArrayList<Category> categories = Paper.book().read("updatedData");
-        ArrayList<SubCategory> subCategory = categories.get(numCategory).getSub_category();
+        ArrayList<SubCategory> subCategory = categories.get(0).getSub_category();
         for (SubCategory subCategory1 : subCategory) {
             strings.add(subCategory1.getUpdated_sub_link_latest());
         }

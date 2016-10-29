@@ -3,23 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.SettingsActivity">
+    tools:context=".ui.activity.NewspaperActivity">
 
     <include
-        android:id="@+id/toolbar_edit_category"
+        android:id="@+id/toolbar_newspaper"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_category"
+    <FrameLayout
+        android:id="@+id/fragmentContainer_newspaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_edit_category" />
+        android:layout_below="@+id/toolbar_newspaper" />
 
 </RelativeLayout>
-
-
-
-
-

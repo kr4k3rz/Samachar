@@ -89,7 +89,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         /*Bind only data here*/
         String actualUrl = null;
         String url = Parse.parseImg(entry.getContent());
-        actualUrl = convertImgUrl(actualUrl, url);
+        actualUrl = convertImgUrl(null, url);
         vh2.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 

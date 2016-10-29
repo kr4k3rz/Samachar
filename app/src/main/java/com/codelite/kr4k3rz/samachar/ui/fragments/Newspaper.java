@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments.category;
+package com.codelite.kr4k3rz.samachar.ui.fragments;
 
 
 import android.os.Bundle;
@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
-import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.List;
 
@@ -23,14 +21,9 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NationalFrag extends Fragment {
-    private static final String CACHE_NAME = WhichCategoryNP.NATIONAL.getSecondName();
-    /*for loading at postRefresh at first lunch*/
-    private View rootView;
-    private RecyclerView recyclerView;
+public class Newspaper extends Fragment {
 
-
-    public NationalFrag() {
+    public Newspaper() {
         // Required empty public constructor
     }
 
@@ -38,19 +31,18 @@ public class NationalFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_national, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_headlines);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        // Inflate the layout for this fragment
+        int position = getArguments().getInt("POSITION");
+        View rootView = inflater.inflate(R.layout.fragment_newspaper, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_newspaper);
+        recyclerView.setHasFixedSize(false);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+        List<Entry> list = Paper.book().read("newspaper" + position);
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
-
         return rootView;
     }
 
-
 }
-

@@ -6,10 +6,8 @@
     <color name="primary_light">#CFD8DC</color>
     <color name="accent">#00796B</color>
     <color name="primary_text">#3B494C</color>
-    <color name="darkColor">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
-    <color name="text">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
 </resources>

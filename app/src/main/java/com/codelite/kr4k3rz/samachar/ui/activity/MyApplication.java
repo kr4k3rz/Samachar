@@ -12,7 +12,5 @@ public class MyApplication extends Application {
         Paper.init(getBaseContext());
         String lang = "NP";
         Paper.book().write("language", lang);
-
-
     }
 }

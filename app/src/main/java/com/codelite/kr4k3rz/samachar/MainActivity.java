@@ -18,9 +18,10 @@ import android.view.MenuItem;
 
 import com.codelite.kr4k3rz.samachar.ui.activity.SettingsActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SplashActivity;
-import com.codelite.kr4k3rz.samachar.ui.fragments.HomeFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.ImgVidFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.NewsTabFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.NewspaperList;
+import com.codelite.kr4k3rz.samachar.ui.fragments.StartUpFrag;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 import com.roughike.bottombar.BottomBar;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (tabId) {
                     case R.id.home_item:
                         try {
-                            fragment = HomeFrag.class.newInstance();
+                            fragment = StartUpFrag.class.newInstance();
                             flag = true;
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
@@ -76,12 +76,18 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.imgvid:
                         try {
                             fragment = ImgVidFrag.class.newInstance();
-
-
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         break;
+                    case R.id.newspaper:
+                        try {
+                            fragment = NewspaperList.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+
                 }
 
                 if (fragment != null) {
@@ -135,15 +141,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_language:
-                if (CacheLang.lang().equalsIgnoreCase("NP")){
-                     String language = "EN";
+                if (CacheLang.lang().equalsIgnoreCase("NP")) {
+                    String language = "EN";
                     Paper.book().write("language", language);
                     startActivity(new Intent(MainActivity.this, SplashActivity.class));
-                 }else {
-                     String language = "NP";
-                     Paper.book().write("language", language);
-                     startActivity(new Intent(MainActivity.this, SplashActivity.class));
-                 }
+                } else {
+                    String language = "NP";
+                    Paper.book().write("language", language);
+                    startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                }
                 return true;
 
 
@@ -151,4 +157,5 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

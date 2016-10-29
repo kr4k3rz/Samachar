@@ -26,7 +26,6 @@ public class CategoryActivity extends AppCompatActivity {
             getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         Fragment fragment;
         try {
-
             fragment = (Fragment) Class.forName("com.codelite.kr4k3rz.samachar.ui.fragments.category." + header.getSecondName()).newInstance();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
 

@@ -33,8 +33,8 @@ import java.util.List;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> {
     private final Context mContext;
-    private String TAG = RvAdapter.class.getSimpleName();
-    private SparseBooleanArray selectedItems = new SparseBooleanArray();
+    private final String TAG = RvAdapter.class.getSimpleName();
+    private final SparseBooleanArray selectedItems = new SparseBooleanArray();
     private List<Entry> entries = new ArrayList<>();
 
     public RvAdapter(Context context, List<Entry> entries) {
@@ -66,7 +66,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         String actualUrl = null;
         String url = Parse.parseImg(entry.getContent());
         try {
-            actualUrl = convertImgUrl(actualUrl, url);
+            actualUrl = convertImgUrl(null, url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(customViewHolder.imageView);
         } else {
-            Log.d("TAG", "Image disabled : " + enableImage);
+            Log.d("TAG", "Image disabled : " + false);
         }
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

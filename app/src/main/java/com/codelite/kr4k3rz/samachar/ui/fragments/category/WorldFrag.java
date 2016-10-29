@@ -21,7 +21,6 @@ import java.util.List;
 import io.paperdb.Paper;
 
 public class WorldFrag extends Fragment {
-    private static final String TAG = WorldFrag.class.getSimpleName();
     private static final String CACHE_NAME = WhichCategoryNP.WORLD.getSecondName();
     private View rootView;
     private RecyclerView recyclerView;

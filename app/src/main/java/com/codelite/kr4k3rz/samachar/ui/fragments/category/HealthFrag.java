@@ -15,7 +15,6 @@ import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
 import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
 
 import java.util.List;
 
@@ -27,9 +26,7 @@ import io.paperdb.Paper;
  */
 public class HealthFrag extends Fragment {
 
-    private static final String TAG = HealthFrag.class.getSimpleName();
     private static final String CACHE_NAME = WhichCategoryNP.HEALTH.getSecondName();
-    private final String[] mSpecialFeed = FeedLists.getFeedListCached(3);
     private RecyclerView recyclerView;
     private View rootView;
 

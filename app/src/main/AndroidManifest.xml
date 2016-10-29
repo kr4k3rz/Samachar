@@ -30,7 +30,6 @@
         <activity android:name=".ui.activity.CategoryActivity" />
         <activity android:name=".ui.activity.DetailFeed" />
         <activity android:name=".ui.activity.SettingsActivity" />
-        <activity android:name=".ui.activity.EditCategory" />
         <activity android:name=".ui.activity.AboutActivity" />
 
         <service android:name=".worker.MyIntentService" />
@@ -44,7 +43,8 @@
         </receiver>
 
         <activity android:name=".ui.activity.SavedArticle" />
-        <activity android:name=".ui.activity.SearchActivity"></activity>
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.NewspaperActivity"></activity>
     </application>
 
 </manifest>

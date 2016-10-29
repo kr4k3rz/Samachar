@@ -26,7 +26,6 @@ import java.util.Set;
 public class Parse {
 
     public static final EmptyImageGetter EMPTY_IMAGE_GETTER = new EmptyImageGetter();
-    private static final String TAG = Parse.class.getSimpleName();
 
     public static String parseImg(String html) {
         String url = null;
@@ -113,11 +112,11 @@ public class Parse {
             seconds = Math.round(seconds);
             // Generate the friendly unit of the ago time
             if (seconds == 1) {
-                unit = "few seconds ago";
+                unit = "now";
             } else {
-                unit = "few seconds ago";
+                unit = "now";
             }
-            finalString = String.format(Locale.ENGLISH, "%.0f", seconds) + unit;
+            finalString = unit;
         } else if (timeElapsed < oneHour) {
             double minutes = (double) ((timeElapsed / 1000) / 60);
             minutes = Math.round(minutes);
@@ -159,11 +158,23 @@ public class Parse {
     }
 
     public static List<Entry> deleteEnglishFeeds(List<Entry> entries) {
+        for (int i = 0; i < entries.size(); i++) {
+            boolean atLeastOneAlpha = entries.get(i).getTitle().matches(".*[a-zA-Z]+.*");
+            if (atLeastOneAlpha) {
+                entries.remove(i);
+            }
+        }
+        return entries;
+    }
+
+
+    static List<Entry> deleteNonEngFeeds(List<Entry> entries) {
         ArrayList<Entry> tempList = new ArrayList<>();
+        tempList.clear();
         for (Entry e : entries) {
             String s = e.getTitle();
             boolean atLeastOneAlpha = s.matches(".*[a-zA-Z]+.*");
-            if (!atLeastOneAlpha) {
+            if (atLeastOneAlpha) {
                 tempList.add(e);
             }
         }

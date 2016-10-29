@@ -25,7 +25,6 @@ import io.paperdb.Paper;
  */
 public class ImgVidFrag extends Fragment {
     private static final String CACHE_NAME = WhichCategoryNP.IMGVID.getSecondName();
-    private static final String TAG = ImgVidFrag.class.getSimpleName();
 
     public ImgVidFrag() {
         // Required empty public constructor

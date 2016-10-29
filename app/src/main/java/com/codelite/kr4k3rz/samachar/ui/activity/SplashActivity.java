@@ -12,8 +12,8 @@ import android.util.Log;
 import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.Newspaper;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
-import com.codelite.kr4k3rz.samachar.util.FeedLists;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryEN;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.google.gson.Gson;
@@ -38,22 +38,20 @@ import okhttp3.Response;
 
 
 public class SplashActivity extends AppCompatActivity {
-    static final String TAG = SplashActivity.class.getSimpleName();
-    Handler mHandler;
-    RingProgressBar ringProgressBar;
-    int tempProgressCounter = 0;
-    String[] rss_english = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://thehimalayantimes.com/feed/&num=30",
-            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://english.onlinekhabar.com/feed&num=30",
-            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://dainikpost.com/feed/&num=30"};
+    private static final String TAG = SplashActivity.class.getSimpleName();
+    private final String[] rss_english = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://thehimalayantimes.com/feed/&num=-1",
+            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://english.onlinekhabar.com/feed&num=-1",
+            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://dainikpost.com/feed/&num=-1"};
+    private Handler mHandler;
+    private RingProgressBar ringProgressBar;
+    private int tempProgressCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
         mHandler = new Handler(Looper.getMainLooper());
         ringProgressBar = (RingProgressBar) findViewById(R.id.progress_bar);
-        initFeedList();
         downloadFeedsOnStart();
 
     }
@@ -83,18 +81,19 @@ public class SplashActivity extends AppCompatActivity {
     private void loadingFeedsOnFirstStart() {
         final List<Entry> list_Nepali = new ArrayList<>();
         final OkHttpClient okHttpClient = new OkHttpClient();
-        final String[] rss = FeedLists.getFeedListCached(0);
+        final ArrayList<String> rss = new Newspaper().getLinksList();
 
          /*ALWAYS START NEPALI LANG*/
-        for (int i = 0; i < rss.length; i++) {
-            Request request = new Request.Builder().url(rss[i]).build();
+        for (int i = 0; i < rss.size(); i++) {
+
+            Request request = new Request.Builder().url(rss.get(i)).build();
             final int responseCount = i;
+            final int finalI = i;
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.i("TAG", "" + e);
                 }
-
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -108,13 +107,11 @@ public class SplashActivity extends AppCompatActivity {
                         String feedLink = feeds.getString("link");
                         Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
                         JSONArray entries = feeds.getJSONArray("entries");
-
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Entry>>() {
                         }.getType();
                         List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-
-
+                        Paper.book().write("newspaper" + finalI, posts);
                         list_Nepali.addAll(setTitleLink(feedTitle, feedLink, posts));
 
                     } catch (JSONException e) {
@@ -126,7 +123,7 @@ public class SplashActivity extends AppCompatActivity {
                         public void run() {
 
                             progressShow(responseCount, rss);
-                            if (responseCount == rss.length - 1) {
+                            if (responseCount == rss.size() - 1) {
                                 FilterCategoryNP filterCategory = new FilterCategoryNP(list_Nepali, getBaseContext());
                                 try {
                                     filterCategory.filter();
@@ -154,14 +151,15 @@ public class SplashActivity extends AppCompatActivity {
     private void loadFeeds() {
         final List<Entry> list = new ArrayList<>();
         final OkHttpClient okHttpClient = new OkHttpClient();
-        final String[] rss = FeedLists.getFeedListLatest(0);
+        final ArrayList<String> rss = new Newspaper().getLinksList();
         String lang = Paper.book().read("language");
         Log.i(TAG, "lang : " + lang);
         if (lang.equalsIgnoreCase("NP")) {
-            for (int i = 0; i < rss.length; i++) {
-                Request request = new Request.Builder().url(rss[i]).build();
+            for (int i = 0; i < rss.size(); i++) {
+                Request request = new Request.Builder().url(rss.get(i)).build();
                 final int failureCount = i;
                 final float responseCount = i;
+                final int finalI = i;
                 okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -170,7 +168,7 @@ public class SplashActivity extends AppCompatActivity {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (failureCount == rss.length - 1) {
+                                if (failureCount == rss.size() - 1) {
                                     FilterCategoryNP filterCategory = new FilterCategoryNP(list, getBaseContext());
                                     try {
                                         filterCategory.filter();
@@ -195,12 +193,18 @@ public class SplashActivity extends AppCompatActivity {
                             JSONObject feeds = responseData.getJSONObject("feed");
                             String feedTitle = feeds.getString("title");
                             String feedLink = feeds.getString("link");
-                            Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
+                            Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
                             JSONArray entries = feeds.getJSONArray("entries");
                             Gson gson = new Gson();
                             Type listType = new TypeToken<List<Entry>>() {
                             }.getType();
                             List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
+                            ArrayList<Entry> entryArrayList = new ArrayList<>();
+                            entryArrayList.clear();
+                            entryArrayList = Paper.book().read("newspaper" + finalI);
+                            entryArrayList.addAll(posts);
+                            Paper.book().write("newspaper" + finalI, entryArrayList);
+
                             list.addAll(setTitleLink(feedTitle, feedLink, posts));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -245,7 +249,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.i("TAG", "" + e);
-                        if (failureCount == rss.length - 1) {
+                        if (failureCount == rss_english.length - 1) {
                             FilterCategoryEN filterCategory = new FilterCategoryEN(list, getBaseContext());
                             filterCategory.filter();
                             Intent intent = new Intent(getBaseContext(), MainActivity.class);
@@ -272,7 +276,6 @@ public class SplashActivity extends AppCompatActivity {
                             }.getType();
                             List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
                             list_English.addAll(setTitleLink(feedTitle, feedLink, posts));
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -315,8 +318,8 @@ public class SplashActivity extends AppCompatActivity {
         return entries;
     }
 
-    private void progressShow(float responseCount, String[] rss) {
-        int progress = (int) (((responseCount + 1) / (float) rss.length) * 100);
+    private void progressShow(float responseCount, ArrayList<String> rss) {
+        int progress = (int) (((responseCount + 1) / (float) rss.size()) * 100);
         if (progress >= tempProgressCounter) {
             Log.i(TAG, "Progress : " + progress + "%");
             ringProgressBar.setProgress(progress);
@@ -324,16 +327,4 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void initFeedList() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("firstTime", false)) {
-            Paper.book().write("updatedData", FeedLists.feedsListSetup());   //<---- Setups your feed into database
-            // mark first time has run.
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstTime", true);
-            editor.apply();
-        }
-
-
-    }
 }

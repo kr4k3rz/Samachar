@@ -19,8 +19,8 @@ import io.paperdb.Paper;
  */
 public class FilterCategoryNP {
     private static final String TAG = Parse.class.getSimpleName();
+    private final Context context;
     private List<Entry> entryList = new ArrayList<>();
-    private Context context;
 
 
     /**
@@ -36,28 +36,9 @@ public class FilterCategoryNP {
 
 
     /**
-     * Filters Feeds with image only.
-     *
-     * @return the list array of Entry with Image Feeds
-     */
-    private List<Entry> feedsWithImg() {
-        Log.i(TAG, "size feed before image filter : " + entryList.size());
-        List<Entry> newEntry = new ArrayList<>();
-        for (Entry entry : entryList) {
-            String url = Parse.parseImg(entry.getContent());
-            if (url != null) {
-                newEntry.add(entry);
-            }
-        }
-        Log.i(TAG, "size feed after image filter : " + newEntry.size());
-        return newEntry;
-    }
-
-
-    /**
      * Filter the List of Entry into category and saved it into DB(Paper database).
-     *
-     * @return the array list of integer that contains the category feeds loaded
+     * <p>
+     * the array list of integer that contains the category feeds loaded
      */
     public void filter() throws ClassNotFoundException {
         List<Header> categories = new ArrayList<>();
@@ -153,31 +134,8 @@ public class FilterCategoryNP {
         //for special category
         for (Entry entry : entryList) {
             total_feeds++;
-            //Only health
-            if (entry.getLink().contains("http://www.nepalihealth.com/")
-                    || entry.getLink().contains("http://nepalhealthnews.com")) {
-                health.add(entry);
-                feeds_filtered++;
-            }
-//Only Entertainment
-            if (entry.getLink().contains("http://screennepal.com/")) {
-                entertain.add(entry);
-                feeds_filtered++;
-            }
-//Only Business
-            if (entry.getLink().contains("http://www.karobardaily.com")) {
-                business.add(entry);
-                feeds_filtered++;
-            }
-//Only technology
-            if (entry.getLink().contains("http://feedproxy.google.com/~r/Aakar/")) {
-                technology.add(entry);
-                feeds_filtered++;
-            }
-
-//for category
             for (String s : entry.getCategories()) {
-                //BreakingFrag
+                //BreakingNews
                 if (s.equalsIgnoreCase("BreakingFrag")
                         || s.equalsIgnoreCase("News")
                         || s.equalsIgnoreCase("Breaking News")
@@ -212,11 +170,13 @@ public class FilterCategoryNP {
                     breaking.add(entry);
                     feeds_filtered++;
                     break;
-                } else //newspaper
+                } else //National
                     if (s.equalsIgnoreCase("सैाजन्य")
+                            || s.equalsIgnoreCase("बिशेष स्टोरी")
                             || s.equalsIgnoreCase("saujanya")
                             || s.equalsIgnoreCase("सम्पादकीय")
                             || s.equalsIgnoreCase("पत्रपत्रिकाबाट")
+                            || s.equalsIgnoreCase("समाचार फिचर")
                             || s.equalsIgnoreCase("आजको पत्रिका बाट")
                             || s.equalsIgnoreCase("छापामा")
                             || s.equalsIgnoreCase("पत्रपत्रिका")
@@ -225,6 +185,7 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("खोजखबर")
                             || s.equalsIgnoreCase("मुलुक")
                             || s.equalsIgnoreCase("Community News")
+                            || s.equalsIgnoreCase("आजको पत्रपत्रिकाबाट")
                             || s.equalsIgnoreCase("Night only")
                             || s.equalsIgnoreCase("राष्ट्रिय समाचार")
                             || s.equalsIgnoreCase("News of the day")
@@ -284,6 +245,7 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("विदेश")
                             || s.equalsIgnoreCase("यूरोप")
                             || s.equalsIgnoreCase("विविध")
+                            || s.equalsIgnoreCase("पत्याउनै गाह्रो")
                             || s.equalsIgnoreCase("Offbeat")
                             || s.equalsIgnoreCase("सम–सामयिक")
                             || s.equalsIgnoreCase("बिश्व")
@@ -313,13 +275,17 @@ public class FilterCategoryNP {
                     }//Business
                     else if (s.equalsIgnoreCase("अर्थनीति")
                             || s.contains("पर्यटन")
+                            || s.equalsIgnoreCase("Tourism")
                             || s.equalsIgnoreCase("कलेज")
                             || s.equalsIgnoreCase("Bank")
+                            || s.equalsIgnoreCase("Share")
                             || s.equalsIgnoreCase("Finance")
-                            ||s.equalsIgnoreCase("Corporate")
-                            ||s.equalsIgnoreCase("Infrastructure")
+                            || s.equalsIgnoreCase("Market")
+                            || s.equalsIgnoreCase("Corporate")
+                            || s.equalsIgnoreCase("Infrastructure")
                             || s.equalsIgnoreCase("Industry")
                             || s.contains("बिजनेस")
+                            || s.equalsIgnoreCase("कर्पेारेट")
                             || s.equalsIgnoreCase("शिक्षा")
                             || s.equalsIgnoreCase("गन्तब्य")
                             || s.equalsIgnoreCase("बैंक-वित्त प्रमुख")
@@ -353,6 +319,10 @@ public class FilterCategoryNP {
                     }//Technology
                     else if (s.equalsIgnoreCase("सूचना प्रविधि-प्रमुख")
                             || s.equalsIgnoreCase("बिज्ञान-प्रबिधि")
+                            || s.equalsIgnoreCase("Technology")
+                            || s.equalsIgnoreCase("Telecom")
+                            ||s.equalsIgnoreCase("ओटोमोबाइल")
+                            ||s.equalsIgnoreCase("Sci-Tech")
                             || s.equalsIgnoreCase("3G mobile service")
                             || s.equalsIgnoreCase("nepal telecom")
                             || s.equalsIgnoreCase("Internet")
@@ -386,6 +356,7 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("फोटो फिचर")
                             || s.equalsIgnoreCase("कला साहित्य")
                             || s.equalsIgnoreCase("मनोरञ्जन / कला")
+                            || s.equalsIgnoreCase("सामाजिक सञ्जाल")
                             || s.equalsIgnoreCase("सिनेमा")
                             || s.equalsIgnoreCase("मनोरञ्जन")
                             || s.equalsIgnoreCase("म्युजिक अपडेट")
@@ -422,6 +393,7 @@ public class FilterCategoryNP {
                             || s.contains("शारीरिक")
                             || s.equalsIgnoreCase("पोषण")
                             || s.equalsIgnoreCase("स्पेशल स्टोरी")
+                            || s.equalsIgnoreCase("राशिफल")
                             || s.equalsIgnoreCase("अवसर")
                             || s.equalsIgnoreCase("Health")
                             || s.equalsIgnoreCase("Lifestyle")
@@ -471,9 +443,12 @@ public class FilterCategoryNP {
                         feeds_filtered++;
                         break;
                     } else {
-                        Log.i(TAG, "unfiltered category : " + s);
-                        imgVid.add(entry);
-                        feeds_notFiltered++;
+                        if (!s.equalsIgnoreCase("Featured")) {
+                            Log.i(TAG, "unfiltered category : " + s);
+                            imgVid.add(entry);
+                            feeds_notFiltered++;
+                        }
+
                     }
 
             }
@@ -498,12 +473,11 @@ public class FilterCategoryNP {
             processedFeeds = Parse.deleteDuplicate(processedFeeds); //delete duplicate feeds
             processedFeeds = Parse.deleteEnglishFeeds(processedFeeds);  //delete english feeds
             processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds*//*
-            int LIMIT_FEED = 5;
+            int LIMIT_FEED = 4;
             if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);
-
                 for (int ii = 0; ii < LIMIT_FEED; ii++) {
                     Entry entry = processedFeeds.get(ii);
                     objects.add(entry);
