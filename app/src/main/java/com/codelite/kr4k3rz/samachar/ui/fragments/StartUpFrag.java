@@ -1,11 +1,13 @@
 package com.codelite.kr4k3rz.samachar.ui.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,28 @@ public class StartUpFrag extends Fragment {
         setupViewPager(viewPager);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs_startup);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1) {
+                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getContext());
+                    Intent i = new Intent("TAG_REFRESH");
+                    lbm.sendBroadcast(i);
+
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         return view;
     }
 
@@ -69,6 +93,7 @@ public class StartUpFrag extends Fragment {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
         }
+
 
         @Override
         public Fragment getItem(int position) {
@@ -86,8 +111,6 @@ public class StartUpFrag extends Fragment {
         }
 
     }
-
-
 
 
 }

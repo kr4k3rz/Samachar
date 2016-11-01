@@ -11,7 +11,6 @@ public enum WhichCategoryEN {
     SPORT("Sport", "SportFrag"),
     IMGVID("ImageVideo", "ImgVidFrag");
 
-
     final String mFirstName;
     final String mSecondName;
 

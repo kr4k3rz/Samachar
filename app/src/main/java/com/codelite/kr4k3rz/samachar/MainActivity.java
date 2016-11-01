@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SettingsActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SplashActivity;
 import com.codelite.kr4k3rz.samachar.ui.fragments.ImgVidFrag;
@@ -43,11 +44,6 @@ public class MainActivity extends AppCompatActivity {
         /*setup the alarm when to notify the user when the breaking news is popup*/
         setupAlarmNotify();
     }
-
-
-    /*
-    * setup bottom bar
-    * */
 
     private void setupBottomBar() {
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -88,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
 
+                    case R.id.customized_feeds:
+                        try {
+                            fragment = CustomizedFrag.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                 }
 
                 if (fragment != null) {
@@ -151,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, SplashActivity.class));
                 }
                 return true;
+            case R.id.action_search:
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
 
 
             default:

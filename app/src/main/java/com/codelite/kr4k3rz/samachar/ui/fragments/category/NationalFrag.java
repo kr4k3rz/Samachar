@@ -25,9 +25,6 @@ import io.paperdb.Paper;
  */
 public class NationalFrag extends Fragment {
     private static final String CACHE_NAME = WhichCategoryNP.NATIONAL.getSecondName();
-    /*for loading at postRefresh at first lunch*/
-    private View rootView;
-    private RecyclerView recyclerView;
 
 
     public NationalFrag() {
@@ -38,8 +35,8 @@ public class NationalFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_national, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_headlines);
+        View rootView = inflater.inflate(R.layout.fragment_national, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_headlines);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

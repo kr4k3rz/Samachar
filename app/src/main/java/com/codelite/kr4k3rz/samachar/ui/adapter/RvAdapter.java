@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -59,14 +60,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             customViewHolder.contentSnippet.setTextColor(Color.LTGRAY);
         } else {
             //if not selected set the default color
-            customViewHolder.title.setTextColor(mContext.getResources().getColor(R.color.primary_text));
-            customViewHolder.contentSnippet.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+            customViewHolder.title.setTextColor(ContextCompat.getColor(mContext, R.color.primary_text));
+            customViewHolder.contentSnippet.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
         }
 
         String actualUrl = null;
         String url = Parse.parseImg(entry.getContent());
         try {
-            actualUrl = convertImgUrl(null, url);
+            actualUrl = convertImgUrl(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -112,19 +113,19 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
     }
 
 
-    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+    private String convertImgUrl(String url) throws MalformedURLException {
         if (url != null && url.startsWith("http://")) {
             if (url.toLowerCase().contains(".png".toLowerCase())) {
                 URL url1 = new URL(url);
                 String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
-                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
-                Log.i("PNG TAG", "" + actualUrl);
+                url = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + url);
             } else {
-                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
-                Log.i("TAG", " String to be shows : " + actualUrl);
+                url = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + url);
             }
         } else Log.i("TAG", " String is null");
-        return actualUrl;
+        return url;
     }
 
 

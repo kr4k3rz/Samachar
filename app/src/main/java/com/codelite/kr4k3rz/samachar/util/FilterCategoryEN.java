@@ -15,8 +15,8 @@ import io.paperdb.Paper;
 
 public class FilterCategoryEN {
     private static final String TAG = Parse.class.getSimpleName();
-    private List<Entry> entryList = new ArrayList<>();
     private final Context context;
+    private List<Entry> entryList = new ArrayList<>();
 
     /**
      * Instantiates a new Filter category.
@@ -36,8 +36,6 @@ public class FilterCategoryEN {
         int feeds_filtered = 0;
         int feeds_notFiltered = 0;
         int CATEGORY_NUMBER = 9;
-        List<Integer> mPriorSize = new ArrayList<>();
-        List<Integer> mFeedSize = new ArrayList<>();
         List<Object> objects = new ArrayList<>();
         // List<Entry> filteredWithImg;
         // filteredWithImg = feedsWithImg();
@@ -52,69 +50,55 @@ public class FilterCategoryEN {
         if (Paper.book().exist(WhichCategoryEN.BREAKING.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.BREAKING.getSecondName() + "EN");
             breaking.addAll(entries1);
-            mPriorSize.add(breaking.size());
-
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> newspaper = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.NATIONAL.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.NATIONAL.getSecondName() + "EN");
             newspaper.addAll(entries1);
-            mPriorSize.add(newspaper.size());
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> world = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.WORLD.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.WORLD.getSecondName() + "EN");
             world.addAll(entries1);
-            mPriorSize.add(world.size());
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> business = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.BUSINESS.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.BUSINESS.getSecondName() + "EN");
             business.addAll(entries1);
-            mPriorSize.add(business.size());
-
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> technology = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.TECHNOLOGY.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.TECHNOLOGY.getSecondName() + "EN");
             technology.addAll(entries1);
-            mPriorSize.add(technology.size());
-
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> entertain = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.ENTERTAINMENT.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.ENTERTAINMENT.getSecondName() + "EN");
             entertain.addAll(entries1);
-            mPriorSize.add(entertain.size());
-
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> health = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.HEALTH.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.HEALTH.getSecondName() + "EN");
             health.addAll(entries1);
-            mPriorSize.add(health.size());
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> sport = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.SPORT.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.SPORT.getSecondName() + "EN");
             sport.addAll(entries1);
-            mPriorSize.add(sport.size());
-        } else mPriorSize.add(0);
+        }
 
         List<Entry> imgVid = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryEN.IMGVID.getSecondName() + "EN")) {
             List<Entry> entries1 = Paper.book().read(WhichCategoryEN.IMGVID.getSecondName() + "EN");
             imgVid.addAll(entries1);
-            mPriorSize.add(imgVid.size());
-        } else mPriorSize.add(0);
-
+        }
 
         for (Entry entry : entryList) {
             total_feeds++;
@@ -155,6 +139,7 @@ public class FilterCategoryEN {
                             || s.equalsIgnoreCase("OPINION")
                             || s.equalsIgnoreCase("Uncategorized")
                             || s.equalsIgnoreCase("Interview")
+                            ||s.equalsIgnoreCase("LITERARY")
                             || s.equalsIgnoreCase("LOCAL")
                             || s.equalsIgnoreCase("Society News")
                             || s.equalsIgnoreCase("Uncategorized")
@@ -259,8 +244,8 @@ public class FilterCategoryEN {
             processedFeeds = Parse.deleteNonEngFeeds(processedFeeds);  //delete non english feeds
             processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds
 
-            int LIMIT_FEED = 4;
-            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
+            int LIMIT_FEED = 3;
+            if (processedFeeds.size() >= LIMIT_FEED && i != 0 && i != CATEGORY_NUMBER - 1) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);

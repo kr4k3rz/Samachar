@@ -12,10 +12,9 @@ import android.util.Log;
 import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.Newspaper;
-import com.codelite.kr4k3rz.samachar.util.CheckInternet;
-import com.codelite.kr4k3rz.samachar.util.FilterCategoryEN;
+import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
+import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,9 +38,6 @@ import okhttp3.Response;
 
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG = SplashActivity.class.getSimpleName();
-    private final String[] rss_english = {"https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://thehimalayantimes.com/feed/&num=-1",
-            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://english.onlinekhabar.com/feed&num=-1",
-            "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://dainikpost.com/feed/&num=-1"};
     private Handler mHandler;
     private RingProgressBar ringProgressBar;
     private int tempProgressCounter = 0;
@@ -65,14 +61,9 @@ public class SplashActivity extends AppCompatActivity {
             editor.putBoolean("firstTime_loadFeed", true);
             editor.apply();
         } else {
-            if (CheckInternet.isNetworkAvailable(getBaseContext()))
-                loadFeeds();
-            else {
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
         }
 
 
@@ -81,7 +72,7 @@ public class SplashActivity extends AppCompatActivity {
     private void loadingFeedsOnFirstStart() {
         final List<Entry> list_Nepali = new ArrayList<>();
         final OkHttpClient okHttpClient = new OkHttpClient();
-        final ArrayList<String> rss = new Newspaper().getLinksList();
+        final ArrayList<String> rss = new NewspaperNP().getLinksList();
 
          /*ALWAYS START NEPALI LANG*/
         for (int i = 0; i < rss.size(); i++) {
@@ -110,8 +101,12 @@ public class SplashActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Entry>>() {
                         }.getType();
+                        List<Entry> tempList;
                         List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                        Paper.book().write("newspaper" + finalI, posts);
+                        tempList = Parse.deleteDuplicate(posts);
+                        tempList = Parse.deleteEnglishFeeds(tempList);
+                        tempList = Parse.sortByTime(tempList);
+                        Paper.book().write("NP" + "newspaper" + finalI, tempList);
                         list_Nepali.addAll(setTitleLink(feedTitle, feedLink, posts));
 
                     } catch (JSONException e) {
@@ -121,15 +116,10 @@ public class SplashActivity extends AppCompatActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-
                             progressShow(responseCount, rss);
                             if (responseCount == rss.size() - 1) {
                                 FilterCategoryNP filterCategory = new FilterCategoryNP(list_Nepali, getBaseContext());
-                                try {
-                                    filterCategory.filter();
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                                filterCategory.filter();
                                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -143,164 +133,6 @@ public class SplashActivity extends AppCompatActivity {
 
             });
 
-        }
-
-
-    }
-
-    private void loadFeeds() {
-        final List<Entry> list = new ArrayList<>();
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        final ArrayList<String> rss = new Newspaper().getLinksList();
-        String lang = Paper.book().read("language");
-        Log.i(TAG, "lang : " + lang);
-        if (lang.equalsIgnoreCase("NP")) {
-            for (int i = 0; i < rss.size(); i++) {
-                Request request = new Request.Builder().url(rss.get(i)).build();
-                final int failureCount = i;
-                final float responseCount = i;
-                final int finalI = i;
-                okHttpClient.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        okHttpClient.dispatcher().cancelAll();
-                        Log.i("TAG", "" + e);
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (failureCount == rss.size() - 1) {
-                                    FilterCategoryNP filterCategory = new FilterCategoryNP(list, getBaseContext());
-                                    try {
-                                        filterCategory.filter();
-                                    } catch (ClassNotFoundException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String jsonStr = response.body().string();    //loads JSON String feeds by Okhttp
-                        Log.i("TAG", " : " + jsonStr);
-                        try {
-                            JSONObject mainNode = new JSONObject(jsonStr);
-                            JSONObject responseData = mainNode.getJSONObject("responseData");
-                            JSONObject feeds = responseData.getJSONObject("feed");
-                            String feedTitle = feeds.getString("title");
-                            String feedLink = feeds.getString("link");
-                            Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
-                            JSONArray entries = feeds.getJSONArray("entries");
-                            Gson gson = new Gson();
-                            Type listType = new TypeToken<List<Entry>>() {
-                            }.getType();
-                            List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                            ArrayList<Entry> entryArrayList = new ArrayList<>();
-                            entryArrayList.clear();
-                            entryArrayList = Paper.book().read("newspaper" + finalI);
-                            entryArrayList.addAll(posts);
-                            Paper.book().write("newspaper" + finalI, entryArrayList);
-
-                            list.addAll(setTitleLink(feedTitle, feedLink, posts));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressShow(responseCount, rss);
-                                ringProgressBar.setOnProgressListener(new RingProgressBar.OnProgressListener() {
-                                    @Override
-                                    public void progressToComplete() {
-                                        Log.i("TAG", "on completed: ");
-                                        FilterCategoryNP filterCategory = new FilterCategoryNP(list, getBaseContext());
-                                        try {
-                                            filterCategory.filter();
-                                        } catch (ClassNotFoundException e) {
-                                            e.printStackTrace();
-                                        }
-                                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
-
-
-                            }
-                        });
-
-                    }
-                });
-
-            }
-        } else if (lang.equalsIgnoreCase("EN")) {
-            final List<Entry> list_English = new ArrayList<>();
-            /*ENGLISH*/
-            for (int i = 0; i < rss_english.length; i++) {
-                Request request = new Request.Builder().url(rss_english[i]).build();
-                final int failureCount = i;
-                final float responseCount = i;
-                okHttpClient.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i("TAG", "" + e);
-                        if (failureCount == rss_english.length - 1) {
-                            FilterCategoryEN filterCategory = new FilterCategoryEN(list, getBaseContext());
-                            filterCategory.filter();
-                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                    }
-
-                    @Override
-                    public void onResponse(Call call, final Response response) throws IOException {
-                        String jsonStr = response.body().string();
-                        Log.i("TAG", " : " + jsonStr);
-                        try {
-                            JSONObject mainNode = new JSONObject(jsonStr);
-                            JSONObject responseData = mainNode.getJSONObject("responseData");
-                            JSONObject feeds = responseData.getJSONObject("feed");
-                            String feedTitle = feeds.getString("title");
-                            String feedLink = feeds.getString("link");
-                            Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
-                            JSONArray entries = feeds.getJSONArray("entries");
-                            Gson gson = new Gson();
-                            Type listType = new TypeToken<List<Entry>>() {
-                            }.getType();
-                            List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                            list_English.addAll(setTitleLink(feedTitle, feedLink, posts));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (responseCount == rss_english.length - 1) {
-                                    Log.i("IN FINAL", "OK");
-                                    FilterCategoryEN filterCategoryEN = new FilterCategoryEN(list_English, getBaseContext());
-                                    filterCategoryEN.filter();
-                                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }
-                        });
-                    }
-
-
-                });
-
-
-            }
         }
 
 

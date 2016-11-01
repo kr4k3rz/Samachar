@@ -25,9 +25,6 @@ import io.paperdb.Paper;
  */
 public class SportFrag extends Fragment {
     private static final String CACHE_NAME = WhichCategoryNP.SPORT.getSecondName();
-    /*for loading at postRefresh at first lunch*/
-    private View rootView;
-    private RecyclerView recyclerView;
 
 
     public SportFrag() {
@@ -38,8 +35,8 @@ public class SportFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_sport, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_sport);
+        View rootView = inflater.inflate(R.layout.fragment_sport, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_sport);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

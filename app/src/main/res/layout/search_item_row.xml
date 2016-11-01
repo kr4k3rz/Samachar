@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/query_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/query_codeSnippet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Snippet"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/query_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Query Link"
+        android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/button_subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="subscribe" />
+</LinearLayout>

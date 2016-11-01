@@ -2,7 +2,7 @@
 <tabs>
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/ic_home"
+        icon="@drawable/icon_whatshot"
         id="@+id/home_item"
         title="home" />
     <tab
@@ -17,7 +17,12 @@
         title="imgvid" />
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/icon_newspaper_list"
+        icon="@drawable/icon_pages"
         id="@+id/newspaper"
+        title="newspaper" />
+    <tab
+        barColorWhenSelected="#D3D3D3"
+        icon="@drawable/icon_person"
+        id="@+id/customized_feeds"
         title="newspaper" />
 </tabs>

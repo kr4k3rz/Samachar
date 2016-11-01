@@ -46,6 +46,8 @@ public class DetailFeed extends AppCompatActivity {
     private boolean checked = false;
     private TextView content;
 
+
+    //TODO entryItem in both combine into single use enque GSON
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class DetailFeed extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setTitle("");
 
         discreteSeekBar1 = (DiscreteSeekBar) findViewById(R.id.discrete1);
         discreteSeekBar1.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
@@ -88,10 +90,10 @@ public class DetailFeed extends AppCompatActivity {
         content.setText(Html.fromHtml(contentHtml, Parse.EMPTY_IMAGE_GETTER, null));
 
         author.setText(entry.getAuthor());
-        String url = Parse.parseImg(entry.getContent());
         String actualUrl = null;
+        String url = Parse.parseImg(entry.getContent());
         try {
-            actualUrl = convertImgUrl(null, url);
+            actualUrl = convertImgUrl(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -125,19 +127,19 @@ public class DetailFeed extends AppCompatActivity {
 
     }
 
-    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+    private String convertImgUrl(String url) throws MalformedURLException {
         if (url != null && url.startsWith("http://")) {
             if (url.toLowerCase().contains(".png".toLowerCase())) {
                 URL url1 = new URL(url);
                 String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
-                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=50";
-                Log.i("PNG TAG", "" + actualUrl);
+                url = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + url);
             } else {
-                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=50";
-                Log.i("TAG", " String to be shows : " + actualUrl);
+                url = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + url);
             }
         } else Log.i("TAG", " String is null");
-        return actualUrl;
+        return url;
     }
 
     @Override

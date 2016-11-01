@@ -22,8 +22,6 @@ import io.paperdb.Paper;
 
 public class WorldFrag extends Fragment {
     private static final String CACHE_NAME = WhichCategoryNP.WORLD.getSecondName();
-    private View rootView;
-    private RecyclerView recyclerView;
 
     public WorldFrag() {
     }
@@ -31,8 +29,8 @@ public class WorldFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_world_frag, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_World);
+        View rootView = inflater.inflate(R.layout.fragment_world_frag, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_World);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

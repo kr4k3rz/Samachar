@@ -27,8 +27,6 @@ import io.paperdb.Paper;
 public class HealthFrag extends Fragment {
 
     private static final String CACHE_NAME = WhichCategoryNP.HEALTH.getSecondName();
-    private RecyclerView recyclerView;
-    private View rootView;
 
     public HealthFrag() {
     }
@@ -36,8 +34,8 @@ public class HealthFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_health, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_health);
+        View rootView = inflater.inflate(R.layout.fragment_health, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_health);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);

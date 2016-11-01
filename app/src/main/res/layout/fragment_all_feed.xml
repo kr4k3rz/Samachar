@@ -2,13 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.category.BreakingFrag">
+    tools:context=".ui.fragments.HomeFrag">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_All_Feeds"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh_allFeeds"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/icons"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_All_Feeds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/icons"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

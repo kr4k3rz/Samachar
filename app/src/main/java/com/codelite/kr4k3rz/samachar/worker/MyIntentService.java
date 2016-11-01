@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Entry;
-import com.codelite.kr4k3rz.samachar.model.Newspaper;
+import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
 import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.Parse;
@@ -54,8 +54,7 @@ public class MyIntentService extends IntentService {
     }
 
     private void updateDataNotify() {
-        //String[] rss = FeedLists.getFeedListLatest();
-        ArrayList<String> rss = new Newspaper().getLinksList();
+        ArrayList<String> rss = new NewspaperNP().getLinksList();
         List<Entry> list = new ArrayList<>();
 
         try {

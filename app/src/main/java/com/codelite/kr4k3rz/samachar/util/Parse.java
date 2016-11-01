@@ -168,7 +168,7 @@ public class Parse {
     }
 
 
-    static List<Entry> deleteNonEngFeeds(List<Entry> entries) {
+   public static List<Entry> deleteNonEngFeeds(List<Entry> entries) {
         ArrayList<Entry> tempList = new ArrayList<>();
         tempList.clear();
         for (Entry e : entries) {

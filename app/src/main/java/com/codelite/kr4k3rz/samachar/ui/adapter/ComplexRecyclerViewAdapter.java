@@ -87,9 +87,9 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void configureViewHolder2(final ViewHolder2 vh2, final int position) throws MalformedURLException {
         final Entry entry = (Entry) items.get(position);
         /*Bind only data here*/
-        String actualUrl = null;
+        String actualUrl;
         String url = Parse.parseImg(entry.getContent());
-        actualUrl = convertImgUrl(null, url);
+        actualUrl = convertImgUrl(url);
         vh2.title.setText(entry.getTitle());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 
@@ -120,7 +120,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 Intent intent = new Intent(context, DetailFeed.class);
                 intent.putExtra("ENTRY", entry);
                 context.startActivity(intent);
-                // ((Activity) context).startActivityForResult(intent, 2);
 
 
             }
@@ -130,19 +129,19 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    private String convertImgUrl(String actualUrl, String url) throws MalformedURLException {
+    private String convertImgUrl(String url) throws MalformedURLException {
         if (url != null && url.startsWith("http://")) {
             if (url.toLowerCase().contains(".png".toLowerCase())) {
                 URL url1 = new URL(url);
                 String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
-                actualUrl = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
-                Log.i("PNG TAG", "" + actualUrl);
+                url = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + url);
             } else {
-                actualUrl = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
-                Log.i("TAG", " String to be shows : " + actualUrl);
+                url = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + url);
             }
         } else Log.i("TAG", " String is null");
-        return actualUrl;
+        return url;
     }
 
 
@@ -186,13 +185,11 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private class ViewHolder1 extends RecyclerView.ViewHolder {
 
         final TextView tv_category_name;
-        final TextView tv_view_all;
         final CardView linearLayout;
 
         ViewHolder1(View itemView) {
             super(itemView);
             tv_category_name = (TextView) itemView.findViewById(R.id.category_name);
-            tv_view_all = (TextView) itemView.findViewById(R.id.viewall);
             linearLayout = (CardView) itemView.findViewById(R.id.ll_item);
         }
 

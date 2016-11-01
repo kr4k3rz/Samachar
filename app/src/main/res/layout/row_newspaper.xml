@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_newspaper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/rss" />
 
     <TextView
         android:id="@+id/newspaper_name"
@@ -23,6 +16,10 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
-        android:text="Newspaper" />
+        android:drawableLeft="@drawable/ic_rss"
+        android:drawablePadding="12dp"
+        android:drawableStart="@drawable/ic_rss"
+        android:text="Newspaper"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>
