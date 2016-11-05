@@ -2,22 +2,21 @@ package com.codelite.kr4k3rz.samachar.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.Header;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.ui.activity.CategoryActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.Parse;
@@ -26,6 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+
+import io.paperdb.Paper;
 
 
 public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -85,29 +86,36 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void configureViewHolder2(final ViewHolder2 vh2, final int position) throws MalformedURLException {
-        final Entry entry = (Entry) items.get(position);
+        final EntriesItem entry = (EntriesItem) items.get(position);
         /*Bind only data here*/
         String actualUrl;
         String url = Parse.parseImg(entry.getContent());
         actualUrl = convertImgUrl(url);
         vh2.title.setText(entry.getTitle());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-
-            vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
-        } else {
-            vh2.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
-        }
 
         try {
-            vh2.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
+            vh2.source.setText(Parse.capitalize(String.format("%s", Parse.getSource(entry.getLink()))));
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
 
-        vh2.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
-        vh2.date.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        boolean enableImage = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("enableImage", true);
+        displayDate(vh2, entry);
 
+        displayImage(vh2, entry, actualUrl);
+
+
+    }
+
+    private void displayDate(ViewHolder2 vh2, EntriesItem entry) {
+        vh2.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getPublishedDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
+        vh2.date.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+    }
+
+    private void displayImage(ViewHolder2 vh2, final EntriesItem entry, String actualUrl) {
+        boolean enableImage = true;
+        if (Paper.book().exist("Image")) {
+            enableImage = Paper.book().read("Image");
+        }
         if (enableImage) {
             Glide.with(context)
                     .load(actualUrl)
@@ -124,8 +132,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             }
         });
-
-
     }
 
 
@@ -175,7 +181,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public int getItemViewType(int position) {
         if (items.get(position) instanceof Header) {
             return HEADER;
-        } else if (items.get(position) instanceof Entry) {
+        } else if (items.get(position) instanceof EntriesItem) {
             return ENTRY;
         }
         return -1;
@@ -185,12 +191,12 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private class ViewHolder1 extends RecyclerView.ViewHolder {
 
         final TextView tv_category_name;
-        final CardView linearLayout;
+        final LinearLayout linearLayout;
 
         ViewHolder1(View itemView) {
             super(itemView);
             tv_category_name = (TextView) itemView.findViewById(R.id.category_name);
-            linearLayout = (CardView) itemView.findViewById(R.id.ll_item);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.ll_item);
         }
 
     }
@@ -201,12 +207,10 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         final CardView cardView;
         final ImageView imageView;
         final TextView source;
-        final TextView contentSnippet;
 
         ViewHolder2(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
-            contentSnippet = (TextView) itemView.findViewById(R.id.content_snippet);
             date = (TextView) itemView.findViewById(R.id.date);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             source = (TextView) itemView.findViewById(R.id.source);

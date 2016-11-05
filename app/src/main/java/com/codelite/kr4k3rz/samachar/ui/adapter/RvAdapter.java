@@ -5,11 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -21,7 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
@@ -31,14 +28,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.paperdb.Paper;
+
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> {
     private final Context mContext;
     private final String TAG = RvAdapter.class.getSimpleName();
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
-    private List<Entry> entries = new ArrayList<>();
+    private List<EntriesItem> entries = new ArrayList<>();
 
-    public RvAdapter(Context context, List<Entry> entries) {
+    public RvAdapter(Context context, List<EntriesItem> entries) {
         this.entries = entries;
         mContext = context;
     }
@@ -52,16 +51,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
     @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(final CustomViewHolder customViewHolder, @SuppressLint("RecyclerView") final int _position) {
-        final Entry entry = entries.get(customViewHolder.getAdapterPosition());
+        final EntriesItem entry = entries.get(customViewHolder.getAdapterPosition());
 
         if (selectedItems.get(customViewHolder.getAdapterPosition())) {
             //if already selected set the same color
             customViewHolder.title.setTextColor(Color.LTGRAY);
-            customViewHolder.contentSnippet.setTextColor(Color.LTGRAY);
         } else {
             //if not selected set the default color
-            customViewHolder.title.setTextColor(ContextCompat.getColor(mContext, R.color.primary_text));
-            customViewHolder.contentSnippet.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
+            customViewHolder.title.setTextColor(Color.DKGRAY);
         }
 
         String actualUrl = null;
@@ -72,22 +69,20 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             e.printStackTrace();
         }
         customViewHolder.title.setText(entry.getTitle());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
-        } else {
-            customViewHolder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
-        }
-
         try {
-            customViewHolder.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
+            customViewHolder.source.setText(Parse.capitalize(String.format("%s", Parse.getSource(entry.getLink()))));
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
 
-        customViewHolder.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
+        customViewHolder.date.setText(String.format("%s", Parse.convertLongDateToAgoString(Date.parse(entry.getPublishedDate()), System.currentTimeMillis()))); //to set date time in '3 minutes ago' like
         customViewHolder.date.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        boolean enableImage = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enableImage", true);
 
+
+        boolean enableImage = true;
+        if (Paper.book().exist("Image")) {
+            enableImage = Paper.book().read("Image");
+        }
         if (enableImage) {
             Glide.with(mContext)
                     .load(actualUrl)
@@ -100,7 +95,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
             @Override
             public void onClick(View view) {
                 customViewHolder.title.setTextColor(Color.LTGRAY);
-                customViewHolder.contentSnippet.setTextColor(Color.LTGRAY);
                 selectedItems.put(customViewHolder.getAdapterPosition(), true);
                 Log.i(TAG, "Inside on Click\n" + "_position :  " + _position + "\n getadapter position : " + customViewHolder.getAdapterPosition());
                 Intent intent = new Intent(mContext, DetailFeed.class);
@@ -142,12 +136,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         final CardView cardView;
         final ImageView imageView;
         final TextView source;
-        final TextView contentSnippet;
 
         CustomViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
-            contentSnippet = (TextView) itemView.findViewById(R.id.content_snippet);
             date = (TextView) itemView.findViewById(R.id.date);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             source = (TextView) itemView.findViewById(R.id.source);

@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -42,12 +42,10 @@ import io.paperdb.Paper;
 public class DetailFeed extends AppCompatActivity {
     private static final String TAG = DetailFeed.class.getSimpleName();
     private DiscreteSeekBar discreteSeekBar1;
-    private Entry entry;
+    private EntriesItem entry;
     private boolean checked = false;
     private TextView content;
 
-
-    //TODO entryItem in both combine into single use enque GSON
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +55,13 @@ public class DetailFeed extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
+        entry = (EntriesItem) getIntent().getSerializableExtra("ENTRY");
 
+        try {
+            getSupportActionBar().setTitle(Parse.capitalize(Parse.getSource(entry.getLink())));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         discreteSeekBar1 = (DiscreteSeekBar) findViewById(R.id.discrete1);
         discreteSeekBar1.setNumericTransformer(new DiscreteSeekBar.NumericTransformer() {
             @Override
@@ -66,7 +69,6 @@ public class DetailFeed extends AppCompatActivity {
                 return value;
             }
         });
-        FlowLayout flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
         TextView title = (TextView) findViewById(R.id.title_detail);
         TextView date = (TextView) findViewById(R.id.date_detail);
         content = (TextView) findViewById(R.id.content_detail);
@@ -74,38 +76,26 @@ public class DetailFeed extends AppCompatActivity {
         CardView cardView = (CardView) findViewById(R.id.myCardview);
         TextView author = (TextView) findViewById(R.id.authorTv);
 
-        entry = (Entry) getIntent().getSerializableExtra("ENTRY");
-
         Log.d("DETAIL FEEDS", "Entry : " + entry.getTitle());
         content.setTextSize(getSharedPreferences("setting", MODE_PRIVATE).getFloat("textsize", 16));
         title.setText(entry.getTitle());
-
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM ''yy, HH:mm ", Locale.ENGLISH);
-        date.setText(simpleDateFormat.format(Date.parse(entry.getDate())));
+        date.setText(simpleDateFormat.format(Date.parse(entry.getPublishedDate())));
         Log.i(TAG, entry.getContent());
        /*use to remove the TAG */
         String check = "<p>The post <a rel=\"nofollow\" href=\"" + entry.getLink() + "\">" + entry.getTitle() + "</a> appeared first on <a rel=\"nofollow\" href=\"" + entry.getLinkFeed() + "\">" + entry.getTitleFeed() + "</a>.</p>";
         Log.i(TAG, "" + check);
         String contentHtml = entry.getContent().replace(check, "");
         content.setText(Html.fromHtml(contentHtml, Parse.EMPTY_IMAGE_GETTER, null));
-
         author.setText(entry.getAuthor());
-        String actualUrl = null;
-        String url = Parse.parseImg(entry.getContent());
-        try {
-            actualUrl = convertImgUrl(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        boolean enableImage = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("enableImage", true);
-        if (enableImage) {
-            cardView.setVisibility(View.VISIBLE);
-            Glide.with(getApplicationContext())
-                    .load(actualUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(imageView);
-        }
+        displayImage(imageView, cardView);
+        displayCategoriesTag();
 
+
+    }
+
+    private void displayCategoriesTag() {
+        FlowLayout flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
         ArrayList<String> fetchList;
         fetchList = (ArrayList<String>) entry.getCategories();
         if (flowLayout != null) {
@@ -118,13 +108,33 @@ public class DetailFeed extends AppCompatActivity {
                     @SuppressLint("InflateParams") TextView rowTextView = (TextView) getLayoutInflater().inflate(R.layout.custom_tag_textview, null);
                     rowTextView.setText(s);
                     rowTextView.setLayoutParams(lparams);
+                    rowTextView.setTextColor(Color.DKGRAY);
                     flowLayout.addView(rowTextView);
                 }
             }
             Log.e("TAG", "setTags: after " + flowLayout.getChildCount());
         }
+    }
 
-
+    private void displayImage(ImageView imageView, CardView cardView) {
+        String actualUrl = null;
+        String url = Parse.parseImg(entry.getContent());
+        try {
+            actualUrl = convertImgUrl(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        boolean enableImage = true;
+        if (Paper.book().exist("Image")) {
+            enableImage = Paper.book().read("Image");
+        }
+        if (enableImage) {
+            cardView.setVisibility(View.VISIBLE);
+            Glide.with(getApplicationContext())
+                    .load(actualUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(imageView);
+        }
     }
 
     private String convertImgUrl(String url) throws MalformedURLException {
@@ -198,15 +208,14 @@ public class DetailFeed extends AppCompatActivity {
                 return true;
             case R.id.action_bookmark:
                 if (item.isChecked()) {
-                    //  ToastMsg.shortMsg(getBaseContext(), "inside checked");
                     item.setIcon(R.drawable.ic_star_selected);
                     if (Paper.book().exist("BookMark")) {
-                        List<Entry> entries;
+                        List<EntriesItem> entries;
                         entries = Paper.book().read("BookMark");
                         entries.add(entry);
                         Paper.book().write("BookMark", entries);
                     } else {
-                        List<Entry> entries = new ArrayList<>();
+                        List<EntriesItem> entries = new ArrayList<>();
                         entries.clear();
                         entries.add(entry);
                         Paper.book().write("BookMark", entries);
@@ -214,11 +223,10 @@ public class DetailFeed extends AppCompatActivity {
                     checked = true;
                     item.setChecked(false);
                 } else {
-                    //  ToastMsg.shortMsg(getBaseContext(), "inside Unchecked");
                     item.setIcon(R.drawable.ic_star_unselected);
                     item.setChecked(true);
                     if (Paper.book().exist("BookMark")) {
-                        List<Entry> entries;
+                        List<EntriesItem> entries;
                         entries = Paper.book().read("BookMark");
                         entries.remove(entry);
                         Paper.book().write("BookMark", entries);

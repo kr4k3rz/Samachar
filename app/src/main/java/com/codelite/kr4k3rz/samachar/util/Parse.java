@@ -2,7 +2,7 @@ package com.codelite.kr4k3rz.samachar.util;
 
 import android.annotation.SuppressLint;
 
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,17 +56,17 @@ public class Parse {
 
     }
 
-    public static List<Entry> sortByTime(List<Entry> entries) {
+    public static List<EntriesItem> sortByTime(List<EntriesItem> entries) {
 
-        Collections.sort(entries, new Comparator<Entry>() {
+        Collections.sort(entries, new Comparator<EntriesItem>() {
             @Override
-            public int compare(Entry entry, Entry t1) {
+            public int compare(EntriesItem entry, EntriesItem t1) {
                 long d1 = 0;
                 long d2 = 0;
                 @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
                 try {
-                    d1 = formatter.parse(entry.getDate()).getTime();
-                    d2 = formatter.parse(t1.getDate()).getTime();
+                    d1 = formatter.parse(entry.getPublishedDate()).getTime();
+                    d2 = formatter.parse(t1.getPublishedDate()).getTime();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -76,9 +76,9 @@ public class Parse {
         return entries;
     }
 
-    public static List<Entry> deleteDuplicate(List<Entry> entries) {
-        ArrayList<Entry> newFeeds = new ArrayList<>();
-        Set<Entry> hs = new HashSet<>();
+    public static List<EntriesItem> deleteDuplicate(List<EntriesItem> entries) {
+        ArrayList<EntriesItem> newFeeds = new ArrayList<>();
+        Set<EntriesItem> hs = new HashSet<>();
         if (entries != null)
             hs.addAll(entries);
         newFeeds.clear();
@@ -157,7 +157,7 @@ public class Parse {
         return finalString;
     }
 
-    public static List<Entry> deleteEnglishFeeds(List<Entry> entries) {
+    public static List<EntriesItem> deleteEnglishFeeds(List<EntriesItem> entries) {
         for (int i = 0; i < entries.size(); i++) {
             boolean atLeastOneAlpha = entries.get(i).getTitle().matches(".*[a-zA-Z]+.*");
             if (atLeastOneAlpha) {
@@ -167,11 +167,10 @@ public class Parse {
         return entries;
     }
 
-
-   public static List<Entry> deleteNonEngFeeds(List<Entry> entries) {
-        ArrayList<Entry> tempList = new ArrayList<>();
+    public static List<EntriesItem> deleteNonEngFeeds(List<EntriesItem> entries) {
+        ArrayList<EntriesItem> tempList = new ArrayList<>();
         tempList.clear();
-        for (Entry e : entries) {
+        for (EntriesItem e : entries) {
             String s = e.getTitle();
             boolean atLeastOneAlpha = s.matches(".*[a-zA-Z]+.*");
             if (atLeastOneAlpha) {
@@ -179,6 +178,10 @@ public class Parse {
             }
         }
         return tempList;
+    }
+
+    public static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1).toLowerCase();
     }
 
 }

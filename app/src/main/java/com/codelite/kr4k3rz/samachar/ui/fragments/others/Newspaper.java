@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments;
+package com.codelite.kr4k3rz.samachar.ui.fragments.others;
 
 
 import android.os.Bundle;
@@ -14,20 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
+import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.ToastMsg;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -60,18 +54,16 @@ public class Newspaper extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         handler = new Handler(Looper.getMainLooper());
         final int position = getArguments().getInt("POSITION");
         final String link = getArguments().getString("LINK");
         Log.i("TAG", "link : " + link);
-
         final String lang = Paper.book().read("language");
         if (lang.equalsIgnoreCase("NP")) {
-            List<Entry> list = Paper.book().read(lang + "newspaper" + position);
+            List<EntriesItem> list = Paper.book().read(lang + "newspaper" + position);
             recyclerView.setAdapter(new RvAdapter(getContext(), list));
         } else {
-            List<Entry> list = Paper.book().read(lang + "newspaper" + position);
+            List<EntriesItem> list = Paper.book().read(lang + "newspaper" + position);
             recyclerView.setAdapter(new RvAdapter(getContext(), list));
         }
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -104,35 +96,23 @@ public class Newspaper extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String jsonStr = response.body().string();    //loads JSON String feeds by Okhttp
                 Log.i("TAG", " : " + jsonStr);
-                try {
-                    JSONObject mainNode = new JSONObject(jsonStr);
-                    JSONObject responseData = mainNode.getJSONObject("responseData");
-                    JSONObject feeds = responseData.getJSONObject("feed");
-                    JSONArray entries = feeds.getJSONArray("entries");
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Entry>>() {
-                    }.getType();
-                    List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                    List<Entry> list = Paper.book().read(lang + "newspaper" + position);
-                    list.addAll(posts);
-                    List<Entry> temp;
-                    temp = Parse.deleteDuplicate(list);
-                    temp = Parse.deleteEnglishFeeds(temp);
-                    temp = Parse.sortByTime(temp);
-                    Paper.book().write(lang + "newspaper" + position, temp);
-                    final List<Entry> finalTemp = temp;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.setAdapter(new RvAdapter(getContext(), finalTemp));
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                List<EntriesItem> posts = responseFeed.getResponseData().getFeed().getEntries();
+                List<EntriesItem> list = Paper.book().read(lang + "newspaper" + position);
+                list.addAll(posts);
+                List<EntriesItem> temp;
+                temp = Parse.deleteDuplicate(list);
+                temp = Parse.deleteEnglishFeeds(temp);
+                temp = Parse.sortByTime(temp);
+                Paper.book().write(lang + "newspaper" + position, temp);
+                final List<EntriesItem> finalTemp = temp;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(new RvAdapter(getContext(), finalTemp));
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
 
             }
         });

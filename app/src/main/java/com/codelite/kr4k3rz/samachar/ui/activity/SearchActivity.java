@@ -17,13 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.search.EntriesItem;
 import com.codelite.kr4k3rz.samachar.model.search.ResponseSearch;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 
@@ -37,8 +36,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class SearchActivity extends AppCompatActivity {
-    Toolbar toolbar;
-    RecyclerView recyclerView;
+    private Toolbar toolbar;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -51,11 +50,10 @@ public class SearchActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_searchResult);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getBaseContext()));
 
 
     }
@@ -99,7 +97,7 @@ public class SearchActivity extends AppCompatActivity {
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/find?v=1.0&q=" + query).build();
         okHttpClient.newCall(request).enqueue(new Callback() {
-            Handler handler = new Handler(SearchActivity.this.getMainLooper());
+            final Handler handler = new Handler(SearchActivity.this.getMainLooper());
 
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -135,8 +133,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.MyViewHolder> {
-        Context context;
-        List<EntriesItem> entries;
+        final Context context;
+        final List<EntriesItem> entries;
 
         SearchQueryAdapter(Context context, List<EntriesItem> entries) {
             this.context = context;
@@ -156,7 +154,6 @@ public class SearchActivity extends AppCompatActivity {
             holder.button_subscribe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // SnackMsg.showMsgShort(toolbar, "Subscribed");
                     Intent intent = new Intent(context, SubscribeActivity.class);
                     intent.putExtra("QUERY", entries.get(holder.getAdapterPosition()));
                     startActivity(intent);
@@ -174,14 +171,16 @@ public class SearchActivity extends AppCompatActivity {
 
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView textView_title, textView_code_snippet, textView_link;
-            Button button_subscribe;
+            final TextView textView_title;
+            final TextView textView_code_snippet;
+            final TextView textView_link;
+            final LinearLayout button_subscribe;
 
             MyViewHolder(View itemView) {
                 super(itemView);
                 textView_title = (TextView) itemView.findViewById(R.id.query_title);
                 textView_code_snippet = (TextView) itemView.findViewById(R.id.query_codeSnippet);
-                button_subscribe = (Button) itemView.findViewById(R.id.button_subscribe);
+                button_subscribe = (LinearLayout) itemView.findViewById(R.id.ll_search);
                 textView_link = (TextView) itemView.findViewById(R.id.query_link);
             }
         }

@@ -16,7 +16,8 @@ import android.view.ViewGroup;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryEN;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
-import com.codelite.kr4k3rz.samachar.ui.fragments.category.BreakingFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.trending.BreakingFrag;
+import com.codelite.kr4k3rz.samachar.ui.fragments.trending.HomeFrag;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StartUpFrag extends Fragment {
+public class TrendingNewsFrag extends Fragment {
 
 
-    public StartUpFrag() {
+    public TrendingNewsFrag() {
         // Required empty public constructor
     }
 

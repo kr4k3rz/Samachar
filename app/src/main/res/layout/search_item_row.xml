@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_search"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="16dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/query_title"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
         android:text="Title"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="16sp"
+        android:textStyle="bold|normal" />
 
     <TextView
         android:id="@+id/query_codeSnippet"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Snippet"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="normal" />
 
     <TextView
         android:id="@+id/query_link"
+        style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Query Link"
+        android:textSize="12sp"
         android:textStyle="italic" />
 
-    <Button
-        android:id="@+id/button_subscribe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="subscribe" />
 </LinearLayout>

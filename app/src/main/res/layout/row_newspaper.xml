@@ -16,9 +16,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
-        android:drawableLeft="@drawable/ic_rss"
+        android:drawableLeft="@drawable/icon_rss_feed"
         android:drawablePadding="12dp"
-        android:drawableStart="@drawable/ic_rss"
+        android:drawableStart="@drawable/icon_rss_feed"
         android:text="Newspaper"
         tools:ignore="HardcodedText" />
 

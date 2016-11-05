@@ -4,23 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/action_setting"
-        android:icon="@drawable/ic_setting"
-        android:orderInCategory="100"
-        android:title="Setting"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction,HardcodedText" />
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/icon_search"
         android:title="Search"
-        app:showAsAction="always"
-        tools:ignore="HardcodedText" />
-    <item
-        android:id="@+id/action_language"
-        android:icon="@drawable/ic_action_name"
-        android:orderInCategory="80"
-        android:title="Language"
         app:showAsAction="always"
         tools:ignore="HardcodedText" />
 

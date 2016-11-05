@@ -17,12 +17,7 @@
         title="imgvid" />
     <tab
         barColorWhenSelected="#D3D3D3"
-        icon="@drawable/icon_pages"
-        id="@+id/newspaper"
-        title="newspaper" />
-    <tab
-        barColorWhenSelected="#D3D3D3"
-        icon="@drawable/icon_person"
-        id="@+id/customized_feeds"
-        title="newspaper" />
+        icon="@drawable/icon_setting"
+        id="@+id/settings"
+        title="more" />
 </tabs>

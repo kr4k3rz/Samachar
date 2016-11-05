@@ -12,21 +12,16 @@ import android.text.Html;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
+import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.PullData;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,49 +44,42 @@ public class MyIntentService extends IntentService {
         Log.i("TAG", "IntentService fired");
 
         if (CheckInternet.isNetworkAvailable(getApplicationContext()))
-            updateDataNotify();
+            try {
+                updateDataNotify();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
     }
 
-    private void updateDataNotify() {
+    private void updateDataNotify() throws IOException {
         ArrayList<String> rss = new NewspaperNP().getLinksList();
-        List<Entry> list = new ArrayList<>();
+        List<EntriesItem> list = new ArrayList<>();
 
-        try {
-            for (String rs : rss) {
-                if (!rs.equalsIgnoreCase("")) {
-                    String jsonStr = new PullData().run(rs);    //loads JSON String feeds by Okhttp
-                    Log.i("TAG", ":>  " + jsonStr);
-                    JSONObject mainNode = new JSONObject(jsonStr);
-                    JSONObject responseData = mainNode.getJSONObject("responseData");
-                    JSONObject feeds = responseData.getJSONObject("feed");
-                    JSONArray entries = feeds.getJSONArray("entries");
-
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Entry>>() {
-                    }.getType();
-                    List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                    list.addAll(posts);
-                }
-
+        for (String rs : rss) {
+            if (!rs.equalsIgnoreCase("")) {
+                String jsonStr = new PullData().run(rs);    //loads JSON String feeds by Okhttp
+                Log.i("TAG", ":>  " + jsonStr);
+                ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                List<EntriesItem> posts = responseFeed.getResponseData().getFeed().getEntries();
+                list.addAll(posts);
             }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            Log.i("TAG", "Internet not working or failed to download / 200 error");
+
         }
 
 
+
         if (list.size() != 0) {
-            List<Entry> oldFeeds = Paper.book().read("Headlines");
+            List<EntriesItem> oldFeeds = Paper.book().read("Headlines");
             if (oldFeeds != null) {
                 list.addAll(oldFeeds);
             }
-            List<Entry> newFeeds;
+            List<EntriesItem> newFeeds;
             newFeeds = Parse.deleteDuplicate(list); //delete duplicate
             newFeeds = Parse.deleteEnglishFeeds(newFeeds);  //delete english feed if present
             Parse.sortByTime(newFeeds).size();
             Paper.book().write("Headlines", newFeeds);
-            Entry entry;
+            EntriesItem entry;
             entry = newFeeds.get(0);
             Intent intent = new Intent(getApplicationContext(), DetailFeed.class);
             intent.putExtra("ENTRY", entry);

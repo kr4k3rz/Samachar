@@ -16,6 +16,7 @@ import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,10 +27,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.model.search.EntriesItem;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
-import com.codelite.kr4k3rz.samachar.util.ToastMsg;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -45,8 +44,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class SubscribeActivity extends AppCompatActivity {
+    private final String TAG = SubscribeActivity.class.getSimpleName();
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +57,18 @@ public class SubscribeActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EntriesItem entriesItem = (EntriesItem) getIntent().getSerializableExtra("QUERY");
-        getSupportActionBar().setTitle(entriesItem.getTitle());
+        getSupportActionBar().setTitle(Html.fromHtml(entriesItem.getTitle()));
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_subscribe);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getBaseContext()));
         String url = entriesItem.getUrl();
-        ToastMsg.shortMsg(getBaseContext(), "" + url);
-
+        Log.i(TAG, "" + url);
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=" + url + "&num=-1").build();
         okHttpClient.newCall(request).enqueue(new Callback() {
-            Handler handler = new Handler(SubscribeActivity.this.getMainLooper());
+            final Handler handler = new Handler(SubscribeActivity.this.getMainLooper());
 
             @Override
             public void onFailure(Call call, IOException e) {
@@ -110,9 +108,20 @@ public class SubscribeActivity extends AppCompatActivity {
         return url;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.MyViewHolder> {
-        Context context;
-        List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItem;
+        final Context context;
+        final List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItem;
 
         SubscribeAdapter(Context context, List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItemList) {
             this.context = context;
@@ -133,11 +142,11 @@ public class SubscribeActivity extends AppCompatActivity {
             if (selectedItems.get(holder.getAdapterPosition())) {
                 //if already selected set the same color
                 holder.title.setTextColor(Color.LTGRAY);
-                holder.contentSnippet.setTextColor(Color.LTGRAY);
+                //  holder.contentSnippet.setTextColor(Color.LTGRAY);
             } else {
                 //if not selected set the default color
                 holder.title.setTextColor(ContextCompat.getColor(context, R.color.primary_text));
-                holder.contentSnippet.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
+                //  holder.contentSnippet.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
             }
 
             String actualUrl = null;
@@ -148,12 +157,6 @@ public class SubscribeActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             holder.title.setText(entry.getTitle());
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                holder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", ""), Html.FROM_HTML_MODE_LEGACY).toString());
-            } else {
-                holder.contentSnippet.setText(Html.fromHtml(entry.getContentSnippet().replace("...", "")).toString());
-            }
-
             try {
                 holder.source.setText(String.format("%s", Parse.getSource(entry.getLink())));
             } catch (MalformedURLException e1) {
@@ -176,7 +179,6 @@ public class SubscribeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     holder.title.setTextColor(Color.LTGRAY);
-                    holder.contentSnippet.setTextColor(Color.LTGRAY);
                     selectedItems.put(holder.getAdapterPosition(), true);
                     Intent intent = new Intent(context, DetailFeed.class);
                     intent.putExtra("ENTRY", entry);
@@ -200,12 +202,12 @@ public class SubscribeActivity extends AppCompatActivity {
             final CardView cardView;
             final ImageView imageView;
             final TextView source;
-            final TextView contentSnippet;
+            //  final TextView contentSnippet;
 
             MyViewHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.title);
-                contentSnippet = (TextView) itemView.findViewById(R.id.content_snippet);
+                //    contentSnippet = (TextView) itemView.findViewById(R.id.content_snippet);
                 date = (TextView) itemView.findViewById(R.id.date);
                 imageView = (ImageView) itemView.findViewById(R.id.imageView);
                 source = (TextView) itemView.findViewById(R.id.source);
@@ -213,6 +215,4 @@ public class SubscribeActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 
 import java.util.List;
@@ -40,8 +39,7 @@ public class EntertainmentFrag extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        List<Entry> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+        List<EntriesItem> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
         return rootView;
     }

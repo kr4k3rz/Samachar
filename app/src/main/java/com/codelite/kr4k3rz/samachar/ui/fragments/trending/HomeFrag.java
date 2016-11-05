@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments;
+package com.codelite.kr4k3rz.samachar.ui.fragments.trending;
 
 
 import android.content.Intent;
@@ -17,24 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.NewspaperEN;
 import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
+import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.ui.adapter.ComplexRecyclerViewAdapter;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryEN;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +50,6 @@ public class HomeFrag extends Fragment {
     private static final String CACHE_NAME = "AllFeeds";
     private static final String TAG = HomeFrag.class.getSimpleName();
     private final OkHttpClient okHttpClient = new OkHttpClient();
-    private boolean b;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private Handler mHandler;
@@ -84,7 +77,6 @@ public class HomeFrag extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         Log.i(TAG, CacheLang.findLang(CACHE_NAME));
         List<Object> objects = Paper.book().read(CacheLang.findLang(CACHE_NAME));
         if (objects == null) {
@@ -142,16 +134,15 @@ public class HomeFrag extends Fragment {
     }
 
     private void loadOnRefresh() {
-        b = true;
-        Paper.book().write("RefreshCheck", b);
+        Paper.book().write("RefreshCheck", true);
         Log.i("TAG", "boolean set");
     }
 
-    private Collection<? extends Entry> setTitleLink(String feedTitle, String feedLink, List<Entry> posts) {
-        List<Entry> entries = new ArrayList<>();
+    private Collection<? extends EntriesItem> setTitleLink(String feedTitle, String feedLink, List<EntriesItem> posts) {
+        List<EntriesItem> entries = new ArrayList<>();
         entries.clear();
         for (int i = 0; i < posts.size(); i++) {
-            Entry entry = posts.get(i);
+            EntriesItem entry = posts.get(i);
             entry.setTitleFeed(feedTitle);
             entry.setLinkFeed(feedLink);
             entries.add(entry);
@@ -160,7 +151,7 @@ public class HomeFrag extends Fragment {
     }
 
     private void loadNPFeeds(final OkHttpClient okHttpClient) {
-        final List<Entry> list_nepali = new ArrayList<>();
+        final List<EntriesItem> list_nepali = new ArrayList<>();
         final ArrayList<String> rss = new NewspaperNP().getLinksList();
         for (int i = 0; i < rss.size(); i++) {
             Request request = new Request.Builder().url(rss.get(i)).build();
@@ -193,31 +184,18 @@ public class HomeFrag extends Fragment {
                 public void onResponse(Call call, Response response) throws IOException {
                     String jsonStr = response.body().string();    //loads JSON String feeds by Okhttp
                     Log.i("TAG", " : " + jsonStr);
-                    try {
-                        JSONObject mainNode = new JSONObject(jsonStr);
-                        JSONObject responseData = mainNode.getJSONObject("responseData");
-                        JSONObject feeds = responseData.getJSONObject("feed");
-                        String feedTitle = feeds.getString("title");
-                        String feedLink = feeds.getString("link");
-                        Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
-                        JSONArray entries = feeds.getJSONArray("entries");
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<Entry>>() {
-                        }.getType();
-                        List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                        ArrayList<Entry> entryArrayList = new ArrayList<>();
-                        entryArrayList.clear();
-                        entryArrayList = Paper.book().read("NP" + "newspaper" + finalI);
-                        entryArrayList.addAll(posts);
-                        List<Entry> tempList;
-                        tempList = Parse.deleteDuplicate(entryArrayList);
-                        tempList = Parse.deleteEnglishFeeds(tempList);
-                        tempList = Parse.sortByTime(tempList);
-                        Paper.book().write("NP" + "newspaper" + finalI, tempList);
-                        list_nepali.addAll(setTitleLink(feedTitle, feedLink, posts));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                    List<EntriesItem> posts = responseFeed.getResponseData().getFeed().getEntries();
+                    ArrayList<EntriesItem> entryArrayList = new ArrayList<>();
+                    entryArrayList.clear();
+                    entryArrayList = Paper.book().read("NP" + "newspaper" + finalI);
+                    entryArrayList.addAll(posts);
+                    List<EntriesItem> tempList;
+                    tempList = Parse.deleteDuplicate(entryArrayList);
+                    tempList = Parse.deleteEnglishFeeds(tempList);
+                    tempList = Parse.sortByTime(tempList);
+                    Paper.book().write("NP" + "newspaper" + finalI, tempList);
+                    list_nepali.addAll(setTitleLink(responseFeed.getResponseData().getFeed().getTitle(), responseFeed.getResponseData().getFeed().getLink(), posts));
 
                     mHandler.post(new Runnable() {
                         @Override
@@ -242,7 +220,7 @@ public class HomeFrag extends Fragment {
     }
 
     private void loadENFeeds(OkHttpClient okHttpClient) {
-        final List<Entry> list_English = new ArrayList<>();
+        final List<EntriesItem> list_English = new ArrayList<>();
         final List<String> rss_english;
         rss_english = new NewspaperEN().getLinksList();
 
@@ -259,11 +237,16 @@ public class HomeFrag extends Fragment {
                     if (failureCount == rss_english.size() - 1) {
                         FilterCategoryEN filterCategory = new FilterCategoryEN(list_English, getContext());
                         filterCategory.filter();
-                        List<Object> objects = Paper.book().read(CacheLang.findLang(CACHE_NAME));
-                        if (objects != null)
-                            recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
-                        swipeRefreshLayout.setRefreshing(false);
-                        loadOnRefresh();
+                        final List<Object> objects = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (objects != null)
+                                    recyclerView.setAdapter(new ComplexRecyclerViewAdapter(getContext(), objects));
+                                swipeRefreshLayout.setRefreshing(false);
+                                loadOnRefresh();
+                            }
+                        });
 
 
                     }
@@ -274,41 +257,26 @@ public class HomeFrag extends Fragment {
                 public void onResponse(Call call, final Response response) throws IOException {
                     String jsonStr = response.body().string();
                     Log.i("TAG", " : " + jsonStr);
-                    try {
-                        JSONObject mainNode = new JSONObject(jsonStr);
-                        JSONObject responseData = mainNode.getJSONObject("responseData");
-                        JSONObject feeds = responseData.getJSONObject("feed");
-                        String feedTitle = feeds.getString("title");
-                        String feedLink = feeds.getString("link");
-                        Log.i(TAG, "FeedLink : " + feedLink + "\n Feed title : " + feedTitle);
-                        JSONArray entries = feeds.getJSONArray("entries");
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<Entry>>() {
-                        }.getType();
-                        List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                        if (Paper.book().exist("EN" + "newspaper" + finalI)) {
-                            List<Entry> entryList;
-                            entryList = Paper.book().read("EN" + "newspaper" + finalI);
-                            entryList.addAll(posts);
-                            List<Entry> temp;
-                            temp = Parse.deleteDuplicate(entryList);
-                            temp = Parse.deleteNonEngFeeds(temp);
-                            temp = Parse.sortByTime(temp);
-                            Paper.book().write("EN" + "newspaper" + finalI, temp);
-                        } else {
-                            List<Entry> tempList;
-                            tempList = Parse.deleteDuplicate(posts);
-                            tempList = Parse.deleteNonEngFeeds(tempList);
-                            tempList = Parse.sortByTime(tempList);
-                            Paper.book().write("EN" + "newspaper" + finalI, tempList);
+                    ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                    List<EntriesItem> posts = responseFeed.getResponseData().getFeed().getEntries();
+                    if (Paper.book().exist("EN" + "newspaper" + finalI)) {
+                        List<EntriesItem> entryList;
+                        entryList = Paper.book().read("EN" + "newspaper" + finalI);
+                        entryList.addAll(posts);
+                        List<EntriesItem> temp;
+                        temp = Parse.deleteDuplicate(entryList);
+                        temp = Parse.deleteNonEngFeeds(temp);
+                        temp = Parse.sortByTime(temp);
+                        Paper.book().write("EN" + "newspaper" + finalI, temp);
+                    } else {
+                        List<EntriesItem> tempList;
+                        tempList = Parse.deleteDuplicate(posts);
+                        tempList = Parse.deleteNonEngFeeds(tempList);
+                        tempList = Parse.sortByTime(tempList);
+                        Paper.book().write("EN" + "newspaper" + finalI, tempList);
 
-                        }
-                        list_English.addAll(setTitleLink(feedTitle, feedLink, posts));
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-
+                    list_English.addAll(setTitleLink(responseFeed.getResponseData().getFeed().getTitle(), responseFeed.getResponseData().getFeed().getLink(), posts));
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {

@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments;
+package com.codelite.kr4k3rz.samachar.ui.fragments.others;
 
 
 import android.os.Bundle;
@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.ui.adapter.RvAdapter;
-import com.codelite.kr4k3rz.samachar.ui.adapter.SimpleDividerItemDecoration;
 
 import java.util.List;
 
@@ -35,12 +34,11 @@ public class FavouriteFrag extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_myList);
-        recyclerView.setHasFixedSize(false);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());/**/
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        List<Entry> list = Paper.book().read(CACHE_NAME);
+        List<EntriesItem> list = Paper.book().read(CACHE_NAME);
         recyclerView.setAdapter(new RvAdapter(getContext(), list));
         return rootView;
     }

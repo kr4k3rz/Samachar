@@ -4,9 +4,9 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.Header;
 import com.codelite.kr4k3rz.samachar.model.WhichCategoryNP;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import io.paperdb.Paper;
 public class FilterCategoryNP {
     private static final String TAG = Parse.class.getSimpleName();
     private final Context context;
-    private List<Entry> entryList = new ArrayList<>();
+    private List<EntriesItem> entryList = new ArrayList<>();
 
 
     /**
@@ -29,7 +29,7 @@ public class FilterCategoryNP {
      * @param entryList the entry list
      * @param context   the context
      */
-    public FilterCategoryNP(List<Entry> entryList, Context context) {
+    public FilterCategoryNP(List<EntriesItem> entryList, Context context) {
         this.entryList = entryList;
         this.context = context;
     }
@@ -42,7 +42,7 @@ public class FilterCategoryNP {
      */
     public void filter() {
         List<Header> categories = new ArrayList<>();
-        List<List<Entry>> main = new ArrayList<>();
+        List<List<EntriesItem>> main = new ArrayList<>();
         int total_feeds = 0;
         int feeds_filtered = 0;
         int feeds_notFiltered = 0;
@@ -58,61 +58,61 @@ public class FilterCategoryNP {
         }
 
 
-        List<Entry> breaking = new ArrayList<>();
+        List<EntriesItem> breaking = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.BREAKING.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.BREAKING.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.BREAKING.getSecondName() + "NP");
             breaking.addAll(entries1);
         }
 
-        List<Entry> newspaper = new ArrayList<>();
+        List<EntriesItem> newspaper = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.NATIONAL.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.NATIONAL.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.NATIONAL.getSecondName() + "NP");
             newspaper.addAll(entries1);
         }
-        List<Entry> world = new ArrayList<>();
+        List<EntriesItem> world = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.WORLD.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.WORLD.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.WORLD.getSecondName() + "NP");
             world.addAll(entries1);
         }
 
-        List<Entry> business = new ArrayList<>();
+        List<EntriesItem> business = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.BUSINESS.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.BUSINESS.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.BUSINESS.getSecondName() + "NP");
             business.addAll(entries1);
         }
 
-        List<Entry> technology = new ArrayList<>();
+        List<EntriesItem> technology = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.TECHNOLOGY.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.TECHNOLOGY.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.TECHNOLOGY.getSecondName() + "NP");
             technology.addAll(entries1);
         }
 
-        List<Entry> entertain = new ArrayList<>();
+        List<EntriesItem> entertain = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.ENTERTAINMENT.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.ENTERTAINMENT.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.ENTERTAINMENT.getSecondName() + "NP");
             entertain.addAll(entries1);
         }
 
-        List<Entry> health = new ArrayList<>();
+        List<EntriesItem> health = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.HEALTH.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.HEALTH.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.HEALTH.getSecondName() + "NP");
             health.addAll(entries1);
         }
 
-        List<Entry> sport = new ArrayList<>();
+        List<EntriesItem> sport = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.SPORT.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.SPORT.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.SPORT.getSecondName() + "NP");
             sport.addAll(entries1);
         }
 
-        List<Entry> imgVid = new ArrayList<>();
+        List<EntriesItem> imgVid = new ArrayList<>();
         if (Paper.book().exist(WhichCategoryNP.IMGVID.getSecondName() + "NP")) {
-            List<Entry> entries1 = Paper.book().read(WhichCategoryNP.IMGVID.getSecondName() + "NP");
+            List<EntriesItem> entries1 = Paper.book().read(WhichCategoryNP.IMGVID.getSecondName() + "NP");
             imgVid.addAll(entries1);
         }
 
         //for special category
-        for (Entry entry : entryList) {
+        for (EntriesItem entry : entryList) {
             total_feeds++;
             for (String s : entry.getCategories()) {
                 //BreakingNews
@@ -262,6 +262,8 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("Share")
                             || s.equalsIgnoreCase("Finance")
                             || s.equalsIgnoreCase("Market")
+                            ||s.equalsIgnoreCase("निजी क्षेत्र")
+                            ||s.equalsIgnoreCase("परियोजना क्षेत्र")
                             || s.equalsIgnoreCase("Corporate")
                             || s.equalsIgnoreCase("व्यापार")
                             || s.equalsIgnoreCase("Infrastructure")
@@ -302,6 +304,7 @@ public class FilterCategoryNP {
                     else if (s.equalsIgnoreCase("सूचना प्रविधि-प्रमुख")
                             || s.equalsIgnoreCase("बिज्ञान-प्रबिधि")
                             || s.equalsIgnoreCase("Technology")
+                            ||s.equalsIgnoreCase("Auto")
                             || s.equalsIgnoreCase("अटो")
                             || s.equalsIgnoreCase("सूचना प्रविधि -समाचार")
                             || s.equalsIgnoreCase("Telecom")
@@ -377,6 +380,7 @@ public class FilterCategoryNP {
                     }//Health
                     else if (s.equalsIgnoreCase("स्वास्थ्य")
                             || s.contains("शारीरिक")
+                            ||s.equalsIgnoreCase("जानकारी")
                             || s.equalsIgnoreCase("पोषण")
                             || s.equalsIgnoreCase("स्पेशल स्टोरी")
                             || s.equalsIgnoreCase("राशिफल")
@@ -454,7 +458,7 @@ public class FilterCategoryNP {
         Log.i(TAG, "feeds not filtered : " + feeds_notFiltered);
 
         for (int i = 0; i < CATEGORY_NUMBER; i++) {
-            List<Entry> processedFeeds;//new
+            List<EntriesItem> processedFeeds;//new
             processedFeeds = main.get(i);
             processedFeeds = Parse.deleteDuplicate(processedFeeds); //delete duplicate feeds
             processedFeeds = Parse.deleteEnglishFeeds(processedFeeds);  //delete english feeds
@@ -465,7 +469,7 @@ public class FilterCategoryNP {
                 header = categories.get(i);
                 objects.add(header);
                 for (int ii = 0; ii < LIMIT_FEED; ii++) {
-                    Entry entry = processedFeeds.get(ii);
+                    EntriesItem entry = processedFeeds.get(ii);
                     objects.add(entry);
                 }
             }
@@ -478,7 +482,7 @@ public class FilterCategoryNP {
         Paper.book().write("AllFeedsNP", objects);
     }
 
-    private void clearFeedsByPref(List<Entry> feeds, Context context) {
+    private void clearFeedsByPref(List<EntriesItem> feeds, Context context) {
         int limitSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(40)));
         if (feeds.size() > limitSize) {
             feeds.subList(limitSize, feeds.size()).clear();

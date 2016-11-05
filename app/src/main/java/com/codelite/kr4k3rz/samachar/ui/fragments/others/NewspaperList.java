@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments;
+package com.codelite.kr4k3rz.samachar.ui.fragments.others;
 
 
 import android.content.Context;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.NewspaperEN;
 import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
-import com.codelite.kr4k3rz.samachar.ui.activity.NewspaperActivity;
+import com.codelite.kr4k3rz.samachar.ui.activity.NewspaperItemActivity;
 import com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity;
 
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class NewspaperList extends Fragment {
-    FloatingActionButton floatingActionButton;
 
     public NewspaperList() {
 
@@ -42,7 +41,7 @@ public class NewspaperList extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_newspaper_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_newspaper_list);
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabBtn);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabBtn);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -66,10 +65,9 @@ public class NewspaperList extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-                View view1 = layoutInflater.inflate(R.layout.dialog_layout, null);
+                View v = View.inflate(getContext(), R.layout.dialog_layout, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setView(view1, 30, 30, 30, 30);
+                builder.setView(v);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -81,7 +79,6 @@ public class NewspaperList extends Fragment {
                         dialogInterface.cancel();
                     }
                 }).show();
-
 
             }
         });
@@ -112,7 +109,7 @@ public class NewspaperList extends Fragment {
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, NewspaperActivity.class);
+                    Intent intent = new Intent(context, NewspaperItemActivity.class);
                     intent.putExtra("NEWSPAPER_NAME", n.name);
                     intent.putExtra("POSITION", holder.getAdapterPosition());
                     intent.putExtra("LINK", n.link);
@@ -162,7 +159,7 @@ public class NewspaperList extends Fragment {
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, NewspaperActivity.class);
+                    Intent intent = new Intent(context, NewspaperItemActivity.class);
                     intent.putExtra("NEWSPAPER_NAME", n.name);
                     intent.putExtra("POSITION", holder.getAdapterPosition());
                     intent.putExtra("LINK", n.link);

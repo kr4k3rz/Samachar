@@ -7,27 +7,22 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.MainActivity;
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.model.Entry;
 import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
+import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 import io.paperdb.Paper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,18 +33,30 @@ import okhttp3.Response;
 
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG = SplashActivity.class.getSimpleName();
+
+
     private Handler mHandler;
-    private RingProgressBar ringProgressBar;
-    private int tempProgressCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
         mHandler = new Handler(Looper.getMainLooper());
-        ringProgressBar = (RingProgressBar) findViewById(R.id.progress_bar);
+        changeNightMode();
         downloadFeedsOnStart();
+    }
 
+    private void changeNightMode() {
+        boolean checked = false;
+        if (Paper.book().exist("NightMode")) {
+            checked = Paper.book().read("NightMode");
+        }
+        if (checked) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        }
     }
 
     private void downloadFeedsOnStart() {
@@ -70,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void loadingFeedsOnFirstStart() {
-        final List<Entry> list_Nepali = new ArrayList<>();
+        final List<EntriesItem> list_Nepali = new ArrayList<>();
         final OkHttpClient okHttpClient = new OkHttpClient();
         final ArrayList<String> rss = new NewspaperNP().getLinksList();
 
@@ -90,33 +97,17 @@ public class SplashActivity extends AppCompatActivity {
                 public void onResponse(Call call, Response response) throws IOException {
                     String jsonStr = response.body().string();    //loads JSON String feeds by Okhttp
                     Log.i("TAG", " : " + jsonStr);
-                    try {
-                        JSONObject mainNode = new JSONObject(jsonStr);
-                        JSONObject responseData = mainNode.getJSONObject("responseData");
-                        JSONObject feeds = responseData.getJSONObject("feed");
-                        String feedTitle = feeds.getString("title");
-                        String feedLink = feeds.getString("link");
-                        Log.i(TAG, "Feedlink : " + feedLink + "\n Feed title : " + feedTitle);
-                        JSONArray entries = feeds.getJSONArray("entries");
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<Entry>>() {
-                        }.getType();
-                        List<Entry> tempList;
-                        List<Entry> posts = gson.fromJson(String.valueOf(entries), listType);
-                        tempList = Parse.deleteDuplicate(posts);
-                        tempList = Parse.deleteEnglishFeeds(tempList);
-                        tempList = Parse.sortByTime(tempList);
-                        Paper.book().write("NP" + "newspaper" + finalI, tempList);
-                        list_Nepali.addAll(setTitleLink(feedTitle, feedLink, posts));
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+                    List<EntriesItem> tempList;
+                    ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                    List<EntriesItem> posts = responseFeed.getResponseData().getFeed().getEntries();
+                    tempList = Parse.deleteDuplicate(posts);
+                    tempList = Parse.deleteEnglishFeeds(tempList);
+                    tempList = Parse.sortByTime(tempList);
+                    Paper.book().write("NP" + "newspaper" + finalI, tempList);
+                    list_Nepali.addAll(setTitleLink(responseFeed.getResponseData().getFeed().getTitle(), responseFeed.getResponseData().getFeed().getLink(), posts));
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressShow(responseCount, rss);
                             if (responseCount == rss.size() - 1) {
                                 FilterCategoryNP filterCategory = new FilterCategoryNP(list_Nepali, getBaseContext());
                                 filterCategory.filter();
@@ -138,25 +129,16 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private List<Entry> setTitleLink(String feedTitle, String feedLink, List<Entry> posts) {
-        List<Entry> entries = new ArrayList<>();
+    private List<EntriesItem> setTitleLink(String feedTitle, String feedLink, List<EntriesItem> posts) {
+        List<EntriesItem> entries = new ArrayList<>();
         entries.clear();
         for (int i = 0; i < posts.size(); i++) {
-            Entry entry = posts.get(i);
+            EntriesItem entry = posts.get(i);
             entry.setTitleFeed(feedTitle);
             entry.setLinkFeed(feedLink);
             entries.add(entry);
         }
         return entries;
-    }
-
-    private void progressShow(float responseCount, ArrayList<String> rss) {
-        int progress = (int) (((responseCount + 1) / (float) rss.size()) * 100);
-        if (progress >= tempProgressCounter) {
-            Log.i(TAG, "Progress : " + progress + "%");
-            ringProgressBar.setProgress(progress);
-            tempProgressCounter = progress;
-        }
     }
 
 }

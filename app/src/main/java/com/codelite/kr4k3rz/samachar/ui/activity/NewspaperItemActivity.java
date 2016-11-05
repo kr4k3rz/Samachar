@@ -6,14 +6,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.codelite.kr4k3rz.samachar.R;
-import com.codelite.kr4k3rz.samachar.ui.fragments.Newspaper;
+import com.codelite.kr4k3rz.samachar.ui.fragments.others.Newspaper;
 
-public class NewspaperActivity extends AppCompatActivity {
+public class NewspaperItemActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newspaper);
+        setContentView(R.layout.activity_item_newspaper);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_newspaper);
         setSupportActionBar(toolbar);
         String name = getIntent().getExtras().getString("NEWSPAPER_NAME");

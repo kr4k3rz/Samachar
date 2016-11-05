@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_light"
-    android:orientation="vertical"
-    tools:ignore="Overdraw">
+    android:orientation="vertical">
 
-    <io.netopen.hotbitmapgg.library.view.RingProgressBar
-        android:id="@+id/progress_bar"
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:max="100"
-        app:ringColor="@color/accent"
-        app:ringProgressColor="@color/primary"
-        app:ringWidth="3dp"
-        app:style="FILL"
-        app:textColor="#00796B"
-        app:textIsShow="true"
-        app:textSize="16sp" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="244dp"
+        android:src="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
 </RelativeLayout>
