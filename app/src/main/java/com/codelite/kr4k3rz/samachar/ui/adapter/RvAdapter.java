@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +32,7 @@ import io.paperdb.Paper;
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> {
     private final Context mContext;
     private final String TAG = RvAdapter.class.getSimpleName();
-    private final SparseBooleanArray selectedItems = new SparseBooleanArray();
+  //  private final SparseBooleanArray selectedItems = new SparseBooleanArray();
     private List<EntriesItem> entries = new ArrayList<>();
 
     public RvAdapter(Context context, List<EntriesItem> entries) {
@@ -53,13 +51,13 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
     public void onBindViewHolder(final CustomViewHolder customViewHolder, @SuppressLint("RecyclerView") final int _position) {
         final EntriesItem entry = entries.get(customViewHolder.getAdapterPosition());
 
-        if (selectedItems.get(customViewHolder.getAdapterPosition())) {
+       /* if (selectedItems.get(customViewHolder.getAdapterPosition())) {
             //if already selected set the same color
             customViewHolder.title.setTextColor(Color.LTGRAY);
         } else {
             //if not selected set the default color
-            customViewHolder.title.setTextColor(Color.DKGRAY);
-        }
+            customViewHolder.title.setTextColor();  //make here
+        }*/
 
         String actualUrl = null;
         String url = Parse.parseImg(entry.getContent());
@@ -94,8 +92,8 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CustomViewHolder> 
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customViewHolder.title.setTextColor(Color.LTGRAY);
-                selectedItems.put(customViewHolder.getAdapterPosition(), true);
+                //  customViewHolder.title.setTextColor(Color.LTGRAY);
+             //   selectedItems.put(customViewHolder.getAdapterPosition(), true);
                 Log.i(TAG, "Inside on Click\n" + "_position :  " + _position + "\n getadapter position : " + customViewHolder.getAdapterPosition());
                 Intent intent = new Intent(mContext, DetailFeed.class);
                 intent.putExtra("ENTRY", entry);

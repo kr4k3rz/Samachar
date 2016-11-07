@@ -18,9 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codelite.kr4k3rz.samachar.R;
+import com.codelite.kr4k3rz.samachar.model.Subscribe;
 import com.codelite.kr4k3rz.samachar.model.search.EntriesItem;
 import com.codelite.kr4k3rz.samachar.model.search.ResponseSearch;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
@@ -36,15 +38,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class SearchActivity extends AppCompatActivity {
+    private ProgressBar progressBar;
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         toolbar = (Toolbar) findViewById(R.id.toolbar_search);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -54,7 +57,6 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
 
     }
 
@@ -67,6 +69,8 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //  swipeRefreshLayout.setRefreshing(true);
+                progressBar.setVisibility(View.VISIBLE);
                 queryFeeds(query);
                 return false;
             }
@@ -115,7 +119,7 @@ public class SearchActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        String jsonStr = null;    //loads JSON String feeds by Okhttp
+                        String jsonStr = null;
                         try {
                             jsonStr = response.body().string();
                         } catch (IOException e) {
@@ -125,16 +129,31 @@ public class SearchActivity extends AppCompatActivity {
                         ResponseSearch responseSearch = new Gson().fromJson(jsonStr, ResponseSearch.class);
                         Log.i("TAG", "response : " + responseSearch.getResponseData().getEntries().size());
                         recyclerView.setAdapter(new SearchQueryAdapter(getBaseContext(), responseSearch.getResponseData().getEntries()));
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
 
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent();
+                Subscribe subscribe;
+                subscribe = (Subscribe) data.getSerializableExtra("SubscribeItem");
+                intent.putExtra("SubscribedItem", subscribe);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
+    }
 
-    private class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.MyViewHolder> {
-        final Context context;
-        final List<EntriesItem> entries;
+    class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.MyViewHolder> {
+        private final Context context;
+        private final List<EntriesItem> entries;
 
         SearchQueryAdapter(Context context, List<EntriesItem> entries) {
             this.context = context;
@@ -156,7 +175,7 @@ public class SearchActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(context, SubscribeActivity.class);
                     intent.putExtra("QUERY", entries.get(holder.getAdapterPosition()));
-                    startActivity(intent);
+                    startActivityForResult(intent, 3);
 
                 }
             });
@@ -168,7 +187,6 @@ public class SearchActivity extends AppCompatActivity {
         public int getItemCount() {
             return entries.size();
         }
-
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             final TextView textView_title;
@@ -185,5 +203,4 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
     }
-
 }

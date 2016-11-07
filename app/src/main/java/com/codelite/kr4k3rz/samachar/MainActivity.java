@@ -6,26 +6,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity;
-import com.codelite.kr4k3rz.samachar.ui.fragments.ImgVidFrag;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.codelite.kr4k3rz.samachar.ui.fragments.MyFeedsFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.NewsTabFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.SettingsFrag;
 import com.codelite.kr4k3rz.samachar.ui.fragments.TrendingNewsFrag;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import io.paperdb.Paper;
 
@@ -37,16 +33,117 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.primary_text));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(R.string.app_name);
-
         setupBottomBar();
-        /*setup the alarm when to notify the user when the breaking news is popup*/
         languageChage();
         setupAlarmNotify();
 
+    }
+
+    private void setupBottomBar() {
+        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.icon_whatshot, R.color.accent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.ic_view_carousel, R.color.accent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.icon_rss_feed, R.color.accent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.icon_setting, R.color.accent);
+
+
+        // Add items
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+
+        // Set background color
+        //   bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+
+// Disable the translation inside the CoordinatorLayout
+        bottomNavigation.setBehaviorTranslationEnabled(false);
+
+// Change colors
+        //    bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
+        //  bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
+
+// Force to tint the drawable (useful for font with icon for example)
+        // bottomNavigation.setForceTint(true);
+
+// Force the titles to be displayed (against Material Design guidelines!)
+        bottomNavigation.setForceTitlesDisplay(true);
+// Or force the titles to be hidden (against Material Design guidelines, too!)
+        bottomNavigation.setForceTitlesHide(true);
+
+
+        // Use colored navigation with circle reveal effect
+        bottomNavigation.setColored(true);
+
+// Set current item programmatically
+
+// Customize notification (title, background, typeface)
+        //  bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
+// Add or remove notification for each item
+//        bottomNavigation.setNotification("1", 3);
+// OR
+       /* AHNotification notification = new AHNotification.Builder()
+                .setText("1")
+                .setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
+                .setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
+                .build();*/
+        // bottomNavigation.setNotification(notification, 1);
+
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                boolean flag = false;
+                switch (position) {
+                    case 0:
+                        try {
+                            fragment = TrendingNewsFrag.class.newInstance();
+                            flag = true;
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 1:
+                        try {
+                            fragment = NewsTabFrag.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 2:
+                        try {
+                            fragment = MyFeedsFrag.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        break;
+                    case 3:
+                        try {
+                            fragment = SettingsFrag.class.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+
+
+                if (fragment != null) {
+                    if (flag) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, fragment).commit();
+                    } else
+                        getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, fragment).addToBackStack(null).commit();
+                    fragment = null;
+                }
+                return true;
+            }
+        });
+        bottomNavigation.setCurrentItem(0);
     }
 
     private void languageChage() {
@@ -84,57 +181,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupBottomBar() {
-        final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                boolean flag = false;
-                switch (tabId) {
-                    case R.id.home_item:
-                        try {
-                            fragment = TrendingNewsFrag.class.newInstance();
-                            flag = true;
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case R.id.categoryAll:
-                        try {
-                            fragment = NewsTabFrag.class.newInstance();
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case R.id.imgvid:
-                        try {
-                            fragment = ImgVidFrag.class.newInstance();
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case R.id.settings:
-                        try {
-                            fragment = SettingsFrag.class.newInstance();
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                }
-
-                if (fragment != null) {
-                    if (flag) {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, fragment).commit();
-                    } else
-                        getSupportFragmentManager().beginTransaction().replace(R.id.contentContainer, fragment).addToBackStack(null).commit();
-                    fragment = null;
-                }
-
-            }
-        });
-
-    }
 
     private void setupAlarmNotify() {
         boolean checked = true;
@@ -163,20 +209,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.setting_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.fragments;
+package com.codelite.kr4k3rz.samachar.ui.fragments.category;
 
 
 import android.os.Bundle;
@@ -28,7 +28,6 @@ public class ImgVidFrag extends Fragment {
     public ImgVidFrag() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

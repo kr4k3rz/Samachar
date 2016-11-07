@@ -1,4 +1,4 @@
-package com.codelite.kr4k3rz.samachar.ui.activity;
+package com.codelite.kr4k3rz.samachar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,18 +6,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,16 +23,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Subscribe;
+import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
-import com.codelite.kr4k3rz.samachar.model.search.EntriesItem;
+import com.codelite.kr4k3rz.samachar.ui.activity.DetailFeed;
 import com.codelite.kr4k3rz.samachar.util.Parse;
 import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,89 +43,70 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.codelite.kr4k3rz.samachar.util.Parse.convertImgUrl;
-
-public class SubscribeActivity extends AppCompatActivity {
-    private final String TAG = SubscribeActivity.class.getSimpleName();
+public class MySubscribedActivity extends AppCompatActivity {
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
-    private FloatingActionButton floatingActionButton;
-    private List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItems;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<EntriesItem> entriesItems = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_subscribe);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main_subscribe);
+        setContentView(R.layout.activity_my_subscribed);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main_mySubscribed);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_subscribe);
-        final EntriesItem entriesItem = (EntriesItem) getIntent().getSerializableExtra("QUERY");
-        getSupportActionBar().setTitle(Html.fromHtml(entriesItem.getTitle()));
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_subscribe);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_mySubscribed);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_mySubList);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
+        LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        String url = entriesItem.getUrl();
-        Log.i(TAG, "" + url);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=" + url + "&num=-1").build();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            final Handler handler = new Handler(SubscribeActivity.this.getMainLooper());
+        final Subscribe subscribe;
+        subscribe = (Subscribe) getIntent().getSerializableExtra("EXTRA_DATA");
+        recyclerView.setAdapter(new SubscribeAdapter(getBaseContext(), subscribe.getEntriesItemList()));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                SnackMsg.showMsgShort(recyclerView, e.toString());
-            }
+            public void onRefresh() {
+                OkHttpClient okHttpClient = new OkHttpClient();
+                String url = subscribe.getEntriesItem().getUrl();
+                Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=" + url + "&num=-1").build();
+                okHttpClient.newCall(request).enqueue(new Callback() {
+                    final Handler handler = new Handler(getMainLooper());
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String jsonStr = response.body().string();
-                ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
-                entriesItems = responseFeed.getResponseData().getFeed().getEntries();
-                handler.post(new Runnable() {
                     @Override
-                    public void run() {
-                        recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), entriesItems));
+                    public void onFailure(Call call, IOException e) {
+                        SnackMsg.showMsgShort(recyclerView, e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String jsonStr = response.body().string();
+                        ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
+                        entriesItems = responseFeed.getResponseData().getFeed().getEntries();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), entriesItems));
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+
                     }
                 });
 
+
             }
         });
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SnackMsg.showMsgShort(toolbar, "subscribed");
-                Subscribe subscribe = new Subscribe();
-                subscribe.setEntriesItem(entriesItem);
-                subscribe.setEntriesItemList(entriesItems);
-                Intent intent = new Intent();
-                intent.putExtra("SubscribeItem", subscribe);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-
 
     }
 
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.MyViewHolder> {
+    private class SubscribeAdapter extends RecyclerView.Adapter<MySubscribedActivity.SubscribeAdapter.MyViewHolder> {
         final Context context;
-        final List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItem;
+        final List<EntriesItem> entriesItem;
 
         SubscribeAdapter(Context context, List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItemList) {
             this.context = context;
@@ -134,13 +114,13 @@ public class SubscribeActivity extends AppCompatActivity {
         }
 
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MySubscribedActivity.SubscribeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview, parent, false);
-            return new MyViewHolder(view);
+            return new MySubscribedActivity.SubscribeAdapter.MyViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MySubscribedActivity.SubscribeAdapter.MyViewHolder holder, int position) {
             final com.codelite.kr4k3rz.samachar.model.feed.EntriesItem entry = entriesItem.get(position);
             holder.title.setText(entry.getTitle());
 
@@ -157,7 +137,7 @@ public class SubscribeActivity extends AppCompatActivity {
             String actualUrl = null;
             String url = Parse.parseImg(entry.getContent());
             try {
-                actualUrl = convertImgUrl(url);
+                actualUrl = Parse.convertImgUrl(url);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -218,4 +198,6 @@ public class SubscribeActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

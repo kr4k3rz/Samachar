@@ -1,6 +1,7 @@
 package com.codelite.kr4k3rz.samachar.util;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 
@@ -54,6 +55,22 @@ public class Parse {
         }
         return "" + check.substring(dot1 + 1, dot2);
 
+    }
+
+
+    public static String convertImgUrl(String url) throws MalformedURLException {
+        if (url != null && url.startsWith("http://")) {
+            if (url.toLowerCase().contains(".png".toLowerCase())) {
+                URL url1 = new URL(url);
+                String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";
+                url = "http://images.weserv.nl/?url=" + tempUrl + "&w=300&h=300&q=10";
+                Log.i("PNG TAG", "" + url);
+            } else {
+                url = "http://images.weserv.nl/?url=" + url.replace("http://", "") + "&w=300&h=300&q=10";
+                Log.i("TAG", " String to be shows : " + url);
+            }
+        } else Log.i("TAG", " String is null");
+        return url;
     }
 
     public static List<EntriesItem> sortByTime(List<EntriesItem> entries) {

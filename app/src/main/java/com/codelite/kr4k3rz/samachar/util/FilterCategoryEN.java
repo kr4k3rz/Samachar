@@ -245,7 +245,7 @@ public class FilterCategoryEN {
             processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds
 
             int LIMIT_FEED = 3;
-            if (processedFeeds.size() >= LIMIT_FEED && i != 0 && i != CATEGORY_NUMBER - 1) {  //leaving breaking news
+            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);

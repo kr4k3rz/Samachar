@@ -130,7 +130,7 @@ public class HomeFrag extends Fragment {
                     public void onReview(int i) {
                     }
                 }) // Used to listen for reviews (if you want to track them )
-                .showAfter(10);
+                .showAfter(50);
     }
 
     private void loadOnRefresh() {

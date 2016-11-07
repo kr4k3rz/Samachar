@@ -1,7 +1,6 @@
 package com.codelite.kr4k3rz.samachar.util;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.codelite.kr4k3rz.samachar.model.Header;
@@ -19,7 +18,6 @@ import io.paperdb.Paper;
  */
 public class FilterCategoryNP {
     private static final String TAG = Parse.class.getSimpleName();
-    private final Context context;
     private List<EntriesItem> entryList = new ArrayList<>();
 
 
@@ -31,7 +29,7 @@ public class FilterCategoryNP {
      */
     public FilterCategoryNP(List<EntriesItem> entryList, Context context) {
         this.entryList = entryList;
-        this.context = context;
+        Context context1 = context;
     }
 
 
@@ -238,7 +236,7 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("Odd World")
                             || s.equalsIgnoreCase("रोचक")
                             || s.equalsIgnoreCase("रोचक / विचित्र")
-                            || s.equalsIgnoreCase("विचित्र संसार")                           //TODO break into rochak and world
+                            || s.equalsIgnoreCase("विचित्र संसार")
                             || s.equalsIgnoreCase("फरक दुनिया")
                             || s.equalsIgnoreCase("आश्चर्यजनक")
                             || s.equalsIgnoreCase("अनौठो संसार")
@@ -262,8 +260,8 @@ public class FilterCategoryNP {
                             || s.equalsIgnoreCase("Share")
                             || s.equalsIgnoreCase("Finance")
                             || s.equalsIgnoreCase("Market")
-                            ||s.equalsIgnoreCase("निजी क्षेत्र")
-                            ||s.equalsIgnoreCase("परियोजना क्षेत्र")
+                            || s.equalsIgnoreCase("निजी क्षेत्र")
+                            || s.equalsIgnoreCase("परियोजना क्षेत्र")
                             || s.equalsIgnoreCase("Corporate")
                             || s.equalsIgnoreCase("व्यापार")
                             || s.equalsIgnoreCase("Infrastructure")
@@ -304,7 +302,7 @@ public class FilterCategoryNP {
                     else if (s.equalsIgnoreCase("सूचना प्रविधि-प्रमुख")
                             || s.equalsIgnoreCase("बिज्ञान-प्रबिधि")
                             || s.equalsIgnoreCase("Technology")
-                            ||s.equalsIgnoreCase("Auto")
+                            || s.equalsIgnoreCase("Auto")
                             || s.equalsIgnoreCase("अटो")
                             || s.equalsIgnoreCase("सूचना प्रविधि -समाचार")
                             || s.equalsIgnoreCase("Telecom")
@@ -380,7 +378,7 @@ public class FilterCategoryNP {
                     }//Health
                     else if (s.equalsIgnoreCase("स्वास्थ्य")
                             || s.contains("शारीरिक")
-                            ||s.equalsIgnoreCase("जानकारी")
+                            || s.equalsIgnoreCase("जानकारी")
                             || s.equalsIgnoreCase("पोषण")
                             || s.equalsIgnoreCase("स्पेशल स्टोरी")
                             || s.equalsIgnoreCase("राशिफल")
@@ -464,7 +462,7 @@ public class FilterCategoryNP {
             processedFeeds = Parse.deleteEnglishFeeds(processedFeeds);  //delete english feeds
             processedFeeds = Parse.sortByTime(processedFeeds);  //sort by time feeds feeds*//*
             int LIMIT_FEED = 3;
-            if (processedFeeds.size() >= LIMIT_FEED && i != 0 && i != CATEGORY_NUMBER - 1) {  //leaving breaking news
+            if (processedFeeds.size() >= LIMIT_FEED && i != 0) {  //leaving breaking news
                 Header header;
                 header = categories.get(i);
                 objects.add(header);
@@ -475,15 +473,15 @@ public class FilterCategoryNP {
             }
              /*calculate feed size by  processedFeeds.size()-mPriorSize.size() */
             Header header = categories.get(i);
-            clearFeedsByPref(processedFeeds, context);
+            clearFeedsByPref(processedFeeds);
             Paper.book().write(header.getSecondName() + "NP", processedFeeds);
 
         }
         Paper.book().write("AllFeedsNP", objects);
     }
 
-    private void clearFeedsByPref(List<EntriesItem> feeds, Context context) {
-        int limitSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("feedsToStore", String.valueOf(40)));
+    private void clearFeedsByPref(List<EntriesItem> feeds) {
+        int limitSize = 50;
         if (feeds.size() > limitSize) {
             feeds.subList(limitSize, feeds.size()).clear();
         }
