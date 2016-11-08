@@ -121,6 +121,7 @@ public class FilterCategoryNP {
                         || s.equalsIgnoreCase("currentnews")
                         || s.equalsIgnoreCase("HEADLINES")
                         || s.equalsIgnoreCase("Feature")
+                        ||s.equalsIgnoreCase("नेपाल चर्चा")
                         || s.equalsIgnoreCase("Banner News")
                         || s.equalsIgnoreCase("highlight")
                         || s.equalsIgnoreCase("English")

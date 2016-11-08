@@ -26,6 +26,7 @@ import java.util.List;
 import io.paperdb.Paper;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -63,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("firstTime_loadFeed", false)) {
             loadingFeedsOnFirstStart();
-            // mark first time has run.
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTime_loadFeed", true);
             editor.apply();
@@ -80,6 +80,7 @@ public class SplashActivity extends AppCompatActivity {
         final List<EntriesItem> list_Nepali = new ArrayList<>();
         final OkHttpClient okHttpClient = new OkHttpClient();
         final ArrayList<String> rss = new NewspaperNP().getLinksList();
+        final Dispatcher dispatcher = okHttpClient.dispatcher();
 
          /*ALWAYS START NEPALI LANG*/
         for (int i = 0; i < rss.size(); i++) {
@@ -87,9 +88,20 @@ public class SplashActivity extends AppCompatActivity {
             Request request = new Request.Builder().url(rss.get(i)).build();
             final int responseCount = i;
             final int finalI = i;
+            final int finalI1 = i;
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    if (finalI1 == rss.size() - 1) {
+                        Log.i(TAG,"i am inside ");
+                        dispatcher.cancelAll();
+                        FilterCategoryNP filterCategory = new FilterCategoryNP(list_Nepali, getBaseContext());
+                        filterCategory.filter();
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
                     Log.i("TAG", "" + e);
                 }
 

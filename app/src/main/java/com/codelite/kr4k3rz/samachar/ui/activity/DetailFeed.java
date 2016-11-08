@@ -56,7 +56,6 @@ public class DetailFeed extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         entry = (EntriesItem) getIntent().getSerializableExtra("ENTRY");
-
         try {
             getSupportActionBar().setTitle(Parse.capitalize(Parse.getSource(entry.getLink())));
         } catch (MalformedURLException e) {
@@ -103,11 +102,11 @@ public class DetailFeed extends AppCompatActivity {
                 Log.e("TEXT", "setTags: " + flowLayout.getChildCount());
                 flowLayout.removeAllViews();
                 for (String s : fetchList) {
-                    FlowLayout.LayoutParams lparams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-                    lparams.setMargins(5, 5, 5, 5);
+                    FlowLayout.LayoutParams lParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                    lParams.setMargins(5, 5, 5, 5);
                     @SuppressLint("InflateParams") TextView rowTextView = (TextView) getLayoutInflater().inflate(R.layout.custom_tag_textview, null);
                     rowTextView.setText(s);
-                    rowTextView.setLayoutParams(lparams);
+                    rowTextView.setLayoutParams(lParams);
                     rowTextView.setTextColor(Color.DKGRAY);
                     flowLayout.addView(rowTextView);
                 }

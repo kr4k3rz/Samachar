@@ -22,12 +22,11 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.activity.CategoryActivity" />
+        <activity android:name=".ui.trending.CategoryActivity" />
         <activity android:name=".ui.activity.DetailFeed" />
 
         <service android:name=".worker.MyIntentService" />
@@ -40,12 +39,12 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.SavedArticle" />
-        <activity android:name=".ui.activity.SearchActivity" />
-        <activity android:name=".ui.activity.NewspaperItemActivity" />
-        <activity android:name=".ui.activity.SubscribeActivity" />
-        <activity android:name=".ui.activity.NewspapersActivity" />
-        <activity android:name=".MySubscribedActivity" />
+        <activity android:name=".ui.settings.SavedArticle" />
+        <activity android:name=".ui.myfeeds.SearchActivity" />
+        <activity android:name=".ui.settings.NewspaperItemActivity" />
+        <activity android:name=".ui.myfeeds.SubscribeActivity" />
+        <activity android:name=".ui.settings.NewspapersActivity" />
+        <activity android:name=".ui.myfeeds.MySubscribedActivity" />
     </application>
 
 </manifest>

@@ -17,10 +17,10 @@ import android.widget.Button;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.codelite.kr4k3rz.samachar.ui.fragments.MyFeedsFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.NewsTabFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.SettingsFrag;
-import com.codelite.kr4k3rz.samachar.ui.fragments.TrendingNewsFrag;
+import com.codelite.kr4k3rz.samachar.ui.allnews.AllNewsFrag;
+import com.codelite.kr4k3rz.samachar.ui.myfeeds.MyFeedsFrag;
+import com.codelite.kr4k3rz.samachar.ui.settings.SettingsFrag;
+import com.codelite.kr4k3rz.samachar.ui.trending.TrendingNewsFrag;
 import com.codelite.kr4k3rz.samachar.worker.MyAlarmReceiver;
 
 import io.paperdb.Paper;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         try {
-                            fragment = NewsTabFrag.class.newInstance();
+                            fragment = AllNewsFrag.class.newInstance();
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }

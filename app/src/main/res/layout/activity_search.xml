@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codelite.kr4k3rz.samachar.ui.activity.SearchActivity">
+    tools:context="com.codelite.kr4k3rz.samachar.ui.myfeeds.SearchActivity">
 
     <include
         android:id="@+id/toolbar_search"
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminateDrawable="@drawable/progress"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_searchResult"
@@ -27,5 +27,16 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_search"
         android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableLeft="@drawable/pagenotfound"
+        android:gravity="center_vertical"
+        android:text="Page Not Found"
+        android:textSize="24sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

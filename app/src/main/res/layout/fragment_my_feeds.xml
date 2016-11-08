@@ -15,6 +15,14 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp" />
 
+        <TextView
+            android:id="@+id/textVIew_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="No Feeds!\nAdd Some!"
+            android:textSize="30sp"
+            android:visibility="gone" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_search"
