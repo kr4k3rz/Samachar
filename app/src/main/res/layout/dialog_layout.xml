@@ -10,7 +10,6 @@
         android:text="Get news on topics that interest you" />
 
     <EditText
-        android:id="@+id/search_word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter a search term or phrase" />
@@ -21,7 +20,6 @@
         android:text="Example: nepal,health,tech " />
 
     <EditText
-        android:id="@+id/topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Topic name (optional)" />

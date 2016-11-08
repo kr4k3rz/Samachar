@@ -3,38 +3,14 @@
     <string name="image_picture">Image picture</string>
     <string name="date">Date</string>
 
-    <string-array name="listDisplayWord">
-        <item>20</item>
-        <item>25</item>
-        <item>30</item>
-        <item>35</item>
-        <item>40</item>
-        <item>50</item>
-        <item>60</item>
-    </string-array>
-    <string-array name="listReturnValue">
-        <item>20</item>
-        <item>25</item>
-        <item>30</item>
-        <item>35</item>
-        <item>40</item>
-        <item>50</item>
-        <item>60</item>
-
-
-    </string-array>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="categoryName">FistName</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_1">trending</string>
     <string name="tab_2">all news</string>
-    <string name="tab_3">img vid</string>
     <string name="tab_4">more</string>
     <string name="tab_5">myfeeds</string>
-    <string name="title_activity_my_subscribed">MySubscribedActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

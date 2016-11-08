@@ -45,7 +45,7 @@
         <activity android:name=".ui.activity.NewspaperItemActivity" />
         <activity android:name=".ui.activity.SubscribeActivity" />
         <activity android:name=".ui.activity.NewspapersActivity" />
-        <activity android:name=".MySubscribedActivity"></activity>
+        <activity android:name=".MySubscribedActivity" />
     </application>
 
 </manifest>

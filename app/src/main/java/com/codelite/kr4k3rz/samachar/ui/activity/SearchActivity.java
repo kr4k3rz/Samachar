@@ -47,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         toolbar = (Toolbar) findViewById(R.id.toolbar_search);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id._progressBar_search);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,27 +115,35 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                String jsonStr = null;
+                try {
+                    jsonStr = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.i("TAG", " : " + jsonStr);
+                final ResponseSearch responseSearch = new Gson().fromJson(jsonStr, ResponseSearch.class);
+                Log.i("TAG", "response : " + responseSearch.getResponseData().getEntries().size());
 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        String jsonStr = null;
-                        try {
-                            jsonStr = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (responseSearch.getResponseData().getEntries().size()!=0) {
+                            recyclerView.setAdapter(new SearchQueryAdapter(getBaseContext(), responseSearch.getResponseData().getEntries()));
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            SnackMsg.showMsgShort(toolbar, "No Result");
+                            progressBar.setVisibility(View.GONE);
+
                         }
-                        Log.i("TAG", " : " + jsonStr);
-                        ResponseSearch responseSearch = new Gson().fromJson(jsonStr, ResponseSearch.class);
-                        Log.i("TAG", "response : " + responseSearch.getResponseData().getEntries().size());
-                        recyclerView.setAdapter(new SearchQueryAdapter(getBaseContext(), responseSearch.getResponseData().getEntries()));
-                        progressBar.setVisibility(View.GONE);
+
                     }
                 });
 
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

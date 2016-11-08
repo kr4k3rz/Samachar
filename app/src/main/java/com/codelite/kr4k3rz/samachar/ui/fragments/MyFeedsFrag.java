@@ -32,7 +32,6 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class MyFeedsFrag extends Fragment {
-    private FloatingActionButton floatingActionButton;
     private RecyclerView recyclerView;
 
     public MyFeedsFrag() {
@@ -43,7 +42,7 @@ public class MyFeedsFrag extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_my_feeds, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView_myFeeds);
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab_search);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab_search);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -49,7 +50,7 @@ import static com.codelite.kr4k3rz.samachar.util.Parse.convertImgUrl;
 public class SubscribeActivity extends AppCompatActivity {
     private final String TAG = SubscribeActivity.class.getSimpleName();
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
-    private FloatingActionButton floatingActionButton;
+    private ProgressBar progressBar;
     private List<com.codelite.kr4k3rz.samachar.model.feed.EntriesItem> entriesItems;
     private RecyclerView recyclerView;
 
@@ -61,7 +62,8 @@ public class SubscribeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_subscribe);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_subscribe);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar_subscribe);
         final EntriesItem entriesItem = (EntriesItem) getIntent().getSerializableExtra("QUERY");
         getSupportActionBar().setTitle(Html.fromHtml(entriesItem.getTitle()));
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_subscribe);
@@ -73,8 +75,10 @@ public class SubscribeActivity extends AppCompatActivity {
         Log.i(TAG, "" + url);
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=" + url + "&num=-1").build();
+        progressBar.setVisibility(View.VISIBLE);
         okHttpClient.newCall(request).enqueue(new Callback() {
             final Handler handler = new Handler(SubscribeActivity.this.getMainLooper());
+
             @Override
             public void onFailure(Call call, IOException e) {
                 SnackMsg.showMsgShort(recyclerView, e.toString());
@@ -83,14 +87,26 @@ public class SubscribeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String jsonStr = response.body().string();
-                ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
-                entriesItems = responseFeed.getResponseData().getFeed().getEntries();
+                final ResponseFeed responseFeed = new Gson().fromJson(jsonStr, ResponseFeed.class);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), entriesItems));
+                        if (responseFeed.getResponseStatus() == 200 && responseFeed.getResponseData().getFeed().getEntries().size() != 0) {
+                            entriesItems = responseFeed.getResponseData().getFeed().getEntries();
+                            recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), entriesItems));
+                            progressBar.setVisibility(View.GONE);
+
+                        } else {
+                            if (responseFeed.getResponseData().getFeed().getEntries().size() == 0)
+                                SnackMsg.showMsgLong(toolbar, "No Feeds");
+                            else
+                                SnackMsg.showMsgLong(toolbar, "Error: " + responseFeed.getResponseDetails().toString());
+                            progressBar.setVisibility(View.GONE);
+                        }
+
                     }
                 });
+
 
             }
         });
@@ -111,7 +127,6 @@ public class SubscribeActivity extends AppCompatActivity {
 
 
     }
-
 
 
     @Override

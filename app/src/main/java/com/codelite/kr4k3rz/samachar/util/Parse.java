@@ -59,7 +59,7 @@ public class Parse {
 
 
     public static String convertImgUrl(String url) throws MalformedURLException {
-        if (url != null && url.startsWith("http://")) {
+        if (url != null && (url.startsWith("http://")||url.startsWith("https://"))) {
             if (url.toLowerCase().contains(".png".toLowerCase())) {
                 URL url1 = new URL(url);
                 String tempUrl = url1.getHost() + ".rsz.io" + url1.getPath() + "?format=jpg";

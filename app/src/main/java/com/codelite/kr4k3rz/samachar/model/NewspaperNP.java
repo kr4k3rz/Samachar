@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class NewspaperNP {
     private static final String POSTFIX = "&num=-1";  //cached and max feeds
+    private final ArrayList<NewspaperNP> newspapers = new ArrayList<>();
     public String name;
     public String link;
-    private final ArrayList<NewspaperNP> newspapers = new ArrayList<>();
 
     private NewspaperNP(String name, String link) {
         this.name = name;
@@ -31,6 +31,9 @@ public class NewspaperNP {
         newspapers.add(new NewspaperNP("NepaliHealth", "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.nepalihealth.com/feed" + POSTFIX));
         newspapers.add(new NewspaperNP("BizKhabar", "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.bizkhabar.com/feed" + POSTFIX));
         newspapers.add(new NewspaperNP("EverestDainik", "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://www.everestdainik.com/feed" + POSTFIX));
+        newspapers.add(new NewspaperNP("KathmanduToday", "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://kathmandutoday.com/feed" + POSTFIX));
+
+
     }
 
 

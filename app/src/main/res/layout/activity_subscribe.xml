@@ -18,20 +18,41 @@
             app:titleTextColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_subscribe"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_subscribe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_subscribe"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateDrawable="@drawable/progress"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_subscribe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:layout_margin="16dp"
-        app:layout_anchor="@+id/recycler_view_subscribe"
+        app:layout_anchor="@+id/relativeLayout"
+        app:layout_anchorGravity="bottom|right"
         app:layout_behavior="com.codelite.kr4k3rz.samachar.util.FABScrollBehavior"
-        app:srcCompat="@drawable/icon_subscribe"
-        app:layout_anchorGravity="bottom|end" />
+        app:srcCompat="@drawable/icon_subscribe" />
+
 
 </android.support.design.widget.CoordinatorLayout>

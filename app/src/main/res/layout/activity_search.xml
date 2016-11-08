@@ -12,7 +12,7 @@
         android:layout_height="wrap_content" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/_progressBar_search"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
