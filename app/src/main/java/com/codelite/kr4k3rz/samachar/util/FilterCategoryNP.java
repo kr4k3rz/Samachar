@@ -29,7 +29,6 @@ public class FilterCategoryNP {
      */
     public FilterCategoryNP(List<EntriesItem> entryList, Context context) {
         this.entryList = entryList;
-        Context context1 = context;
     }
 
 

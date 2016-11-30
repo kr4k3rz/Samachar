@@ -22,9 +22,11 @@ import com.codelite.kr4k3rz.samachar.model.NewspaperNP;
 import com.codelite.kr4k3rz.samachar.model.feed.EntriesItem;
 import com.codelite.kr4k3rz.samachar.model.feed.ResponseFeed;
 import com.codelite.kr4k3rz.samachar.util.CacheLang;
+import com.codelite.kr4k3rz.samachar.util.CheckInternet;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryEN;
 import com.codelite.kr4k3rz.samachar.util.FilterCategoryNP;
 import com.codelite.kr4k3rz.samachar.util.Parse;
+import com.codelite.kr4k3rz.samachar.util.SnackMsg;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -87,17 +89,11 @@ public class HomeFrag extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                final OkHttpClient okHttpClient = new OkHttpClient();
-                String lang = Paper.book().read("language");
-                Log.i(TAG, "lang : " + lang);
-
-                switch (lang) {
-                    case "NP":
-                        loadNPFeeds(okHttpClient);
-                        break;
-                    case "EN":
-                        loadENFeeds(okHttpClient);
-                        break;
+                if (CheckInternet.isNetworkAvailable(getContext()))
+                    loadFeedsOnRefresh();
+                else {
+                    SnackMsg.showMsgLong(recyclerView, "connect to internet");
+                    swipeRefreshLayout.setRefreshing(false);
                 }
 
             }
@@ -106,6 +102,21 @@ public class HomeFrag extends Fragment {
         });
 
         ratingApp();
+    }
+
+    private void loadFeedsOnRefresh() {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        String lang = Paper.book().read("language");
+        Log.i(TAG, "lang : " + lang);
+
+        switch (lang) {
+            case "NP":
+                loadNPFeeds(okHttpClient);
+                break;
+            case "EN":
+                loadENFeeds(okHttpClient);
+                break;
+        }
     }
 
     private void ratingApp() {
@@ -129,7 +140,7 @@ public class HomeFrag extends Fragment {
                     public void onReview(int i) {
                     }
                 }) // Used to listen for reviews (if you want to track them )
-                .showAfter(50);
+                .showAfter(30);
     }
 
     private void loadOnRefresh() {
@@ -189,9 +200,9 @@ public class HomeFrag extends Fragment {
                     entryArrayList.clear();
                     entryArrayList = Paper.book().read("NP" + "newspaper" + finalI);
                     List<EntriesItem> tempList;
-                    if (entryArrayList==null){
+                    if (entryArrayList == null) {
                         tempList = Parse.deleteDuplicate(posts);
-                    }else {
+                    } else {
                         entryArrayList.addAll(posts);
                         tempList = Parse.deleteDuplicate(entryArrayList);
                     }

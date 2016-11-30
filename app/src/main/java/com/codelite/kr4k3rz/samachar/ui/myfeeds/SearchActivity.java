@@ -39,7 +39,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class SearchActivity extends AppCompatActivity {
-    TextView textViewError;
+    private TextView textViewError;
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private RecyclerView recyclerView;

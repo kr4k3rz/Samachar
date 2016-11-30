@@ -98,10 +98,7 @@ public class SubscribeActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
 
                         } else {
-                            if (responseFeed.getResponseData().getFeed().getEntries().size() == 0)
-                                SnackMsg.showMsgLong(toolbar, "No Feeds");
-                            else
-                                SnackMsg.showMsgLong(toolbar, "Error: " + responseFeed.getResponseDetails().toString());
+                            SnackMsg.showMsgLong(toolbar, "No Feeds");
                             progressBar.setVisibility(View.GONE);
                         }
 

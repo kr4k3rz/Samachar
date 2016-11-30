@@ -28,13 +28,13 @@ import java.util.List;
 import io.paperdb.Paper;
 
 
-public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int HEADER = 0, ENTRY = 1;
     private final Context context;
     private final List<Object> items;
 
 
-    public ComplexRecyclerViewAdapter(Context context, List<Object> items) {
+    ComplexRecyclerViewAdapter(Context context, List<Object> items) {
         this.items = items;
         this.context = context;
     }

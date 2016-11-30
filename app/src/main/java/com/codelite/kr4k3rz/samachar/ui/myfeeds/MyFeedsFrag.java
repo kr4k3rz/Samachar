@@ -2,7 +2,6 @@ package com.codelite.kr4k3rz.samachar.ui.myfeeds;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -30,7 +29,7 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class MyFeedsFrag extends Fragment {
-    TextView textView;
+    private TextView textView;
     private RecyclerView recyclerView;
 
     public MyFeedsFrag() {
@@ -51,7 +50,7 @@ public class MyFeedsFrag extends Fragment {
         if (Paper.book().exist("SubscribedList")) {
             List<Subscribe> subscribes;
             subscribes = Paper.book().read("SubscribedList");
-            recyclerView.setAdapter(new SearchQueryAdapter(getContext(), subscribes));
+            recyclerView.setAdapter(new SearchQueryAdapter(subscribes));
         } else {
             textView.setVisibility(View.VISIBLE);
         }
@@ -77,7 +76,7 @@ public class MyFeedsFrag extends Fragment {
                 Subscribe subscribe;
                 subscribe = (Subscribe) data.getSerializableExtra("SubscribedItem");
                 subscribeList.add(subscribe);
-                SearchQueryAdapter adapter = new SearchQueryAdapter(getContext(), subscribeList);
+                SearchQueryAdapter adapter = new SearchQueryAdapter(subscribeList);
                 textView.setVisibility(View.GONE);
                 recyclerView.setAdapter(adapter);
                 Paper.book().write("SubscribedList", subscribeList);
@@ -88,11 +87,9 @@ public class MyFeedsFrag extends Fragment {
 
     class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.MyViewHolder> {
         final List<Subscribe> subscribeList;
-        private final Context context;
 
 
-        SearchQueryAdapter(Context context, List<Subscribe> subscribeList) {
-            this.context = context;
+        SearchQueryAdapter(List<Subscribe> subscribeList) {
             this.subscribeList = subscribeList;
         }
 

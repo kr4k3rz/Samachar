@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:drawableLeft="@drawable/pagenotfound"
+        android:drawableStart="@drawable/pagenotfound"
         android:gravity="center_vertical"
         android:text="Page Not Found"
         android:textSize="24sp"

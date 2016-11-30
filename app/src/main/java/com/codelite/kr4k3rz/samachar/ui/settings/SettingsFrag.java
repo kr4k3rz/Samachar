@@ -65,7 +65,13 @@ public class SettingsFrag extends Fragment {
         rateUsOnPlaystore(view);
         shareThisApp(view);
         sendFeedback(view);
+        setVersion(view);
         return view;
+    }
+
+    private void setVersion(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.version_app);
+        textView.setText(BuildConfig.VERSION_NAME);
     }
 
     private void sendFeedback(View view) {
@@ -76,7 +82,7 @@ public class SettingsFrag extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for " + R.string.app_name + " " + BuildConfig.VERSION_NAME);
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"xitize@gmailcom"});
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"xitize@gmail.com"});
                 intent.putExtra(Intent.EXTRA_TEXT, "\n\n\nBelow information is required tp address your issue in more detail. Please do not delete/modify this information.\n App Version - " + BuildConfig.VERSION_NAME + "\n Device Model - " + Build.MODEL + "\n OS Version - " + Build.VERSION.RELEASE);
                 Intent mailer = Intent.createChooser(intent, "Send through...");
                 startActivity(mailer);
@@ -91,9 +97,9 @@ public class SettingsFrag extends Fragment {
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out " + R.string.app_name + " app for Android");
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out " + "समाचार" + " app for Android");
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Hi, I am using " + R.string.app_name + " Android app." + "Why don't you check it out on your Android Phone at: https://play.google.com/store/apps/details?id=" + getContext().getPackageName());
+                        "Hi, I am using " + "समाचार" + " Android app." + "Why don't you check it out on your Android Phone at: https://play.google.com/store/apps/details?id=" + getContext().getPackageName());
                 sendIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent, "Share post via"));
             }

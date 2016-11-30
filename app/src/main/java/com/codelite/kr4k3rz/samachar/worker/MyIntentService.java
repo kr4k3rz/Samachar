@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.paperdb.Paper;
 
@@ -68,19 +69,21 @@ public class MyIntentService extends IntentService {
         }
 
 
-
         if (list.size() != 0) {
-            List<EntriesItem> oldFeeds = Paper.book().read("Headlines");
+
+            List<EntriesItem> oldFeeds = Paper.book().read("BreakingFrag");
             if (oldFeeds != null) {
                 list.addAll(oldFeeds);
             }
             List<EntriesItem> newFeeds;
             newFeeds = Parse.deleteDuplicate(list); //delete duplicate
             newFeeds = Parse.deleteEnglishFeeds(newFeeds);  //delete english feed if present
-            Parse.sortByTime(newFeeds).size();
-            Paper.book().write("Headlines", newFeeds);
+            Parse.sortByTime(newFeeds);
+            Paper.book().write("BreakingFrag", newFeeds);
             EntriesItem entry;
-            entry = newFeeds.get(0);
+            Random random = new Random();
+            int random_num = random.nextInt(5);
+            entry = newFeeds.get(random_num);
             Intent intent = new Intent(getApplicationContext(), DetailFeed.class);
             intent.putExtra("ENTRY", entry);
             Log.i("TAG", " Title : " + entry.getTitle() + "\n Content : " + Html.fromHtml(entry.getContentSnippet().replace("...", "").replace("[…]", "")));

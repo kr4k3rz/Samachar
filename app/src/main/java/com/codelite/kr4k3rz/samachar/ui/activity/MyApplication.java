@@ -1,22 +1,25 @@
 package com.codelite.kr4k3rz.samachar.ui.activity;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 
 
 public class MyApplication extends Application {
-    private static MyApplication instance;
 
-    public static MyApplication getInstance() {
-        return instance;
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        Fabric.with(this, new Crashlytics());
         Paper.init(getBaseContext());
         String lang = "NP";
         Paper.book().write("language", lang);

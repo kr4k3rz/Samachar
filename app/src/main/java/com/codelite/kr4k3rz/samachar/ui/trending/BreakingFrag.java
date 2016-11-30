@@ -71,18 +71,18 @@ public class BreakingFrag extends Fragment {
     private void refresh() {
         //yout code in refresh.
         Log.i("Refresh", "YES");
-        if (Paper.book().exist("RefreshCheck")) {
-            boolean b = Paper.book().read("RefreshCheck");
-            Log.i("Refresh", "boolean" + b);
+            if (Paper.book().exist("RefreshCheck")) {
+                boolean b = Paper.book().read("RefreshCheck");
+                Log.i("Refresh", "boolean" + b);
 
-            if (b) {
-                List<EntriesItem> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
-                recyclerView.setAdapter(new RvAdapter(getContext(), list));
-                Log.i("Refresh", "YES");
-                Paper.book().write("RefreshCheck", false);
+                if (b) {
+                    List<EntriesItem> list = Paper.book().read(CacheLang.findLang(CACHE_NAME));
+                    recyclerView.setAdapter(new RvAdapter(getContext(), list));
+                    Log.i("Refresh", "YES");
+                    Paper.book().write("RefreshCheck", false);
+                }
+
             }
-
-        }
 
     }
 

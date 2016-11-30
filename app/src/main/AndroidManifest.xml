@@ -45,6 +45,9 @@
         <activity android:name=".ui.myfeeds.SubscribeActivity" />
         <activity android:name=".ui.settings.NewspapersActivity" />
         <activity android:name=".ui.myfeeds.MySubscribedActivity" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="210f384be0bbca0907c65dad4d18c62d3c111bbc" />
     </application>
 
 </manifest>
