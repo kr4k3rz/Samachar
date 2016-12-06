@@ -168,8 +168,8 @@ public class DetailFeed extends AppCompatActivity {
             case R.id.action_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getExtras().getString("title"));
-                shareIntent.putExtra(Intent.EXTRA_TEXT, getIntent().getExtras().getString("link"));
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, entry.getTitle());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, entry.getLink());
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share this article with..."));
                 return true;
