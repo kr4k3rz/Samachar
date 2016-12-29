@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.codelite.kr4k3rz.samachar.R;
 import com.codelite.kr4k3rz.samachar.model.Subscribe;
 import com.codelite.kr4k3rz.samachar.model.search.EntriesItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,13 @@ import io.paperdb.Paper;
  * A simple {@link Fragment} subclass.
  */
 public class MyFeedsFrag extends Fragment {
+    private List<Subscribe> subscribeList;
     private TextView textView;
     private RecyclerView recyclerView;
 
+
     public MyFeedsFrag() {
+        subscribeList = new ArrayList<>();
     }
 
     @Override
@@ -46,7 +51,8 @@ public class MyFeedsFrag extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
+        Log.i("TAG", "MyFeedFrag");
+        Log.i(MyFeedsFrag.class.getSimpleName(), "In Oncreate");
         if (Paper.book().exist("SubscribedList")) {
             List<Subscribe> subscribes;
             subscribes = Paper.book().read("SubscribedList");
@@ -69,7 +75,6 @@ public class MyFeedsFrag extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
-                List<Subscribe> subscribeList = new ArrayList<>();
                 if (Paper.book().exist("SubscribedList")) {
                     subscribeList = Paper.book().read("SubscribedList");
                 }
@@ -88,7 +93,6 @@ public class MyFeedsFrag extends Fragment {
     class SearchQueryAdapter extends RecyclerView.Adapter<SearchQueryAdapter.MyViewHolder> {
         final List<Subscribe> subscribeList;
 
-
         SearchQueryAdapter(List<Subscribe> subscribeList) {
             this.subscribeList = subscribeList;
         }
@@ -101,7 +105,7 @@ public class MyFeedsFrag extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
             final Subscribe subscribe;
             subscribe = subscribeList.get(position);
             final EntriesItem entriesItem = subscribe.getEntriesItem();
@@ -111,7 +115,8 @@ public class MyFeedsFrag extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getContext(), MySubscribedActivity.class);
-                    intent.putExtra("EXTRA_DATA", subscribe);
+                    intent.putExtra("EXTRA_DATA", (Serializable) subscribeList);
+                    intent.putExtra("EXTRA_POSITION", holder.getAdapterPosition());
                     startActivity(intent);
                 }
             });

@@ -1,8 +1,6 @@
 package com.codelite.kr4k3rz.samachar.ui.trending;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,9 +32,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import angtrim.com.fivestarslibrary.FiveStarsDialog;
-import angtrim.com.fivestarslibrary.NegativeReviewListener;
-import angtrim.com.fivestarslibrary.ReviewListener;
 import io.paperdb.Paper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -101,7 +96,7 @@ public class HomeFrag extends Fragment {
 
         });
 
-        ratingApp();
+
     }
 
     private void loadFeedsOnRefresh() {
@@ -119,29 +114,6 @@ public class HomeFrag extends Fragment {
         }
     }
 
-    private void ratingApp() {
-        FiveStarsDialog fiveStarsDialog = new FiveStarsDialog(getContext(), "xitize@gmail.com");
-        fiveStarsDialog.setRateText("How would you rate this app?")
-                .setTitle("Rate your experience")
-                .setForceMode(false)
-                .setUpperBound(2) // Market opened if a rating >= 2 is selected
-                .setNegativeReviewListener(new NegativeReviewListener() {
-                    @Override
-                    public void onNegativeReview(int i) {
-                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                                "mailto", "xitize@gmail.com", null));
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Samachar FeedBack");
-                        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi,i would like to ");
-                        startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                    }
-                }) // OVERRIDE mail intent for negative review
-                .setReviewListener(new ReviewListener() {
-                    @Override
-                    public void onReview(int i) {
-                    }
-                }) // Used to listen for reviews (if you want to track them )
-                .showAfter(30);
-    }
 
     private void loadOnRefresh() {
         Paper.book().write("RefreshCheck", true);

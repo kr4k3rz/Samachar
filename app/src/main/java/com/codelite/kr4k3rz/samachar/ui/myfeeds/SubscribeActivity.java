@@ -74,6 +74,7 @@ public class SubscribeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
         String url = entriesItem.getUrl();
         Log.i(TAG, "" + url);
+        Log.i("TAG", "SubscribeActivity");
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url("https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=" + url + "&num=-1").build();
         progressBar.setVisibility(View.VISIBLE);

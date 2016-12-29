@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">समाचार</string>
+    <string name="app_name">Samachar</string>
     <string name="image_picture">Image picture</string>
     <string name="date">Date</string>
 
@@ -11,6 +11,7 @@
     <string name="tab_2">all news</string>
     <string name="tab_4">more</string>
     <string name="tab_5">myfeeds</string>
+    <string name="samachar">Samachar</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

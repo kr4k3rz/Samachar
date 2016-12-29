@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.paperdb.Paper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -46,10 +48,11 @@ import okhttp3.Response;
 
 public class MySubscribedActivity extends AppCompatActivity {
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
+    private Subscribe subscribe;
+    private List<Subscribe> subscribeList = new ArrayList<>();
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<EntriesItem> entriesItems = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +60,28 @@ public class MySubscribedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_subscribed);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main_mySubscribed);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
+        //noinspection unchecked
+        subscribeList = (List<Subscribe>) getIntent().getSerializableExtra("EXTRA_DATA");
+        int position = getIntent().getIntExtra("EXTRA_POSITION", 0);
+        subscribe = subscribeList.get(position);
+        Log.i("TAG", "Position :" + position);
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Html.fromHtml(subscribe.getEntriesItem().getTitle()));
+        }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_mySubscribed);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_mySubList);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        final Subscribe subscribe;
-        subscribe = (Subscribe) getIntent().getSerializableExtra("EXTRA_DATA");
-        recyclerView.setAdapter(new SubscribeAdapter(getBaseContext(), subscribe.getEntriesItemList()));
+        Log.i("TAG", "MySubscribedActivity");
+        if (Paper.book().exist("SubscribedList")) {
+            List<Subscribe> subscribes = Paper.book().read("SubscribedList");
+            recyclerView.setAdapter(new SubscribeAdapter(getBaseContext(), subscribes.get(position).getEntriesItemList()));
+        } else
+            recyclerView.setAdapter(new SubscribeAdapter(getBaseContext(), subscribe.getEntriesItemList()));
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -90,7 +104,17 @@ public class MySubscribedActivity extends AppCompatActivity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), entriesItems));
+                                List<EntriesItem> tempList;
+                                tempList = subscribe.getEntriesItemList();
+                                tempList.addAll(entriesItems);
+                                tempList = Parse.deleteDuplicate(tempList);
+                                tempList = Parse.deleteEnglishFeeds(tempList);
+                                tempList = Parse.sortByTime(tempList);
+                                recyclerView.setAdapter(new SubscribeAdapter(getApplicationContext(), tempList));
+                                if (tempList.size() > 40)
+                                    tempList.subList(0, 40);
+                                subscribe.setEntriesItemList(tempList);
+                                Paper.book().write("SubscribedList", subscribeList);
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
@@ -129,6 +153,7 @@ public class MySubscribedActivity extends AppCompatActivity {
                 //if already selected set the same color
                 holder.title.setTextColor(Color.LTGRAY);
                 //  holder.contentSnippet.setTextColor(Color.LTGRAY);
+
             } else {
                 //if not selected set the default color
                 holder.title.setTextColor(ContextCompat.getColor(context, R.color.primary_text));

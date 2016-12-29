@@ -60,6 +60,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(getBaseContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+        Log.i("TAG", "SearchActivity");
 
     }
 

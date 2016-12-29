@@ -32,7 +32,6 @@ public class FilterCategoryNP {
     }
 
 
-
     /**
      * Filter the List of Entry into category and saved it into DB(Paper database).
      * <p>
@@ -114,13 +113,14 @@ public class FilterCategoryNP {
             total_feeds++;
             for (String s : entry.getCategories()) {
                 //BreakingNews
-                if (s.equalsIgnoreCase("BreakingFrag")
-                        || s.equalsIgnoreCase("News")
+                if (s.equalsIgnoreCase("News")
                         || s.equalsIgnoreCase("Breaking News")
-                        || s.equalsIgnoreCase("currentnews")
+                        || s.equalsIgnoreCase("CurrentNews")
+                        || s.equalsIgnoreCase("मुलुक प्रमुख")
                         || s.equalsIgnoreCase("HEADLINES")
                         || s.equalsIgnoreCase("Feature")
-                        ||s.equalsIgnoreCase("नेपाल चर्चा")
+                        || s.equalsIgnoreCase("साप्ताहिक परिषिष्टांक")
+                        || s.equalsIgnoreCase("नेपाल चर्चा")
                         || s.equalsIgnoreCase("Banner News")
                         || s.equalsIgnoreCase("highlight")
                         || s.equalsIgnoreCase("English")
@@ -151,6 +151,7 @@ public class FilterCategoryNP {
                     break;
                 } else //National
                     if (s.equalsIgnoreCase("सैाजन्य")
+                            || s.equalsIgnoreCase("पत्रपत्रिका प्रमुख")
                             || s.equalsIgnoreCase("बिशेष स्टोरी")
                             || s.equalsIgnoreCase("saujanya")
                             || s.equalsIgnoreCase("एभरेष्ट दैनिक")
@@ -254,7 +255,9 @@ public class FilterCategoryNP {
                         break;
                     }//Business
                     else if (s.equalsIgnoreCase("अर्थनीति")
-                            || s.contains("पर्यटन")
+                            || s.equalsIgnoreCase("पर्यटन") || s.equalsIgnoreCase("market")
+                            || s.equalsIgnoreCase("Expo")
+                            || s.equalsIgnoreCase("Employment")
                             || s.equalsIgnoreCase("Tourism")
                             || s.equalsIgnoreCase("कलेज")
                             || s.equalsIgnoreCase("Bank")
@@ -432,11 +435,9 @@ public class FilterCategoryNP {
                         feeds_filtered++;
                         break;
                     } else {
-                        if (!s.equalsIgnoreCase("Featured")) {
-                            Log.i(TAG, "unfiltered category : " + s);
-                            imgVid.add(entry);
-                            feeds_notFiltered++;
-                        }
+                        Log.i(TAG, "unfiltered category : " + s);
+                        imgVid.add(entry);
+                        feeds_notFiltered++;
 
                     }
 
